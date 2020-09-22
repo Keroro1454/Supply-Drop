@@ -27,5 +27,7 @@ More items are coming soon, as fast as I can figure out how to make them (and su
 
 # Special Thanks:
 **KomradeSpectre:** Their code served as a foundation for this mod, and their advice and help was instrumental in getting this mod off the ground.
+
 **ThinkInvis:** I utilize their config/logger system, as well as their TILER2 API in this mod.
+
 **Sheybey:** They answered so many of my C# questions. So, so many questions.
