@@ -8,18 +8,18 @@ More items are coming soon, as fast as I can figure out how to make them (and su
 - **Hardened Bone Fragments**
 	- Gain .5 (+.5 per stack) armor on kill. All armor is lost upon taking damage.
 - **COMING SOON: Numbing Berries**
-	- ERROR: Item log read-out scrambled during transmission. Please wait for update...
+	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
 
 ## Uncommon Items:
 - **COMING SOON: Calcified Shell Plating**
-	- ERROR: Item log read-out scrambled during transmission. Please wait for update...
+	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
 	
 - **COMING SOON: Power Converter**
-	- ERROR: Item log read-out scrambled during transmission. Please wait for update...
+	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
 	
 ## Legendary Items:
 - **COMING SOON: Tome of Bloodletting**
-	- ERROR: Item log read-out scrambled during transmission. Please wait for update...
+	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
 	
 ## Lunar Items:
 
