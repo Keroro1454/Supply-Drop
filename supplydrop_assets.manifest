@@ -1,0 +1,42 @@
+ManifestFileVersion: 0
+CRC: 573800512
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 665e8adfa64077917765ff1a30441654
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 069797ccdc458d01886e092d5a79e275
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 49
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Main/Textures/Icons/BoneIcon.png
+- Assets/Main/Models/Prefabs/Bone.prefab
+- Assets/Main/Models/materials/bone_material.mat
+- Assets/Main/Models/Prefabs/bone.blend
+- Assets/Main/Textures/Icons/BoneBuffIcon.png
+- Assets/AssetBundle/AssetBundle.manifest
+- Assets/Main/Models/materials/Boney.mat
+- Assets/AssetBundle/supplydrop.manifest
+- Assets/AssetBundle/exampleitemmod.manifest
+Dependencies: []
