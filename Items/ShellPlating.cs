@@ -209,7 +209,7 @@ namespace SupplyDrop.Items
                 }
 
                 var inventoryCount = GetCount(damageReport.attackerBody);
-                var CurrentShellStackMax = (((inventoryCount - 1) * 25) + 3);
+                var CurrentShellStackMax = (((inventoryCount - 1) * 25) + 50);
                 if (inventoryCount > 0 && shellComponent.cachedShellStacks < CurrentShellStackMax)
                 {
                     shellComponent.cachedShellStacks += 1;
