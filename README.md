@@ -3,7 +3,7 @@ Supply Drop is a mod for Risk of Rain 2 designed to add a number of items.
 Items are designed with not just variety in mind, but with the goal of staying true to the game's design aesthetic, as well as balance.
 More items are coming soon--over a dozen are planned as of now!
 
-# What's New: Update 1.1- *Mi A(r)mor!*
+# What's New with Update 1.1: *Mi A(r)mor!*
 This update added two new items, the Numbing Berries and the Shell Plating. This update was designed to further focus on and improve survivability, something RoR2 is currently lacking in; both items added revolve around the under-used armor stat!
 
 # Included Items:
