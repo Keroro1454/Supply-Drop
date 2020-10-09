@@ -17,7 +17,7 @@ namespace K1454.SupplyDrop
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
     {
-        public const string ModVer = "1.0.0";
+        public const string ModVer = "1.1.0";
         public const string ModName = "Supply Drop";
         public const string ModGuid = "com.K1454.SupplyDrop";
 
@@ -84,10 +84,9 @@ namespace K1454.SupplyDrop
                     renderer = meshes[i], //we retrieve the MeshRenderer.
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On, //We allow our mesh to cast shadows or not.
                     ignoreOverlays = false //We allow the mesh to be affected by overlays like OnFire or PredatoryInstinctsCritOverlay.
+                    
                 };
             }
-
-
             return renderInfos;
         }
     }
