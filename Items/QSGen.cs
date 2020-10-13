@@ -4,15 +4,12 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
-using static TILER2.StatHooks;
 using K1454.SupplyDrop;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Reflection;
 
-
-//TO-DO: Remove Bobbing effect on the star, it causes it to freak out
 namespace SupplyDrop.Items
 {
     class QSGen : Item<QSGen>
@@ -26,9 +23,9 @@ namespace SupplyDrop.Items
 
         protected override string NewLangPickup(string langID = null) => "If shields are active, any damage that exceeds the active shield amount is weakened.";
 
-        protected override string NewLangDesc(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>12%</style> of your maximum health. " +
+        protected override string NewLangDesc(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>16%</style> of your maximum health. " +
             "If an attack exceeds your active shields, the excess damage is <style=cIsUtility>reduced by 10%</style> <style=cStack>(+5% per stack)</style>, " +
-            "plus an additional <style=cIsUtility>0.5%</style> <style=cStack>(+0.25% per stack)</style> per 4% of maximum <style=cIsUtility>shield</style> that was depleted.";
+            "plus an additional <style=cIsUtility>0.5%</style> <style=cStack>(+0.25% per stack)</style> per 1% of maximum <style=cIsUtility>shield</style> that was depleted.";
 
         protected override string NewLangLore(string landID = null) => "Order: \"Quantum Shield Generator\"\nTracking Number: 06******\nEstimated Delivery: 12/21/2055\nShipping Method: High Priority/Fragile" +
             "\nShipping Address: 6900 West, Advanced Warfare, Mars\nShipping Details:\n\nAfter months of development, we finally have a functioning prototype for your approval." +
@@ -60,7 +57,6 @@ namespace SupplyDrop.Items
             Vector3 generalScale = new Vector3(.1f, .1f, .1f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
             {
-                //MULT, REX, ACRID NEED CHILDNAMES
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -193,7 +189,7 @@ namespace SupplyDrop.Items
                 regDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
                 var meshes = regDef.pickupModelPrefab.GetComponentsInChildren<MeshRenderer>();
                 meshes[1].gameObject.AddComponent<Spin>();
-                meshes[2].gameObject.AddComponent<Bobbing>();
+                //meshes[2].gameObject.AddComponent<Bobbing>();
             }
             On.RoR2.HealthComponent.TakeDamage += CalculateDamageReduction;
 
@@ -221,7 +217,7 @@ namespace SupplyDrop.Items
             {
                 if (GetCount(characterBody) > 0)
                 {
-                    return shield + (characterBody.maxHealth * 0.12f);
+                    return shield + (characterBody.maxHealth * 0.16f);
                 }
                 return shield;
             }
@@ -240,8 +236,10 @@ namespace SupplyDrop.Items
                 float shieldDamage = Math.Min(dmgTaken, currentShield);
                 if (currentShield > 0 && dmgTaken > currentShield)
                 {
-                    float damageReduction = (dmgTaken * .1f) + (shieldDamage * (0.05f * ((inventoryCount - 1) * 0.025f)));
-                    damageInfo.damage -= damageReduction;
+                    float baseReduction = dmgTaken * (.1f + (.05f * (inventoryCount - 1)));
+                    float bonusReduction = ((shieldDamage / maxShield) * 100) * (0.05f + ((inventoryCount - 1) * 0.025f));
+                    float totalDamageReduction = baseReduction + bonusReduction;
+                    damageInfo.damage -= totalDamageReduction;
                 }
             }
         }

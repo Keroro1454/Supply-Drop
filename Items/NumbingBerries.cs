@@ -20,9 +20,22 @@ namespace SupplyDrop.Items
 
         protected override string NewLangPickup(string langID = null) => "Gain temporary armor upon taking damage.";
 
-        protected override string NewLangDesc(string langID = null) => "Gain <style=cIsUtility>5</style> <style=cStack>(+5 per stack)</style> <style=cIsUtility>armor</style> for 2 seconds <style=cStack>(+0.5 second per stack)</style> upon taking damage.";
+        protected override string NewLangDesc(string langID = null) => "Gain <style=cIsUtility>5</style> <style=cStack>(+5 per stack)</style> <style=cIsUtility>armor</style> for 2 seconds " +
+            "<style=cStack>(+0.5 second per stack)</style> upon taking damage.";
 
-        protected override string NewLangLore(string landID = null) => "> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION...\n\n> VERIFICATION SUCCESS. ACCESSING YOUR QUERY...\n\n> OUTPUT:\n\nSpecies Genus: Vaccinum\n\nSpecies Section: Achilococcus\n\nSpecies is native to the Andromeda system, though the exact planetary origin is currently unknown. Species is a flowering bush. Both the branches and leaves display dark green coloration, and substantial hydrophobic tendencies.\n\nThe fruit of the flowering bush is officially called numbberries. It forms as small, round berries with a cool mint skin coloration, and a striking bright purple flesh. Colloquially, the fruit is often referred to as 'The Fruit of the Damned', 'Unstoppapples' (despite the lack of similarities between apples and the fruit), or 'Madmen Mints' (owing to the fruit's skin coloration). All of these names are in reference to the chief effect caused by ingesting the fruit.\n\nNumbberries possess an inordinate amount of unique nerve suppressants.The effect of ingesting these is a complete absence of fatigue in the victim, as well as an effectively-unlimited increase to pain tolerance.Examples of this increase in tolerance to pain include victims maintaining complete functionality and reporting no symptoms of pain in spite of:\n\n- Over 30 puncture wounds in the abdominal and chest region\n\n- Severe burns over 75% of their body\n\n- Loss of 1 arm--victim reported not noticing it was missing until they were told\n\nOther symptoms caused by ingestion include severe recklessness and loss of fear and a powerful desire to travel.\n\nAdditionally, numbberries have proven to be fatally addictive.If forced to go without ingesting more numbberries within a small window of time (usually between 2-3 days), addicts quickly begin developing extreme growths on their posterior.Soon after(usually between 1-2 days), regardless of if they acquire more numbberries at this point, they will succumb to a violent series of spasms before suddenly dying of unknown causes; this is the chief reason behind their classification as a restricted organism.\n\n> END OUTPUT";
+        protected override string NewLangLore(string landID = null) => "<style=cMono>> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION..." +
+            "\n> VERIFICATION SUCCESS. ACCESSING YOUR QUERY...\n> OUTPUT:</style>\n\nSpecies Genus: Vaccinum\nSpecies Section: Achilococcus" +
+            "\n\nSpecies is native to the Andromeda system, though the exact planetary origin is currently unknown. Species is a flowering bush. Both the branches and leaves display dark green coloration, " +
+            "and substantial hydrophobic tendencies.\n\nThe fruit of the flowering bush is officially called numbberries. It forms as small, round berries with a mint skin coloration, and a bright purple flesh. " +
+            "Colloquially, the fruit is referred to as 'The Fruit of the Damned', 'Unstoppapples', or 'Madmen Mints'. " +
+            "All of these names are in reference to the chief effect caused by ingesting the fruit.\n\nNumbberries possess an inordinate amount of unique nerve suppressants. " +
+            "The effect of ingesting these is a complete absence of fatigue in the victim, as well as an effectively-unlimited increase to pain tolerance. " +
+            "Examples of this increase in tolerance to pain include victims maintaining complete functionality and reporting no symptoms of pain in spite of:" +
+            "\n\n- Over 30 puncture wounds in the abdominal and chest region\n\n- Severe burns over 75% of their body\n\n- Loss of 1 arm; victim reported not noticing it was missing until they were told" +
+            "\n\nOther symptoms caused by ingestion include severe recklessness, loss of fear, and a powerful desire to travel.\n\nAdditionally, numbberries have proven to be fatally addictive. " +
+            "If forced to go without ingesting more numbberries within a small window of time (usually between 2-3 days), addicts quickly begin developing extreme growths on their posterior. " +
+            "Soon after (usually between 1-2 days), regardless of if they acquire more numbberries at this point, they will succumb to a violent series of spasms before suddenly dying of unknown causes." +
+            "\n\n<style=cMono>END OUTPUT</style>";
 
         private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
@@ -38,7 +51,6 @@ namespace SupplyDrop.Items
                 var numbBerryBuff = new R2API.CustomBuff(
                     new BuffDef
                     {
-                        buffColor = Color.white,
                         canStack = false,
                         isDebuff = false,
                         name = namePrefix + "NumbBerryBuff",
@@ -201,12 +213,12 @@ namespace SupplyDrop.Items
 
         private void CalculateBerryBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
         {
-                var InventoryCount = GetCount(self.body);
+
+            var InventoryCount = GetCount(self.body);
             if (InventoryCount > 0)
                 {
                 self.body.AddTimedBuffAuthority(NumbBerryBuff, 2f + (.5f * (InventoryCount - 1)));
                 }
-
             orig(self, damageInfo);
         }
 

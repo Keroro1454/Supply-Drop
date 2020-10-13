@@ -10,9 +10,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Reflection;
-using System.Timers;
 
-//TO-DO: Duplicate Model, make it not schmove, set that as the pickupmodel, I can't deal with this bs
 namespace SupplyDrop.Items
 {
     class UnassumingTie : Item<UnassumingTie>
@@ -28,7 +26,7 @@ namespace SupplyDrop.Items
 
         protected override string NewLangDesc(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>4%</style> <style=cStack>(+4% per stack)</style> of your maximum health. " +
             "Breaking your <style=cIsUtility>shield</style> gives you a <style=cIsUtility>Second Wind</style> for 4s, plus a bonus amount based on your <style=cIsUtility>maximum shield</style>. " +
-            "Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>15%</style> <style=cStack>(+15% per stack)</style>.";
+            "Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>15%</style> <style=cStack>(+10% per stack)</style>.";
 
         protected override string NewLangLore(string landID = null) => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters which were active during the early 21st century.The gang was wildly successful while active, breaking into, looting, and escaping from some of the most secure sites on Earth at the time. Even when authorities attempted to apprehend the criminals, reports state that shooting at them 'only seem to make [the heisters] move faster, however the hell that works.' While the identities of these criminals were never discovered, the gang ceased operations for unknown reasons after over a decade of activity. This piece serves as a testament to their dedication to style, no matter the situation.\"\n\n- Placard description for \"Striped Tie\" at the Galactic Museum of Law Enforcement and Criminality";
 
@@ -87,7 +85,7 @@ namespace SupplyDrop.Items
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.12f, 0.25f),
                     localAngles = new Vector3(0f, 180f, 0f),
-                    localScale = generalScale * 0.9f
+                    localScale = generalScale
                 }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
@@ -209,7 +207,7 @@ namespace SupplyDrop.Items
                 ThirdItemBodyModelPrefab = regDef.pickupModelPrefab;
                 regItem.ItemDisplayRules = GenerateItemDisplayRules();
             }
-            regDef.pickupModelPrefab.transform.localScale = new Vector3(.5f, .5f, .5f);
+            regDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
             IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
             GetStatCoefficients += AddSecondWindBuff;
@@ -275,7 +273,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(sender);
             if (sender.HasBuff(SecondWindBuff))
             {
-                args.moveSpeedMultAdd += 0.15f * InventoryCount;
+                args.moveSpeedMultAdd += (0.15f + ((InventoryCount-1) * 0.10f));
 
             }
         }

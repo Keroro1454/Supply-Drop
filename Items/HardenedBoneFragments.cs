@@ -7,6 +7,7 @@ using TILER2;
 using static TILER2.StatHooks;
 using K1454.SupplyDrop;
 
+//TO-DO: Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain. Plus fix model (Rico says some of the vertices still don't have closed faces???)
 namespace SupplyDrop.Items
 {
     class HardenedBoneFragments : Item<HardenedBoneFragments>
@@ -20,9 +21,15 @@ namespace SupplyDrop.Items
 
         protected override string NewLangPickup(string langID = null) => "Gain temporary armor on kill. Armor is lost when injured.";
 
-        protected override string NewLangDesc(string langID = null) => "Gain <style=cIsUtility>1</style> <style=cStack>(+1 per stack)</style> <style=cIsUtility>armor</style> on kill. All <style=cIsUtility>armor</style> is lost upon taking damage.";
+        protected override string NewLangDesc(string langID = null) => "Gain <style=cIsUtility>1</style> <style=cStack>(+1 per stack)</style> <style=cIsUtility>armor</style> on kill. " +
+            "All <style=cIsUtility>armor</style> is lost upon taking damage.";
 
-        protected override string NewLangLore(string landID = null) => "The last attacker hissed its final breath before falling silent next to its brethren. \n\n The man holstered his weapon, wisps of smoke curling around the barrel, before falling to his knees with a sigh. Taking his knife from its hilt, he stabbed through the purple scales of his defeated foes, taking meat to eat but also the creatures' bones, which he began wittling to flat surfaces. \n\n A woman came over, shouldering her bow as she stopped and looked upon the gory scene before her. \n\n 'What are you doing?!' \n\n 'What does it look like? I'm making myself some protection. Want some?' \n\n 'Don't be ridiculous. What you're doing...that's just grotesque. There's no way bits of bone will do anything other than make you look like some kind of monster.' \n\n 'Good. I'll fit right in here then.' \n\n The man stood back up, covered in scales. Not purple like those of the creatures he had just felled, but a brilliant white. He moved on from the scene, seeking to complete his suit of armor.";
+        protected override string NewLangLore(string landID = null) => "The last attacker hissed its final breath before falling silent next to its brethren.\n\nThe man holstered his weapon, " +
+            "wisps of smoke curling around the barrel, before falling to his knees with a sigh. Taking his knife from its hilt, he stabbed through the purple scales of his defeated foes, " +
+            "taking meat to eat but also the creatures' bones, which he began wittling to flat surfaces. \n\nA woman came over, shouldering her bow as she stopped and looked upon the gory scene before her." +
+            "\n\n\"What are you doing?!\" \n\n\"What does it look like? I'm making myself some protection. Want some?\"\n\n\"Don't be ridiculous. What you're doing...that's just grotesque. " +
+            "There's no way bits of bone will do anything other than make you look like some kind of monster.\"\n\n\"Good. I'll fit right in here then.\"" +
+            "\n\nThe man stood back up, covered in scales. Not purple like those of the creatures he had just felled, but a brilliant white. He moved on from the scene, seeking to complete his suit of armor.";
 
         private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
@@ -49,7 +56,6 @@ namespace SupplyDrop.Items
         }
 
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
-        //TO-DO: Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = SupplyDropPlugin.ItemDisplaySetup(ItemBodyModelPrefab);
@@ -61,7 +67,7 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighL",
+                    childName = "null",
                     localPos = new Vector3(0f, 0.35f, 0.15f),
                     localAngles = new Vector3(-85f, 0f, 0f),
                     localScale = generalScale
@@ -74,7 +80,7 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighL",
+                    childName = "null",
                     localPos = new Vector3(0f, 0.30f, 0.15f),
                     localAngles = new Vector3(-100f, 0f, 0f),
                     localScale = generalScale
@@ -98,7 +104,7 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighL",
+                    childName = "null",
                     localPos = new Vector3(0.05f, 0.15f, 0.15f),
                     localAngles = new Vector3(-75f, 0f, 0f),
                     localScale = generalScale
@@ -184,9 +190,10 @@ namespace SupplyDrop.Items
             if (ItemBodyModelPrefab == null)
             {
                 ItemBodyModelPrefab = regDef.pickupModelPrefab;
-                regItem.ItemDisplayRules = GenerateItemDisplayRules();
+                regItem.ItemDisplayRules = GenerateItemDisplayRules(); 
             }
-            On.RoR2.DeathRewards.OnKilledServer += CalculateBFBuffGain;
+            regDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
+            On.RoR2.GlobalEventManager.OnCharacterDeath += CalculateBFBuffGain;
             On.RoR2.HealthComponent.TakeDamage += BFBuffLoss;
 
             GetStatCoefficients += AddBFBuff;
@@ -194,15 +201,15 @@ namespace SupplyDrop.Items
 
         protected override void UnloadBehavior()
         {
-            On.RoR2.DeathRewards.OnKilledServer -= CalculateBFBuffGain;
+            On.RoR2.GlobalEventManager.OnCharacterDeath -= CalculateBFBuffGain;
             On.RoR2.HealthComponent.TakeDamage -= BFBuffLoss;
 
             GetStatCoefficients -= AddBFBuff;
         }
 
-        private void CalculateBFBuffGain(On.RoR2.DeathRewards.orig_OnKilledServer orig, RoR2.DeathRewards self, RoR2.DamageReport damageReport)
+        private void CalculateBFBuffGain(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, RoR2.DamageReport damageReport)
         {
-            if(damageReport?.attackerBody)
+            if(damageReport.attackerBody)
             {
                 var inventoryCount = GetCount(damageReport.attackerBody);
                 if(GetCount(damageReport.attackerBody) > 0)
@@ -213,7 +220,7 @@ namespace SupplyDrop.Items
             orig(self, damageReport);
         }
         private void BFBuffLoss(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
-        {
+        {  
             var BuffCount = self.body.GetBuffCount(BFBuff);
             while (BuffCount > 0)
             {

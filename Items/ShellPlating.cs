@@ -7,8 +7,6 @@ using TILER2;
 using static TILER2.StatHooks;
 using K1454.SupplyDrop;
 
-//NEEDS BUFFICON
-
 namespace SupplyDrop.Items
 {
     class ShellPlating : Item<ShellPlating>
@@ -22,18 +20,26 @@ namespace SupplyDrop.Items
 
         protected override string NewLangPickup(string langID = null) => "Gain armor on kill.";
 
-        protected override string NewLangDesc(string langID = null) => "Killing an enemy increases your <style=cIsUtility>armor</style> permanently by <style=cIsUtility>.4</style>, up to a maximum of <style=cIsUtility>20</style> <style=cStack>(+10 per stack)</style> <style=cIsUtility>armor</style>.";
+        protected override string NewLangDesc(string langID = null) => "Killing an enemy increases your <style=cIsUtility>armor</style> permanently by <style=cIsUtility>.2</style>, " +
+            "up to a maximum of <style=cIsUtility>10</style> <style=cStack>(+10 per stack)</style> <style=cIsUtility>armor</style>.";
 
-        protected override string NewLangLore(string landID = null) => "Order: Shell Plating\nTracking Number: 02******\nEstimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Research Center, Polarity Zone, Neptune\nShipping Details:\n\nI've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. The story behind this piece should be especially interesting to you, given your fascination with sea-faring cultures.\n\nThe artifact comes from a small tribal community that lived on Earth long ago. The tribe would pay tributes into the sea, though it's not clear if this was in appeasement, celebration; in fact, it's unknown to what they were even paying tribute to.\n\nEither way, legend goes that one day, invaders appeared on the horizon in mighty vessels. The people, sensing the impending danger, sacrificed all they had in a terrified frenzy. Texts of theirs mention blood, possibly human, staining the foam red. In return...something...gave them shells to adorn their bodies with.\n\nGovernment reports state casualities were in the hundreds. The few that survived described those clad with shells as literally invincible, grinning like madmen and shouting praises as armaments hit them without effect.\n\nThere's still a few shells floating out there today, including this one here. Of course, no one has found them to be quite as...effective as those old reports claimed them to be. But it's still a neat little trinket, eh?";
+        protected override string NewLangLore(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\nEstimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan" +
+            "\nShipping Details:\n\nI've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. The story behind this piece should be especially interesting to you, " +
+            "given your fascination with sea-faring cultures.\n\nThe artifact comes from a small tribal community that lived on Earth long ago. The tribe would pay tributes into the sea, " +
+            "though it's not clear if this was in appeasement, celebration; in fact, it's unknown to what they were even paying tribute to.\n\nEither way, legend goes that one day, invaders appeared on the horizon in mighty vessels. " +
+            "The people, sensing the impending danger, sacrificed all they had in a terrified frenzy. Texts of theirs mention blood, possibly human, staining the foam red. In return...something...gave them shells to adorn their bodies with." +
+            "\n\nGovernment reports state casualities were in the hundreds. The few that survived described those clad with shells as literally invincible, grinning like madmen and shouting praises as armaments hit them without effect." +
+            "\n\nThere's still a few shells floating out there today, including this one here. Of course, no one has found them to be quite as...effective as those old reports claimed them to be. But it's still a neat little trinket, eh?";
 
         private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public BuffIndex ShellStackMax { get; private set; }
+        public ItemIndex shellStack { get; private set; }
 
         public ShellPlating()
         {
             modelPathName = "@SupplyDrop:Assets/Main/Models/Prefabs/Shell.prefab";
-            iconPathName = "@SupplyDrop:Assets/Main/Textures/Icons/ShellIcon1.png";
+            iconPathName = "@SupplyDrop:Assets/Main/Textures/Icons/ShellIcon.png";
 
             onAttrib += (tokenIdent, namePrefix) =>
             {
@@ -46,6 +52,15 @@ namespace SupplyDrop.Items
                         iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ShellBuffIcon.png"
                     });
                 ShellStackMax = R2API.BuffAPI.Add(shellStackMax);
+
+                var shellStackDef = new CustomItem(new ItemDef
+                {
+                    hidden = true,
+                    name = namePrefix + "INTERNALShell",
+                    tier = ItemTier.NoTier,
+                    canRemove = false
+                }, new ItemDisplayRuleDict(null));
+                shellStack = ItemAPI.Add(shellStackDef);
             };
         }
 
@@ -88,7 +103,7 @@ namespace SupplyDrop.Items
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Hip",
                     localPos = new Vector3(2.37f, 2.3f, -0.4f),
-                    localAngles = new Vector3(-160f, 100f, 0f),
+                    localAngles = new Vector3(-30f, 90f, 180f),
                     localScale = new Vector3(2f, 2f, 2f)
                 }
             });
@@ -199,48 +214,37 @@ namespace SupplyDrop.Items
             GetStatCoefficients -= AddShellPlateStats;
         }
         private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, RoR2.DamageReport damageReport)
-        {           
+        {
+            orig(self, damageReport);
             if (damageReport.attackerBody)
             {
-                var shellComponent = damageReport.attackerBody.gameObject.GetComponent<ShellStacksComponent>();
-                if (!shellComponent)
-                {
-                    shellComponent = damageReport.attackerBody.gameObject.AddComponent<ShellStacksComponent>();
-                }
-
                 var inventoryCount = GetCount(damageReport.attackerBody);
-                var CurrentShellStackMax = (((inventoryCount - 1) * 25) + 50);
-                if (inventoryCount > 0 && shellComponent.cachedShellStacks < CurrentShellStackMax)
+                var currentShellStackMax = (((inventoryCount - 1) * 50) + 50);
+                var currentShellStack = damageReport.attackerBody.inventory.GetItemCount(shellStack);
+                if (inventoryCount > 0 && currentShellStack < currentShellStackMax)
                 {
-                    shellComponent.cachedShellStacks += 1;
-                    damageReport.attackerBody.statsDirty = true;
-                    if (shellComponent.cachedShellStacks >= CurrentShellStackMax && damageReport.attackerBody.GetBuffCount(ShellStackMax) <= 0)
-                    {
-                        damageReport.attackerBody.AddBuff(ShellStackMax);
-                    }
-
-                    if (shellComponent.cachedShellStacks < CurrentShellStackMax && damageReport.attackerBody.GetBuffCount(ShellStackMax) > 0)
-                    {
-                        damageReport.attackerBody.RemoveBuff(ShellStackMax);
-                    }
+                    damageReport.attackerBody.inventory.GiveItem(shellStack);
                 }
             }
-
-            orig(self, damageReport);
         }
-
         private void AddShellPlateStats(CharacterBody sender, StatHookEventArgs args)
         {
-            var InventoryCount = GetCount(sender);
-            var shellComponent = sender.GetComponent<ShellStacksComponent>();
-            if (shellComponent)
+            var inventoryCount = GetCount(sender);
+            if (inventoryCount > 0)
             {
-                args.armorAdd += (.4f * shellComponent.cachedShellStacks);
+                var currentShellStackMax = (((inventoryCount - 1) * 50) + 50);
+                if (sender.inventory.GetItemCount(shellStack) >= currentShellStackMax && sender.GetBuffCount(ShellStackMax) <= 0)
+                {
+                    sender.AddBuff(ShellStackMax);
+                }
+
+                if (sender.inventory.GetItemCount(shellStack) < currentShellStackMax && sender.GetBuffCount(ShellStackMax) > 0)
+                {
+                    sender.RemoveBuff(ShellStackMax);
+                }
+                var currentShellStack = sender.inventory.GetItemCount(shellStack);
+                args.armorAdd += (.2f * currentShellStack);
             }
-        }
-        public class ShellStacksComponent : MonoBehaviour
-        {
-            public int cachedShellStacks = 0;
         }
     }
 }

@@ -4,14 +4,12 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
-using static TILER2.StatHooks;
 using K1454.SupplyDrop;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Reflection;
 
-//TO-DO: Rig model to Loader, Captain
 namespace SupplyDrop.Items
 {
     class ElectroPlankton : Item<ElectroPlankton>
@@ -83,7 +81,7 @@ namespace SupplyDrop.Items
                     childName = "Chest",
                     localPos = new Vector3(0f, -0.025f, -0.12f),
                     localAngles = new Vector3(0f, 0f, 90f),
-                    localScale = generalScale
+                    localScale = new Vector3(.09f, .09f, .09f)
                 }
             });
             rules.Add("mdlToolbot", new ItemDisplayRule[]
@@ -155,7 +153,7 @@ namespace SupplyDrop.Items
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.25f, -0.37f),
                     localAngles = new Vector3(0f, 0f, 90f),
-                    localScale = new Vector3(0.85f, 0.85f, 0.85f)
+                    localScale = new Vector3(0.1f, 0.1f, 0.1f)
                 }
             });
             rules.Add("mdlCroco", new ItemDisplayRule[]
@@ -197,13 +195,13 @@ namespace SupplyDrop.Items
                 regDef.pickupModelPrefab.transform.localScale = new Vector3(1.75f, 1.75f, 1.75f);
             }
             IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
-            On.RoR2.HealthComponent.TakeDamage += ShieldOnHit;
+            On.RoR2.SetStateOnHurt.OnTakeDamageServer += ShieldOnHit;
         }
 
         protected override void UnloadBehavior()
         {
             IL.RoR2.CharacterBody.RecalculateStats -= IL_AddMaxShield;
-            On.RoR2.HealthComponent.TakeDamage -= ShieldOnHit;
+            On.RoR2.SetStateOnHurt.OnTakeDamageServer -= ShieldOnHit;
         }
             
         private void IL_AddMaxShield(ILContext il)
@@ -228,15 +226,15 @@ namespace SupplyDrop.Items
             );
             c.Emit(OpCodes.Stloc, 43);
         }
-        private void ShieldOnHit(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        private void ShieldOnHit(On.RoR2.SetStateOnHurt.orig_OnTakeDamageServer orig, SetStateOnHurt self, DamageReport damageReport)
         {
-            var Attacker = damageInfo.attacker.GetComponent<CharacterBody>();
-            var InvenCount = GetCount(Attacker);
-            if (Attacker && InvenCount > 0)
+            var InvenCount = GetCount(damageReport.attackerMaster);
+            if (InvenCount > 0)
             {
-                Attacker.healthComponent.RechargeShield(InvenCount);
+                float procCoeff = damageReport.damageInfo.procCoefficient;
+                damageReport.attackerBody.healthComponent.RechargeShield(InvenCount * procCoeff);
             }
-            orig(self, damageInfo);
+            orig(self, damageReport);
         }
     }
 }
