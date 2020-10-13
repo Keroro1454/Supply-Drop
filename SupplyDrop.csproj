@@ -5,11 +5,97 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="supplydrop_assets" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="bin\Debug\netstandard2.0\0Harmony.xml" />
+    <Content Include="bin\Debug\netstandard2.0\BepInEx.xml" />
+    <Content Include="bin\Debug\netstandard2.0\MonoMod.Utils.xml" />
+    <Content Include="bin\Debug\netstandard2.0\R2API.xml" />
+    <Content Include="bin\Debug\netstandard2.0\SupplyDrop.deps.json" />
+    <Content Include="bin\Debug\netstandard2.0\Test1.deps.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="supplydrop_assets" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Debug\netstandard2.0\0Harmony.dll" />
+    <None Include="bin\Debug\netstandard2.0\Assembly-CSharp.dll" />
+    <None Include="bin\Debug\netstandard2.0\Assembly-CSharp.R2API.mm.dll" />
+    <None Include="bin\Debug\netstandard2.0\BepInEx.dll" />
+    <None Include="bin\Debug\netstandard2.0\MMHOOK_Assembly-CSharp.dll" />
+    <None Include="bin\Debug\netstandard2.0\Mono.Cecil.dll" />
+    <None Include="bin\Debug\netstandard2.0\MonoMod.Utils.dll" />
+    <None Include="bin\Debug\netstandard2.0\R2API.dll" />
+    <None Include="bin\Debug\netstandard2.0\SupplyDrop.dll" />
+    <None Include="bin\Debug\netstandard2.0\SupplyDrop.pdb" />
+    <None Include="bin\Debug\netstandard2.0\Test1.dll" />
+    <None Include="bin\Debug\netstandard2.0\Test1.pdb" />
+    <None Include="bin\Debug\netstandard2.0\TILER2.dll" />
+    <None Include="bin\Debug\netstandard2.0\Unity.Postprocessing.Runtime.dll" />
+    <None Include="bin\Debug\netstandard2.0\Unity.TextMeshPro.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.AccessibilityModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.AIModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.AnimationModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.ARModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.AssetBundleModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.AudioModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.ClothModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.ClusterInputModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.ClusterRendererModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.CoreModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.CrashReportingModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.DirectorModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.GameCenterModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.GridModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.ImageConversionModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.IMGUIModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.InputModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.JSONSerializeModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.LocalizationModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.Networking.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.ParticleSystemModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.PerformanceReportingModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.Physics2DModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.PhysicsModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.ScreenCaptureModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.SharedInternalsModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.SpriteMaskModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.SpriteShapeModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.StreamingModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.StyleSheetsModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.TerrainModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.TerrainPhysicsModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.TextCoreModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.TextRenderingModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.TilemapModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UI.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UIElementsModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UIModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UNETModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UnityAnalyticsModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UnityConnectModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestAssetBundleModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestAudioModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestTextureModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestWWWModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.VehiclesModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.VFXModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.VideoModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.VRModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.WindModule.dll" />
+    <None Include="bin\Debug\netstandard2.0\UnityEngine.XRModule.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +113,9 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\r2modman\BepInEx\core\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\r2modman\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.Utils">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\r2modman\BepInEx\core\MonoMod.Utils.dll</HintPath>
