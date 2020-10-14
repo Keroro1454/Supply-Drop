@@ -274,21 +274,31 @@ namespace SupplyDrop.Items
 
             if (inventoryCount > 0)
             {
+                //This bit simply caches the damage you take for usage by the actual AddBloodBuffStats hook
+                var cachedDamageComponent = self.body.gameObject.GetComponent<DamageComponent>();
+                if (!cachedDamageComponent)
+                {
+                    cachedDamageComponent = self.body.gameObject.AddComponent<DamageComponent>();
+                }
+                
                 //Each of these checks to make sure a higher-tier buff isn't already active, and cleanses any lower-tier buffs before applying their buff. Maybe there's a cleaner way to do it but oh well...
                 if (dmgTaken <= maxHealth * .1 && weakBuffCount == 0 && averageBuffCount == 0 && strongBuffCount == 0 && insaneBuffCount == 0 && devotedBuffCount == 0)
                 {
                     self.body.AddTimedBuffAuthority(PatheticBloodBuff, 4f);
+                    cachedDamageComponent.cachedDamage = dmgTaken;
                 }     
                 if (dmgTaken >= maxHealth * .1 && dmgTaken <= maxHealth * .2 && averageBuffCount == 0 && strongBuffCount == 0 && insaneBuffCount == 0 && devotedBuffCount == 0)
                 {
                     self.body.RemoveBuff(PatheticBloodBuff);
                     self.body.AddTimedBuffAuthority(WeakBloodBuff, 6f);
+                    cachedDamageComponent.cachedDamage = dmgTaken;
                 }
                 if (dmgTaken >= maxHealth * .2 && dmgTaken <= maxHealth * .3 && strongBuffCount == 0 && insaneBuffCount == 0 && devotedBuffCount == 0)
                 {
                     self.body.RemoveBuff(PatheticBloodBuff);
                     self.body.RemoveBuff(WeakBloodBuff);
                     self.body.AddTimedBuffAuthority(AverageBloodBuff, 8f);
+                    cachedDamageComponent.cachedDamage = dmgTaken;
                 }
                 if (dmgTaken >= maxHealth * .3 && dmgTaken <= maxHealth * .4 && insaneBuffCount == 0 && devotedBuffCount == 0)
                 {
@@ -296,6 +306,7 @@ namespace SupplyDrop.Items
                     self.body.RemoveBuff(WeakBloodBuff);
                     self.body.RemoveBuff(AverageBloodBuff);
                     self.body.AddTimedBuffAuthority(StrongBloodBuff, 10f);
+                    cachedDamageComponent.cachedDamage = dmgTaken;
                 }
                 if (dmgTaken >= maxHealth * .4 && dmgTaken <= maxHealth * .5 && devotedBuffCount == 0)
                 {
@@ -304,6 +315,7 @@ namespace SupplyDrop.Items
                     self.body.RemoveBuff(AverageBloodBuff);
                     self.body.RemoveBuff(StrongBloodBuff);
                     self.body.AddTimedBuffAuthority(InsaneBloodBuff, 12f);
+                    cachedDamageComponent.cachedDamage = dmgTaken;
                 }
                 if (dmgTaken >= maxHealth * .5)
                 {
@@ -313,6 +325,7 @@ namespace SupplyDrop.Items
                     self.body.RemoveBuff(StrongBloodBuff);
                     self.body.RemoveBuff(InsaneBloodBuff);
                     self.body.AddTimedBuffAuthority(InsaneBloodBuff, 14f);
+                    cachedDamageComponent.cachedDamage = dmgTaken;
                 }
             }
             orig(self, damageInfo);
@@ -341,11 +354,16 @@ namespace SupplyDrop.Items
         }
         private void AddBloodBuffStats(CharacterBody sender, StatHookEventArgs args)
         {
+            var cachedDamageComponent = sender.GetComponent<DamageComponent>();
             var InventoryCount = GetCount(sender);
             if (sender.HasBuff(InsaneBloodBuff))
             {
-                args.armorAdd += 5f * (5 * (InventoryCount - 1));
+                args.baseDamageAdd += .1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1));
             }
+        }
+        public class DamageComponent : MonoBehaviour
+        {
+            public float cachedDamage = 0f;
         }
     }
 }
