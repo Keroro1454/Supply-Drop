@@ -358,7 +358,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(sender);
             if (sender.HasBuff(InsaneBloodBuff))
             {
-                args.baseDamageAdd += .1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1));
+                args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), 20);
             }
         }
         public class DamageComponent : MonoBehaviour
