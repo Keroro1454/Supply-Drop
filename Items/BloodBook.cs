@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿#undef UNUSED
+#if UNUSED
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using R2API;
 using RoR2;
@@ -396,3 +398,4 @@ namespace SupplyDrop.Items
         }
     }
 }
+#endif

@@ -61,7 +61,7 @@ namespace SupplyDrop.Items
 
             base.SetupAttributes();
         }
-            private static ItemDisplayRuleDict GenerateItemDisplayRules()
+        private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);

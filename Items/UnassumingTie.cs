@@ -54,7 +54,6 @@ namespace SupplyDrop.Items
                 displayRules = GenerateItemDisplayRules();
             }
 
-
             base.SetupAttributes();
             var secondWindBuff = new R2API.CustomBuff(
                     new BuffDef

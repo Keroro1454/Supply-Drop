@@ -56,6 +56,8 @@ namespace SupplyDrop.Items
                 ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
                 displayRules = GenerateItemDisplayRules();
             }
+
+            base.SetupAttributes();
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
