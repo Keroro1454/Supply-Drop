@@ -6,24 +6,25 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using K1454.SupplyDrop;
+using K1454.Utils;
 
 namespace SupplyDrop.Items
 {
-    class ShellPlating : Item<ShellPlating>
+    class ShellPlating : Item_V2<ShellPlating>
     {
         public override string displayName => "Shell Plating";
 
-        public override ItemTier itemTier => RoR2.ItemTier.Tier2;
+        public override ItemTier itemTier => ItemTier.Tier2;
 
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string NewLangName(string langid = null) => displayName;
+        protected override string GetNameString(string langid = null) => displayName;
 
-        protected override string NewLangPickup(string langID = null) => "Gain armor on kill.";
+        protected override string GetPickupString(string langID = null) => "Gain armor on kill.";
 
-        protected override string NewLangDesc(string langID = null) => "Killing an enemy increases your <style=cIsUtility>armor</style> permanently by <style=cIsUtility>.2</style>, " +
+        protected override string GetDescString(string langID = null) => "Killing an enemy increases your <style=cIsUtility>armor</style> permanently by <style=cIsUtility>.2</style>, " +
             "up to a maximum of <style=cIsUtility>10</style> <style=cStack>(+10 per stack)</style> <style=cIsUtility>armor</style>.";
 
-        protected override string NewLangLore(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\nEstimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan" +
+        protected override string GetLoreString(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\nEstimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan" +
             "\nShipping Details:\n\nI've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. The story behind this piece should be especially interesting to you, " +
             "given your fascination with sea-faring cultures.\n\nThe artifact comes from a small tribal community that lived on Earth long ago. The tribe would pay tributes into the sea, " +
             "though it's not clear if this was in appeasement, celebration; in fact, it's unknown to what they were even paying tribute to.\n\nEither way, legend goes that one day, invaders appeared on the horizon in mighty vessels. " +
@@ -31,44 +32,51 @@ namespace SupplyDrop.Items
             "\n\nGovernment reports state casualities were in the hundreds. The few that survived described those clad with shells as literally invincible, grinning like madmen and shouting praises as armaments hit them without effect." +
             "\n\nThere's still a few shells floating out there today, including this one here. Of course, no one has found them to be quite as...effective as those old reports claimed them to be. But it's still a neat little trinket, eh?";
 
-        private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
+        private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public BuffIndex ShellStackMax { get; private set; }
         public ItemIndex shellStack { get; private set; }
 
         public ShellPlating()
         {
-            modelPathName = "@SupplyDrop:Assets/Main/Models/Prefabs/Shell.prefab";
-            iconPathName = "@SupplyDrop:Assets/Main/Textures/Icons/ShellIcon.png";
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Shell.prefab";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/ShellIcon.png";
+        }
 
-            onAttrib += (tokenIdent, namePrefix) =>
+        public override void SetupAttributes()
+        {
+            if (ItemBodyModelPrefab == null)
             {
-                var shellStackMax = new R2API.CustomBuff(
+                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                displayRules = GenerateItemDisplayRules();
+            }
+
+            base.SetupAttributes();
+            var shellStackMax = new R2API.CustomBuff(
                     new BuffDef
-                    {                        
+                    {
                         canStack = false,
                         isDebuff = false,
-                        name = namePrefix + "ShellStackMax",
+                        name = "ShellStackMax",
                         iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ShellBuffIcon.png"
                     });
-                ShellStackMax = R2API.BuffAPI.Add(shellStackMax);
+            ShellStackMax = R2API.BuffAPI.Add(shellStackMax);
 
-                var shellStackDef = new CustomItem(new ItemDef
-                {
-                    hidden = true,
-                    name = namePrefix + "INTERNALShell",
-                    tier = ItemTier.NoTier,
-                    canRemove = false
-                }, new ItemDisplayRuleDict(null));
-                shellStack = ItemAPI.Add(shellStackDef);
-            };
+            var shellStackDef = new CustomItem(new ItemDef
+            {
+                hidden = true,
+                name = "INTERNALShell",
+                tier = ItemTier.NoTier,
+                canRemove = false
+            }, new ItemDisplayRuleDict(null));
+            shellStack = ItemAPI.Add(shellStackDef);
         }
 
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
-            
+
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = SupplyDropPlugin.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
             {
@@ -194,12 +202,13 @@ namespace SupplyDrop.Items
             return rules;
         }
 
-        protected override void LoadBehavior()
+        public override void Install()
         {
+            base.Install();
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = regDef.pickupModelPrefab;
-                regItem.ItemDisplayRules = GenerateItemDisplayRules();
+                ItemBodyModelPrefab = itemDef.pickupModelPrefab;
+                customItem.ItemDisplayRules = GenerateItemDisplayRules();
 
             }
             On.RoR2.GlobalEventManager.OnCharacterDeath += CalculateShellBuffApplications;
@@ -207,13 +216,14 @@ namespace SupplyDrop.Items
             GetStatCoefficients += AddShellPlateStats;
         }
 
-        protected override void UnloadBehavior()
+        public override void Uninstall()
         {
+            base.Uninstall();
             On.RoR2.GlobalEventManager.OnCharacterDeath -= CalculateShellBuffApplications;
 
             GetStatCoefficients -= AddShellPlateStats;
         }
-        private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, RoR2.DamageReport damageReport)
+        private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
         {
             orig(self, damageReport);
             if (damageReport.attackerBody)

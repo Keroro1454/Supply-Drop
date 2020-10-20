@@ -46,11 +46,14 @@ namespace SupplyDrop.Items
         }
         public override void SetupAttributes()
         {
-            if (ItemBodyModelPrefab == null)
+            if (ItemBodyModelPrefab == null && SecondItemBodyModelPrefab == null && ThirdItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/Tie.prefab");
+                SecondItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/TieBig.prefab");
+                ThirdItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
                 displayRules = GenerateItemDisplayRules();
             }
+
 
             base.SetupAttributes();
             var secondWindBuff = new R2API.CustomBuff(
@@ -207,14 +210,8 @@ namespace SupplyDrop.Items
         public override void Install()
         {
             base.Install();
-            ItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/Tie.prefab");
-            SecondItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/TieBig.prefab");
-            if (ThirdItemBodyModelPrefab == null)
-            {
-                ThirdItemBodyModelPrefab = itemDef.pickupModelPrefab;
-                customItem.ItemDisplayRules = GenerateItemDisplayRules();
-            }
             itemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
+
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
             IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
             GetStatCoefficients += AddSecondWindBuff;
