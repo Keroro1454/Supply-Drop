@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="BloodBook.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="supplydrop_assets" />
   </ItemGroup>
 
@@ -40,7 +44,6 @@
     <None Include="bin\Debug\netstandard2.0\SupplyDrop.pdb" />
     <None Include="bin\Debug\netstandard2.0\Test1.dll" />
     <None Include="bin\Debug\netstandard2.0\Test1.pdb" />
-    <None Include="bin\Debug\netstandard2.0\TILER2.dll" />
     <None Include="bin\Debug\netstandard2.0\Unity.Postprocessing.Runtime.dll" />
     <None Include="bin\Debug\netstandard2.0\Unity.TextMeshPro.dll" />
     <None Include="bin\Debug\netstandard2.0\UnityEngine.AccessibilityModule.dll" />
