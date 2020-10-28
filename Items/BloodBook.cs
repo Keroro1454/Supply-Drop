@@ -9,7 +9,6 @@ using K1454.SupplyDrop;
 using K1454.Utils;
 using System;
 using System.Linq;
-using System.Timers;
 
 namespace SupplyDrop.Items
 {
@@ -275,20 +274,14 @@ namespace SupplyDrop.Items
         public override void Install()
         {
             base.Install();
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = itemDef.pickupModelPrefab;
-                customItem.ItemDisplayRules = GenerateItemDisplayRules();
-            }
-            On.RoR2.CharacterBody.FixedUpdate += AddBleedCreator;
             On.RoR2.HealthComponent.TakeDamage += ApplyBloodBookBuff;
             GetStatCoefficients += AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
+            ItemBodyModelPrefab.AddComponent<BleedCreator>();
         }
         public override void Uninstall()
         {
             base.Uninstall();
-            On.RoR2.CharacterBody.FixedUpdate += AddBleedCreator;
             On.RoR2.HealthComponent.TakeDamage -= ApplyBloodBookBuff;
             GetStatCoefficients -= AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
@@ -313,19 +306,6 @@ namespace SupplyDrop.Items
             {
                 return value >= Lower && value <= Upper;
             }
-        }
-        private void AddBleedCreator(On.RoR2.CharacterBody.orig_FixedUpdate orig, RoR2.CharacterBody self)
-        {
-            var inventoryCount = GetCount(self);
-            if (inventoryCount > 0)
-            {
-                var bleedCreator = self.gameObject.GetComponent<BleedCreator>();
-                if (!bleedCreator)
-                {
-                    bleedCreator = self.gameObject.AddComponent<BleedCreator>();
-                }
-            }
-                orig(self);
         }
         private void ApplyBloodBookBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
         {
@@ -385,9 +365,8 @@ namespace SupplyDrop.Items
             public void FixedUpdate()
             {
                 var bleedController = ItemBodyModelPrefab.GetComponentInParent<CharacterBody>();
-
                 var currentBuffLevel = Array.FindIndex(ranges, r => bleedController.HasBuff(r.Buff));
-
+                
                 var Meshes = GetComponents<MeshRenderer>();
                 var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
                 if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
