@@ -46,8 +46,6 @@ namespace SupplyDrop.Items
         public static BuffIndex InsaneBloodBuff { get; private set; }
         public static BuffIndex DevotedBloodBuff { get; private set; }
 
-        private static Timer timer;
-
         public BloodBook()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/BloodBook.prefab";
@@ -65,6 +63,7 @@ namespace SupplyDrop.Items
             var patheticBloodBuff = new CustomBuff(
                     new BuffDef
                     {
+                        buffColor = Color.white,
                         canStack = false,
                         isDebuff = false,
                         name = "PatheticBloodBuff",
@@ -76,6 +75,7 @@ namespace SupplyDrop.Items
             var weakBloodBuff = new CustomBuff(
                 new BuffDef
                 {
+                    buffColor = Color.red,
                     canStack = false,
                     isDebuff = false,
                     name = "WeakBloodBuff",
@@ -87,6 +87,7 @@ namespace SupplyDrop.Items
             var averageBloodBuff = new R2API.CustomBuff(
                 new BuffDef
                 {
+                    buffColor = Color.blue,
                     canStack = false,
                     isDebuff = false,
                     name = "AverageBloodBuff",
@@ -98,6 +99,7 @@ namespace SupplyDrop.Items
             var strongBloodBuff = new CustomBuff(
                 new BuffDef
                 {
+                    buffColor = Color.green,
                     canStack = false,
                     isDebuff = false,
                     name = "StrongBloodBuff",
@@ -109,6 +111,7 @@ namespace SupplyDrop.Items
             var insaneBloodBuff = new CustomBuff(
                 new BuffDef
                 {
+                    buffColor = Color.black,
                     canStack = false,
                     isDebuff = false,
                     name = "InsaneBloodBuff",
@@ -120,6 +123,7 @@ namespace SupplyDrop.Items
             var devotedBloodBuff = new CustomBuff(
                 new BuffDef
                 {
+                    buffColor = Color.cyan,
                     canStack = false,
                     isDebuff = false,
                     name = "DevotedBloodBuff",
@@ -276,16 +280,19 @@ namespace SupplyDrop.Items
                 ItemBodyModelPrefab = itemDef.pickupModelPrefab;
                 customItem.ItemDisplayRules = GenerateItemDisplayRules();
             }
-            On.RoR2.HealthComponent.TakeDamage += CalculateBloodBookBuff;
+            On.RoR2.CharacterBody.FixedUpdate += AddBleedCreator;
+            On.RoR2.HealthComponent.TakeDamage += ApplyBloodBookBuff;
             GetStatCoefficients += AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
         }
         public override void Uninstall()
         {
             base.Uninstall();
-            On.RoR2.HealthComponent.TakeDamage -= CalculateBloodBookBuff;
+            On.RoR2.CharacterBody.FixedUpdate += AddBleedCreator;
+            On.RoR2.HealthComponent.TakeDamage -= ApplyBloodBookBuff;
             GetStatCoefficients -= AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
+
         }
         public struct Range
         {
@@ -307,8 +314,20 @@ namespace SupplyDrop.Items
                 return value >= Lower && value <= Upper;
             }
         }
-    
-        private void CalculateBloodBookBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
+        private void AddBleedCreator(On.RoR2.CharacterBody.orig_FixedUpdate orig, RoR2.CharacterBody self)
+        {
+            var inventoryCount = GetCount(self);
+            if (inventoryCount > 0)
+            {
+                var bleedCreator = self.gameObject.GetComponent<BleedCreator>();
+                if (!bleedCreator)
+                {
+                    bleedCreator = self.gameObject.AddComponent<BleedCreator>();
+                }
+            }
+                orig(self);
+        }
+        private void ApplyBloodBookBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
         {
             var inventoryCount = GetCount(self.body);
             float dmgTaken = damageInfo.damage;
@@ -316,12 +335,14 @@ namespace SupplyDrop.Items
 
             if (inventoryCount > 0)
             {
+
                 //This bit will cache the damage you took for use by the actual damage boost calculator, only if the damage exceeds any previous cached damage numbers
                 var cachedDamageComponent = self.body.gameObject.GetComponent<DamageComponent>();
                 if (!cachedDamageComponent)
                 {
                     cachedDamageComponent = self.body.gameObject.AddComponent<DamageComponent>();
                 }
+
                 if (cachedDamageComponent.cachedDamage < dmgTaken)
                 {
                     cachedDamageComponent.cachedDamage = dmgTaken;
@@ -347,7 +368,18 @@ namespace SupplyDrop.Items
                 cachedDamageComponent.cachedDamage = 0;
             }
         }
+        private void AddBloodBuffStats(CharacterBody sender, StatHookEventArgs args)
+        {
+            var cachedDamageComponent = sender.GetComponent<DamageComponent>();
+            var InventoryCount = GetCount(sender);
 
+            int currentBuffLevel = Array.FindIndex(ranges, r => sender.HasBuff(r.Buff));
+
+            if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
+            {
+                args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), 20);
+            }
+        }
         public class BleedCreator : MonoBehaviour
         {
             public void FixedUpdate()
@@ -360,6 +392,8 @@ namespace SupplyDrop.Items
                 var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
                 if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                 {
+                    Chat.AddMessage("Particle System should have just enabled.");
+
                     particleSystem.Play();
                     if (currentBuffLevel == 0)
                     {
@@ -399,18 +433,6 @@ namespace SupplyDrop.Items
             }
         }
 
-        private void AddBloodBuffStats(CharacterBody sender, StatHookEventArgs args)
-        {
-            var cachedDamageComponent = sender.GetComponent<DamageComponent>();
-            var InventoryCount = GetCount(sender);
-
-            int currentBuffLevel = Array.FindIndex(ranges, r => sender.HasBuff(r.Buff));
-
-            if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
-            {
-                args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), 20);
-            }
-        }
         public class DamageComponent : MonoBehaviour
         {
             public float cachedDamage = 0f;
