@@ -6,126 +6,154 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using K1454.SupplyDrop;
-
+using K1454.Utils;
+using System;
+using System.Linq;
+using System.Timers;
 
 namespace SupplyDrop.Items
 {
-    class BloodBook : Item<BloodBook>
+    class BloodBook : Item_V2<BloodBook>
     {
+
         public override string displayName => "Tome of Bloodletting";
 
-        public override ItemTier itemTier => RoR2.ItemTier.Tier3;
+        public override ItemTier itemTier => ItemTier.Tier3;
 
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Damage });
-        protected override string NewLangName(string langid = null) => displayName;
+        protected override string GetNameString(string langid = null) => displayName;
 
-        protected override string NewLangPickup(string langID = null) => "Convert some damage taken into a temporary damage boost.";
+        protected override string GetPickupString(string langID = null) => "Convert some damage taken into a temporary damage boost.";
 
-        protected override string NewLangDesc(string langID = null) => "Convert <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> of the damage you take into a <style=cIsDamage>temporary damage boost</style>, " +
+        protected override string GetDescString(string langID = null) => "Convert <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> of the damage you take into a <style=cIsDamage>temporary damage boost</style>, " +
             "up to <style=cIsDamage>20</style> <style=cStack>(+10 per stack)</style>. The boost is powered up based on damage taken; every 10% max HP, up to 50%, that was depleted increases the base duration of 4s by +2s.";
 
-        protected override string NewLangLore(string landID = null) => "Nature learns from pain. Nature willingly suffers, without protest. Nature studies what gifts pain provides. " +
+        protected override string GetLoreString(string landID = null) => "Nature learns from pain. Nature willingly suffers, without protest. Nature studies what gifts pain provides. " +
             "It takes the lessons that pain gives out freely, and it grows stronger, more capable of survival." +
             "\n\nHumanity has disrupted this order. It no longer wishes to learn from its greatest teacher. It is an insolent pupil, forgetting its place." +
-            "\n\nHumanity will learn.But you may spare yourself of the harsh lesson coming. Pain offers its tutelage to all." +
+            "\n\nHumanity will learn. But you may spare yourself of the harsh lesson coming. Pain offers its tutelage to all." +
             "\n\nSimply turn the page." +
             "\n\nSteel yourself." +
             "\n\nAnd begin.";
 
-        private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
+        private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        public BuffIndex PatheticBloodBuff { get; private set; }
-        public BuffIndex WeakBloodBuff { get; private set; }
-        public BuffIndex AverageBloodBuff { get; private set; }
-        public BuffIndex StrongBloodBuff { get; private set; }
-        public BuffIndex InsaneBloodBuff { get; private set; }
-        public BuffIndex DevotedBloodBuff { get; private set; }
+        public static Range[] ranges;
+        public static BuffIndex PatheticBloodBuff { get; private set; }
+        public static BuffIndex WeakBloodBuff { get; private set; }
+        public static BuffIndex AverageBloodBuff { get; private set; }
+        public static BuffIndex StrongBloodBuff { get; private set; }
+        public static BuffIndex InsaneBloodBuff { get; private set; }
+        public static BuffIndex DevotedBloodBuff { get; private set; }
+
+        private static Timer timer;
 
         public BloodBook()
         {
-            modelPathName = "@SupplyDrop:Assets/Main/Models/Prefabs/BloodBook.prefab";
-            iconPathName = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookIcon.png";
-
-            onAttrib += (tokenIdent, namePrefix) =>
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/BloodBook.prefab";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookIcon.png";
+        }
+        public override void SetupAttributes()
+        {
+            if (ItemBodyModelPrefab == null)
             {
-                var patheticBloodBuff = new CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = namePrefix + "PatheticBloodBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/PBloodBuffIcon.png"
-                    });
-                PatheticBloodBuff = BuffAPI.Add(patheticBloodBuff);
+                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                displayRules = GenerateItemDisplayRules();
+            }
 
-                var weakBloodBuff = new CustomBuff(
+            base.SetupAttributes();
+            var patheticBloodBuff = new CustomBuff(
                     new BuffDef
                     {
                         canStack = false,
                         isDebuff = false,
-                        name = namePrefix + "WeakBloodBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/WBloodBuffIcon.png"
+                        name = "PatheticBloodBuff",
+                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/PBloodBuffIcon.png"
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
                     });
-                WeakBloodBuff = BuffAPI.Add(weakBloodBuff);
+            PatheticBloodBuff = BuffAPI.Add(patheticBloodBuff);
 
-                var averageBloodBuff = new R2API.CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = namePrefix + "AverageBloodBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ABloodBuffIcon.png"
-                    });
-                AverageBloodBuff = BuffAPI.Add(averageBloodBuff);
+            var weakBloodBuff = new CustomBuff(
+                new BuffDef
+                {
+                    canStack = false,
+                    isDebuff = false,
+                    name = "WeakBloodBuff",
+                        // iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/WBloodBuffIcon.png"
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                });
+            WeakBloodBuff = BuffAPI.Add(weakBloodBuff);
 
-                var strongBloodBuff = new CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = namePrefix + "StrongBloodBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/SBloodBuffIcon.png"
-                    });
-                StrongBloodBuff = BuffAPI.Add(strongBloodBuff);
+            var averageBloodBuff = new R2API.CustomBuff(
+                new BuffDef
+                {
+                    canStack = false,
+                    isDebuff = false,
+                    name = "AverageBloodBuff",
+                        // iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ABloodBuffIcon.png"
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                });
+            AverageBloodBuff = BuffAPI.Add(averageBloodBuff);
 
-                var insaneBloodBuff = new CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = namePrefix + "InsaneBloodBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/IBloodBuffIcon.png"
-                    });
-                InsaneBloodBuff = BuffAPI.Add(insaneBloodBuff);
+            var strongBloodBuff = new CustomBuff(
+                new BuffDef
+                {
+                    canStack = false,
+                    isDebuff = false,
+                    name = "StrongBloodBuff",
+                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/SBloodBuffIcon.png"
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                });
+            StrongBloodBuff = BuffAPI.Add(strongBloodBuff);
 
-                var devotedBloodBuff = new CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = namePrefix + "DevotedBloodBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/DBloodBuffIcon.png"
-                    });
-                DevotedBloodBuff = BuffAPI.Add(devotedBloodBuff);
+            var insaneBloodBuff = new CustomBuff(
+                new BuffDef
+                {
+                    canStack = false,
+                    isDebuff = false,
+                    name = "InsaneBloodBuff",
+                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/IBloodBuffIcon.png"
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                });
+            InsaneBloodBuff = BuffAPI.Add(insaneBloodBuff);
+
+            var devotedBloodBuff = new CustomBuff(
+                new BuffDef
+                {
+                    canStack = false,
+                    isDebuff = false,
+                    name = "DevotedBloodBuff",
+                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/DBloodBuffIcon.png"
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                });
+            DevotedBloodBuff = BuffAPI.Add(devotedBloodBuff);
+            ranges = new Range[]
+            {
+                new Range(0, 10, PatheticBloodBuff, 4),
+                new Range(10, 20, WeakBloodBuff, 6),
+                new Range(20, 30, AverageBloodBuff, 8),
+                new Range(30, 40, StrongBloodBuff, 10),
+                new Range(40, 50, InsaneBloodBuff, 12),
+                new Range(50, double.PositiveInfinity, DevotedBloodBuff, 14)
             };
         }
 
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = SupplyDropPlugin.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
-            Vector3 generalScale = new Vector3(1f, 1f, 1f);
+            Vector3 generalScale = new Vector3(.1f, .1f, .1f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
-                    localPos = new Vector3(0f, 0.1f, 0f),
-                    localAngles = new Vector3(-85f, 0f, 0f),
-                    localScale = generalScale
+                    childName = "Chest",
+                    localPos = new Vector3(0.75f, 0.5f, 0),
+                    localAngles = new Vector3(0, 0, 0),
+                    localScale = new Vector3(0.05f, 0.05f, 0.05f)
 
                 }
             });
@@ -150,7 +178,7 @@ namespace SupplyDrop.Items
                     childName = "Head",
                     localPos = new Vector3(0.75f, 3.7f, -2.3f),
                     localAngles = new Vector3(90f, 0f, 0f),
-                    localScale = new Vector3(0.5f, 0.5f, 0.5f)
+                    localScale = generalScale * 8
                 }
             });
             rules.Add("mdlEngi", new ItemDisplayRule[]
@@ -198,7 +226,7 @@ namespace SupplyDrop.Items
                     childName = "FlowerBase",
                     localPos = new Vector3(1.5f, -0.1f, -0.3f),
                     localAngles = new Vector3(0f, 0f, 40f),
-                    localScale = new Vector3(0.3f, 0.3f, 0.3f)
+                    localScale = generalScale
                 }
             });
             rules.Add("mdlLoader", new ItemDisplayRule[]
@@ -240,123 +268,145 @@ namespace SupplyDrop.Items
             return rules;
         }
 
-        protected override void LoadBehavior()
+        public override void Install()
         {
+            base.Install();
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = regDef.pickupModelPrefab;
-                regItem.ItemDisplayRules = GenerateItemDisplayRules();
+                ItemBodyModelPrefab = itemDef.pickupModelPrefab;
+                customItem.ItemDisplayRules = GenerateItemDisplayRules();
+            }
+            On.RoR2.HealthComponent.TakeDamage += CalculateBloodBookBuff;
+            GetStatCoefficients += AddBloodBuffStats;
+            On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
+        }
+        public override void Uninstall()
+        {
+            base.Uninstall();
+            On.RoR2.HealthComponent.TakeDamage -= CalculateBloodBookBuff;
+            GetStatCoefficients -= AddBloodBuffStats;
+            On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
+        }
+        public struct Range
+        {
+            public double Lower;
+            public double Upper;
+            public BuffIndex Buff;
+            public int Duration;
+
+            public Range(double lower, double upper, BuffIndex buff, int duration)
+            {
+                Lower = lower;
+                Upper = upper;
+                Buff = buff;
+                Duration = duration;
             }
 
-            On.RoR2.HealthComponent.TakeDamage += CalculateBloodBookBuff;
-            On.RoR2.CharacterBody.FixedUpdate += BloodBookBleedManager;
-            GetStatCoefficients += AddBloodBuffStats;
+            public bool Contains(double value)
+            {
+                return value >= Lower && value <= Upper;
+            }
         }
-
-        protected override void UnloadBehavior()
-        {
-            On.RoR2.HealthComponent.TakeDamage -= CalculateBloodBookBuff;
-            On.RoR2.CharacterBody.FixedUpdate -= BloodBookBleedManager;
-            GetStatCoefficients -= AddBloodBuffStats;
-        }
+    
         private void CalculateBloodBookBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
         {
             var inventoryCount = GetCount(self.body);
-            var patheticBuffCount = self.body.GetBuffCount(PatheticBloodBuff);
-            var weakBuffCount = self.body.GetBuffCount(WeakBloodBuff);
-            var averageBuffCount = self.body.GetBuffCount(AverageBloodBuff);
-            var strongBuffCount = self.body.GetBuffCount(StrongBloodBuff);
-            var insaneBuffCount = self.body.GetBuffCount(InsaneBloodBuff);
-            var devotedBuffCount = self.body.GetBuffCount(DevotedBloodBuff);
-
             float dmgTaken = damageInfo.damage;
             float maxHealth = self.body.maxHealth;
 
             if (inventoryCount > 0)
             {
-                //This bit simply caches the damage you take for usage by the actual AddBloodBuffStats hook
+                //This bit will cache the damage you took for use by the actual damage boost calculator, only if the damage exceeds any previous cached damage numbers
                 var cachedDamageComponent = self.body.gameObject.GetComponent<DamageComponent>();
                 if (!cachedDamageComponent)
                 {
                     cachedDamageComponent = self.body.gameObject.AddComponent<DamageComponent>();
                 }
-                
-                //Each of these checks to make sure a higher-tier buff isn't already active, and cleanses any lower-tier buffs before applying their buff. Maybe there's a cleaner way to do it but oh well...
-                if (dmgTaken <= maxHealth * .1 && weakBuffCount == 0 && averageBuffCount == 0 && strongBuffCount == 0 && insaneBuffCount == 0 && devotedBuffCount == 0)
+                if (cachedDamageComponent.cachedDamage < dmgTaken)
                 {
-                    self.body.AddTimedBuffAuthority(PatheticBloodBuff, 4f);
-                    cachedDamageComponent.cachedDamage = dmgTaken;
-                }     
-                if (dmgTaken >= maxHealth * .1 && dmgTaken <= maxHealth * .2 && averageBuffCount == 0 && strongBuffCount == 0 && insaneBuffCount == 0 && devotedBuffCount == 0)
-                {
-                    self.body.RemoveBuff(PatheticBloodBuff);
-                    self.body.AddTimedBuffAuthority(WeakBloodBuff, 6f);
                     cachedDamageComponent.cachedDamage = dmgTaken;
                 }
-                if (dmgTaken >= maxHealth * .2 && dmgTaken <= maxHealth * .3 && strongBuffCount == 0 && insaneBuffCount == 0 && devotedBuffCount == 0)
+
+                int currentBuffLevel = Array.FindIndex(ranges, r => self.body.HasBuff(r.Buff));
+                int nextBuffLevel = Array.FindIndex(ranges, r => r.Contains((dmgTaken/maxHealth) * 100));
+                if (nextBuffLevel > currentBuffLevel)
                 {
-                    self.body.RemoveBuff(PatheticBloodBuff);
-                    self.body.RemoveBuff(WeakBloodBuff);
-                    self.body.AddTimedBuffAuthority(AverageBloodBuff, 8f);
-                    cachedDamageComponent.cachedDamage = dmgTaken;
-                }
-                if (dmgTaken >= maxHealth * .3 && dmgTaken <= maxHealth * .4 && insaneBuffCount == 0 && devotedBuffCount == 0)
-                {
-                    self.body.RemoveBuff(PatheticBloodBuff);
-                    self.body.RemoveBuff(WeakBloodBuff);
-                    self.body.RemoveBuff(AverageBloodBuff);
-                    self.body.AddTimedBuffAuthority(StrongBloodBuff, 10f);
-                    cachedDamageComponent.cachedDamage = dmgTaken;
-                }
-                if (dmgTaken >= maxHealth * .4 && dmgTaken <= maxHealth * .5 && devotedBuffCount == 0)
-                {
-                    self.body.RemoveBuff(PatheticBloodBuff);
-                    self.body.RemoveBuff(WeakBloodBuff);
-                    self.body.RemoveBuff(AverageBloodBuff);
-                    self.body.RemoveBuff(StrongBloodBuff);
-                    self.body.AddTimedBuffAuthority(InsaneBloodBuff, 12f);
-                    cachedDamageComponent.cachedDamage = dmgTaken;
-                }
-                if (dmgTaken >= maxHealth * .5)
-                {
-                    self.body.RemoveBuff(PatheticBloodBuff);
-                    self.body.RemoveBuff(WeakBloodBuff);
-                    self.body.RemoveBuff(AverageBloodBuff);
-                    self.body.RemoveBuff(StrongBloodBuff);
-                    self.body.RemoveBuff(InsaneBloodBuff);
-                    self.body.AddTimedBuffAuthority(InsaneBloodBuff, 14f);
-                    cachedDamageComponent.cachedDamage = dmgTaken;
+                    self.body.AddTimedBuff(ranges[nextBuffLevel].Buff, ranges[nextBuffLevel].Duration);
                 }
             }
             orig(self, damageInfo);
         }
-        private void BloodBookBleedManager(On.RoR2.CharacterBody.orig_FixedUpdate orig, RoR2.CharacterBody self)
+
+        private void DamageBoostReset(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
         {
-            if (self.modelLocator && self.modelLocator.modelTransform && self.HasBuff(InsaneBloodBuff) && !self.GetComponent<InsaneBleed>())
+            orig(self, buffType);
+
+            if (buffType == PatheticBloodBuff || buffType == WeakBloodBuff || buffType == AverageBloodBuff || buffType == StrongBloodBuff || buffType == InsaneBloodBuff || buffType == DevotedBloodBuff)
             {
-                var Meshes = BloodBook.ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
-                Meshes[0].gameObject.AddComponent<InsaneBleed>();                
+                var cachedDamageComponent = self.gameObject.GetComponent<DamageComponent>();
+                cachedDamageComponent.cachedDamage = 0;
             }
         }
-        public class BleedDestroyer : MonoBehaviour
-        {
-            public ParticleSystem insaneParticle;
-            public CharacterBody Body;
 
+        public class BleedCreator : MonoBehaviour
+        {
             public void FixedUpdate()
             {
-                if (!Body.HasBuff(InsaneBloodBuff))
+                var bleedController = ItemBodyModelPrefab.GetComponentInParent<CharacterBody>();
+
+                var currentBuffLevel = Array.FindIndex(ranges, r => bleedController.HasBuff(r.Buff));
+
+                var Meshes = GetComponents<MeshRenderer>();
+                var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
+                if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                 {
-                    Destroy(insaneParticle);
-                    Destroy(this);
+                    particleSystem.Play();
+                    if (currentBuffLevel == 0)
+                    {
+                        var newDripCount = particleSystem.main.maxParticles;
+                        newDripCount = 20;
+                    }
+                    if (currentBuffLevel == 1)
+                    {
+                        var newDripCount = particleSystem.main.maxParticles;
+                        newDripCount = 40;
+                    }
+                    if (currentBuffLevel == 2)
+                    {
+                        var newDripCount = particleSystem.main.maxParticles;
+                        newDripCount = 60;
+                    }
+                    if (currentBuffLevel == 3)
+                    {
+                        var newDripCount = particleSystem.main.maxParticles;
+                        newDripCount = 80;
+                    }
+                    if (currentBuffLevel == 4)
+                    {
+                        var newDripCount = particleSystem.main.maxParticles;
+                        newDripCount = 100;
+                    }
+                    if (currentBuffLevel == 5)
+                    {
+                        var newDripCount = particleSystem.main.maxParticles;
+                        newDripCount = 120;
+                    }
+                }
+                else
+                {
+                    particleSystem.Stop();
                 }
             }
         }
+
         private void AddBloodBuffStats(CharacterBody sender, StatHookEventArgs args)
         {
             var cachedDamageComponent = sender.GetComponent<DamageComponent>();
             var InventoryCount = GetCount(sender);
-            if (sender.HasBuff(InsaneBloodBuff))
+
+            int currentBuffLevel = Array.FindIndex(ranges, r => sender.HasBuff(r.Buff));
+
+            if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
             {
                 args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), 20);
             }
