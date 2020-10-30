@@ -154,9 +154,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0.75f, 0.5f, 0),
-                    localAngles = new Vector3(0, 0, 0),
-                    localScale = new Vector3(0.05f, 0.05f, 0.05f)
+                    localPos = new Vector3(0.75f, 0.8f, -0.5f),
+                    localAngles = new Vector3(0, 0, 90),
+                    localScale = new Vector3(0.025f, 0.025f, 0.025f)
 
                 }
             });
@@ -364,45 +364,49 @@ namespace SupplyDrop.Items
         {
             public void FixedUpdate()
             {
-                var bleedController = ItemBodyModelPrefab.GetComponentInParent<CharacterBody>();
-                var currentBuffLevel = Array.FindIndex(ranges, r => bleedController.HasBuff(r.Buff));
+                var characterModel = gameObject.GetComponentInParent<CharacterModel>();
+                var characterBody = characterModel.body;
+
+                var currentBuffLevel = Array.FindIndex(ranges, r => characterBody.HasBuff(r.Buff));
                 
                 var Meshes = GetComponents<MeshRenderer>();
                 var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
                 if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                 {
-                    Chat.AddMessage("Particle System should have just enabled.");
-
-                    particleSystem.Play();
-                    if (currentBuffLevel == 0)
-                    {
-                        var newDripCount = particleSystem.main.maxParticles;
-                        newDripCount = 20;
-                    }
-                    if (currentBuffLevel == 1)
-                    {
-                        var newDripCount = particleSystem.main.maxParticles;
-                        newDripCount = 40;
-                    }
-                    if (currentBuffLevel == 2)
-                    {
-                        var newDripCount = particleSystem.main.maxParticles;
-                        newDripCount = 60;
-                    }
-                    if (currentBuffLevel == 3)
-                    {
-                        var newDripCount = particleSystem.main.maxParticles;
-                        newDripCount = 80;
-                    }
-                    if (currentBuffLevel == 4)
-                    {
-                        var newDripCount = particleSystem.main.maxParticles;
-                        newDripCount = 100;
-                    }
-                    if (currentBuffLevel == 5)
-                    {
-                        var newDripCount = particleSystem.main.maxParticles;
-                        newDripCount = 120;
+                    
+                    if (!particleSystem.isPlaying)
+                    {                        
+                        if (currentBuffLevel == 0)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 1f;
+                        }
+                        if (currentBuffLevel == 1)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 2f;
+                        }
+                        if (currentBuffLevel == 2)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 5f;
+                        }
+                        if (currentBuffLevel == 3)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 10f;
+                        }
+                        if (currentBuffLevel == 4)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 15f;
+                        }
+                        if (currentBuffLevel == 5)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 20f;
+                        }
+                        particleSystem.Play();
                     }
                 }
                 else
