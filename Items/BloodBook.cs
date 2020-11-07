@@ -385,8 +385,7 @@ namespace SupplyDrop.Items
                     {                       
                         var Meshes = GetComponents<MeshRenderer>();
                         var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
-                        int currentBuffLevel = -1;
-                        Array.FindIndex(ranges, r => characterBody.HasBuff(r.Buff));
+                        int currentBuffLevel = Array.FindIndex(ranges, r => characterBody.HasBuff(r.Buff));
                         if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                         {
                             if (!particleSystem.isPlaying)
