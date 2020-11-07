@@ -274,7 +274,7 @@ namespace SupplyDrop.Items
             On.RoR2.HealthComponent.TakeDamage += ApplyBloodBookBuff;
             GetStatCoefficients += AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
-            ItemBodyModelPrefab.AddComponent<BleedCreator>();
+            ItemBodyModelPrefab.AddComponent<BleedingScript>();
         }
         public override void Uninstall()
         {
@@ -325,25 +325,26 @@ namespace SupplyDrop.Items
                     cachedDamageComponent.cachedDamage = dmgTaken;
                 }
 
+                //This block is designed to ensure you have one of the buffs before the array is accessed
                 int currentBuffLevel = Array.FindIndex(ranges, r => self.body.HasBuff(r.Buff));
-                int nextBuffLevel = Array.FindIndex(ranges, r => r.Contains((dmgTaken/maxHealth) * 100));
-                if (nextBuffLevel > currentBuffLevel)
+                if (currentBuffLevel != -1)
                 {
-                    if (currentBuffLevel != -1)
+                    int nextBuffLevel = Array.FindIndex(ranges, r => r.Contains((dmgTaken / maxHealth) * 100));
+                    if (nextBuffLevel > currentBuffLevel)
                     {
                         self.body.RemoveBuff(ranges[currentBuffLevel].Buff);
-                    }
-                    self.body.AddTimedBuff(ranges[nextBuffLevel].Buff, ranges[nextBuffLevel].Duration);
+                        self.body.AddTimedBuff(ranges[nextBuffLevel].Buff, ranges[nextBuffLevel].Duration);
 
-                    //Bombinomicon here. Whenever a buff is applied while config is true, there is a 1 in 10 chance 
-                    if (fearOfReading == true)
-                    {
-                        int willBookRead = new System.Random().Next(9);
-                        
-                        if (willBookRead >= 0)
-                        {                            
-                            AkSoundEngine.PostEvent(1656833108u, self.body.gameObject);
-                            Chat.AddMessage("Ay, dis is gonna be good!");
+                        //Bombinomicon here. Whenever a buff is applied while config is true, there is a 1 in 10 chance 
+                        if (fearOfReading == true)
+                        {
+                            int willBookRead = new System.Random().Next(9);
+
+                            if (willBookRead >= 0)
+                            {
+                                AkSoundEngine.PostEvent(1656833108u, self.body.gameObject);
+                                Chat.AddMessage("Ay, dis is gonna be good!");
+                            }
                         }
                     }
                 }
@@ -373,62 +374,60 @@ namespace SupplyDrop.Items
                 args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), 20);
             }
         }
-        public class BleedCreator : MonoBehaviour
+        public class BleedingScript : MonoBehaviour
         {
+            public ParticleSystem particles;    
+            public CharacterModel model;
+
+            public void Awake()
+            {
+                model = GetComponentInParent<CharacterModel>();
+            }
             public void FixedUpdate()
             {
-                var characterModel = gameObject.GetComponentInParent<CharacterModel>();
-                if (characterModel)
+                var particleSystem = particles;
+                int currentBuffLevel = Array.FindIndex(ranges, r => model.body.HasBuff(r.Buff));
+                if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                 {
-                    var characterBody = characterModel.body;
-                    if (characterBody)
-                    {                       
-                        var Meshes = GetComponents<MeshRenderer>();
-                        var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
-                        int currentBuffLevel = Array.FindIndex(ranges, r => characterBody.HasBuff(r.Buff));
-                        if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
+                    if (!particleSystem.isPlaying)
+                    {
+                        if (currentBuffLevel == 0)
                         {
-                            if (!particleSystem.isPlaying)
-                            {
-                                if (currentBuffLevel == 0)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 1f;
-                                }
-                                if (currentBuffLevel == 1)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 2f;
-                                }
-                                if (currentBuffLevel == 2)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 5f;
-                                }
-                                if (currentBuffLevel == 3)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 10f;
-                                }
-                                if (currentBuffLevel == 4)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 15f;
-                                }
-                                if (currentBuffLevel == 5)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 20f;
-                                }
-                                particleSystem.Play();
-                            }
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 1f;
                         }
-                        else
+                        if (currentBuffLevel == 1)
                         {
-                            particleSystem.Stop();                         
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 2f;
                         }
+                        if (currentBuffLevel == 2)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 5f;
+                        }
+                        if (currentBuffLevel == 3)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 10f;
+                        }
+                        if (currentBuffLevel == 4)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 15f;
+                        }
+                        if (currentBuffLevel == 5)
+                        {
+                            var newDripSpeed = particleSystem.emission;
+                            newDripSpeed.rateOverTime = 20f;
+                        }
+                        particleSystem.Play();
                     }
-                }  
+                }
+                else
+                {
+                    particleSystem.Stop();
+                }
             }
         }
 
