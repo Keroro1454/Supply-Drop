@@ -5,15 +5,19 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
-using K1454.SupplyDrop;
 using K1454.Utils;
 using System;
 using System.Linq;
 
+
+//STILL NEEDS: Rigging to characters, improved icon. That's it tho!
 namespace SupplyDrop.Items
 {
     class BloodBook : Item_V2<BloodBook>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("If set to true, the tome will become haunted with the spirit of a wise-cracking, explosives-loving cursed book.", AutoConfigFlags.None)]
+        public bool fearOfReading { get; private set; } = true;
 
         public override string displayName => "Tome of Bloodletting";
 
@@ -62,72 +66,60 @@ namespace SupplyDrop.Items
             var patheticBloodBuff = new CustomBuff(
                     new BuffDef
                     {
-                        buffColor = Color.white,
                         canStack = false,
                         isDebuff = false,
                         name = "PatheticBloodBuff",
-                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/PBloodBuffIcon.png"
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon1.png"
                     });
             PatheticBloodBuff = BuffAPI.Add(patheticBloodBuff);
 
             var weakBloodBuff = new CustomBuff(
                 new BuffDef
                 {
-                    buffColor = Color.red,
                     canStack = false,
                     isDebuff = false,
                     name = "WeakBloodBuff",
-                        // iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/WBloodBuffIcon.png"
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon2.png"
                 });
             WeakBloodBuff = BuffAPI.Add(weakBloodBuff);
 
             var averageBloodBuff = new R2API.CustomBuff(
                 new BuffDef
                 {
-                    buffColor = Color.blue,
                     canStack = false,
                     isDebuff = false,
                     name = "AverageBloodBuff",
-                        // iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ABloodBuffIcon.png"
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon3.png"
                 });
             AverageBloodBuff = BuffAPI.Add(averageBloodBuff);
 
             var strongBloodBuff = new CustomBuff(
                 new BuffDef
                 {
-                    buffColor = Color.green,
                     canStack = false,
                     isDebuff = false,
                     name = "StrongBloodBuff",
-                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/SBloodBuffIcon.png"
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon4.png"
                 });
             StrongBloodBuff = BuffAPI.Add(strongBloodBuff);
 
             var insaneBloodBuff = new CustomBuff(
                 new BuffDef
                 {
-                    buffColor = Color.black,
                     canStack = false,
                     isDebuff = false,
                     name = "InsaneBloodBuff",
-                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/IBloodBuffIcon.png"
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon5.png"                    
                 });
             InsaneBloodBuff = BuffAPI.Add(insaneBloodBuff);
 
             var devotedBloodBuff = new CustomBuff(
                 new BuffDef
                 {
-                    buffColor = Color.cyan,
                     canStack = false,
                     isDebuff = false,
                     name = "DevotedBloodBuff",
-                        //iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/DBloodBuffIcon.png"
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png"
+                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon6.png"                    
                 });
             DevotedBloodBuff = BuffAPI.Add(devotedBloodBuff);
             ranges = new Range[]
@@ -146,7 +138,7 @@ namespace SupplyDrop.Items
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
-            Vector3 generalScale = new Vector3(.1f, .1f, .1f);
+            Vector3 generalScale = new Vector3(0.08f, 0.08f, 0.08f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -155,9 +147,8 @@ namespace SupplyDrop.Items
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
                     localPos = new Vector3(0.75f, 0.8f, -0.5f),
-                    localAngles = new Vector3(0, 0, 90),
-                    localScale = new Vector3(0.025f, 0.025f, 0.025f)
-
+                    localAngles = new Vector3(0f, 0f, 90f),
+                    localScale = generalScale
                 }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
@@ -166,7 +157,7 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
+                    childName = "Head",
                     localPos = new Vector3(0f, 0.1f, 0f),
                     localAngles = new Vector3(-100f, 0f, 0f),
                     localScale = generalScale
@@ -178,9 +169,9 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Head",
-                    localPos = new Vector3(0.75f, 3.7f, -2.3f),
-                    localAngles = new Vector3(90f, 0f, 0f),
+                    childName = "Chest",
+                    localPos = new Vector3(-6f, 5f, -4f),
+                    localAngles = new Vector3(0f, 0f, 90f),
                     localScale = generalScale * 8
                 }
             });
@@ -190,10 +181,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
-                    localPos = new Vector3(0f, 0.15f, 0f),
-                    localAngles = new Vector3(-75f, 0f, 0f),
-                    localScale = generalScale
+                    childName = "Chest",
+                    localPos = new Vector3(-0.6f, 0.65f, 0.5f),
+                    localAngles = new Vector3(0f, 0f, 90f),
+                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
                 }
             });
             rules.Add("mdlMage", new ItemDisplayRule[]
@@ -202,10 +193,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
-                    localPos = new Vector3(0f, 0.1f, 0f),
+                    childName = "Chest",
+                    localPos = new Vector3(-0.5f, 0.6f, -0.5f),
                     localAngles = new Vector3(-22.5f, 0f, 0f),
-                    localScale = generalScale
+                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
                 }
             });
             rules.Add("mdlMerc", new ItemDisplayRule[]
@@ -214,10 +205,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
-                    localPos = new Vector3(0f, 0f, 0f),
-                    localAngles = new Vector3(-25f, 0f, 0f),
-                    localScale = generalScale
+                    childName = "Chest",
+                    localPos = new Vector3(-0.5f, 0.5f, -0.45f),
+                    localAngles = new Vector3(0f, 0f, 90f),
+                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
                 }
             });
             rules.Add("mdlTreebot", new ItemDisplayRule[]
@@ -227,9 +218,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "FlowerBase",
-                    localPos = new Vector3(1.5f, -0.1f, -0.3f),
-                    localAngles = new Vector3(0f, 0f, 40f),
-                    localScale = generalScale
+                    localPos = new Vector3(-1.4f, 1.5f, -0.3f),
+                    localAngles = new Vector3(0f, 0f, 90f),
+                    localScale = new Vector3(0.04f, 0.04f, 0.04f)
                 }
             });
             rules.Add("mdlLoader", new ItemDisplayRule[]
@@ -238,9 +229,9 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
-                    localPos = new Vector3(0f, 0f, 0f),
-                    localAngles = new Vector3(-25f, 0f, 0f),
+                    childName = "Chest",
+                    localPos = new Vector3(-0.6f, 0.75f, -0.6f),
+                    localAngles = new Vector3(0f, 0f, 90f),
                     localScale = generalScale
                 }
             });
@@ -250,9 +241,9 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Head",
-                    localPos = new Vector3(0f, 0f, 0f),
-                    localAngles = new Vector3(115f, 0f, 0f),
+                    childName = "Chest",
+                    localPos = new Vector3(5f, 7f, 3f),
+                    localAngles = new Vector3(340f, 180f, 90f),
                     localScale = generalScale * 8
                 }
             });
@@ -262,10 +253,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
-                    localPos = new Vector3(0f, 0.2f, 0f),
-                    localAngles = new Vector3(-25f, 0f, 0f),
-                    localScale = generalScale
+                    childName = "Chest",
+                    localPos = new Vector3(-0.6f, 0.6f, -0.5f),
+                    localAngles = new Vector3(0f, 0f, 90f),
+                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
                 }
             });
             return rules;
@@ -274,6 +265,12 @@ namespace SupplyDrop.Items
         public override void Install()
         {
             base.Install();
+
+            itemDef.pickupModelPrefab.transform.localScale = new Vector3(.5f, .5f, .5f);
+            itemDef.pickupModelPrefab.transform.localEulerAngles = new Vector3(0f, 0f, 90f);
+            
+
+
             On.RoR2.HealthComponent.TakeDamage += ApplyBloodBookBuff;
             GetStatCoefficients += AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
@@ -332,7 +329,23 @@ namespace SupplyDrop.Items
                 int nextBuffLevel = Array.FindIndex(ranges, r => r.Contains((dmgTaken/maxHealth) * 100));
                 if (nextBuffLevel > currentBuffLevel)
                 {
+                    if (currentBuffLevel != -1)
+                    {
+                        self.body.RemoveBuff(ranges[currentBuffLevel].Buff);
+                    }
                     self.body.AddTimedBuff(ranges[nextBuffLevel].Buff, ranges[nextBuffLevel].Duration);
+
+                    //Bombinomicon here. Whenever a buff is applied while config is true, there is a 1 in 10 chance 
+                    if (fearOfReading == true)
+                    {
+                        int willBookRead = new System.Random().Next(9);
+                        
+                        if (willBookRead >= 0)
+                        {                            
+                            AkSoundEngine.PostEvent(1656833108u, self.body.gameObject);
+                            Chat.AddMessage("Ay, dis is gonna be good!");
+                        }
+                    }
                 }
             }
             orig(self, damageInfo);
@@ -365,54 +378,58 @@ namespace SupplyDrop.Items
             public void FixedUpdate()
             {
                 var characterModel = gameObject.GetComponentInParent<CharacterModel>();
-                var characterBody = characterModel.body;
-
-                var currentBuffLevel = Array.FindIndex(ranges, r => characterBody.HasBuff(r.Buff));
-                
-                var Meshes = GetComponents<MeshRenderer>();
-                var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
-                if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
+                if (characterModel)
                 {
-                    
-                    if (!particleSystem.isPlaying)
-                    {                        
-                        if (currentBuffLevel == 0)
+                    var characterBody = characterModel.body;
+                    if (characterBody)
+                    {                       
+                        var Meshes = GetComponents<MeshRenderer>();
+                        var particleSystem = Meshes[0].gameObject.GetComponent<ParticleSystem>();
+                        int currentBuffLevel = -1;
+                        Array.FindIndex(ranges, r => characterBody.HasBuff(r.Buff));
+                        if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                         {
-                            var newDripSpeed = particleSystem.emission;
-                            newDripSpeed.rateOverTime = 1f;
+                            if (!particleSystem.isPlaying)
+                            {
+                                if (currentBuffLevel == 0)
+                                {
+                                    var newDripSpeed = particleSystem.emission;
+                                    newDripSpeed.rateOverTime = 1f;
+                                }
+                                if (currentBuffLevel == 1)
+                                {
+                                    var newDripSpeed = particleSystem.emission;
+                                    newDripSpeed.rateOverTime = 2f;
+                                }
+                                if (currentBuffLevel == 2)
+                                {
+                                    var newDripSpeed = particleSystem.emission;
+                                    newDripSpeed.rateOverTime = 5f;
+                                }
+                                if (currentBuffLevel == 3)
+                                {
+                                    var newDripSpeed = particleSystem.emission;
+                                    newDripSpeed.rateOverTime = 10f;
+                                }
+                                if (currentBuffLevel == 4)
+                                {
+                                    var newDripSpeed = particleSystem.emission;
+                                    newDripSpeed.rateOverTime = 15f;
+                                }
+                                if (currentBuffLevel == 5)
+                                {
+                                    var newDripSpeed = particleSystem.emission;
+                                    newDripSpeed.rateOverTime = 20f;
+                                }
+                                particleSystem.Play();
+                            }
                         }
-                        if (currentBuffLevel == 1)
+                        else
                         {
-                            var newDripSpeed = particleSystem.emission;
-                            newDripSpeed.rateOverTime = 2f;
+                            particleSystem.Stop();                         
                         }
-                        if (currentBuffLevel == 2)
-                        {
-                            var newDripSpeed = particleSystem.emission;
-                            newDripSpeed.rateOverTime = 5f;
-                        }
-                        if (currentBuffLevel == 3)
-                        {
-                            var newDripSpeed = particleSystem.emission;
-                            newDripSpeed.rateOverTime = 10f;
-                        }
-                        if (currentBuffLevel == 4)
-                        {
-                            var newDripSpeed = particleSystem.emission;
-                            newDripSpeed.rateOverTime = 15f;
-                        }
-                        if (currentBuffLevel == 5)
-                        {
-                            var newDripSpeed = particleSystem.emission;
-                            newDripSpeed.rateOverTime = 20f;
-                        }
-                        particleSystem.Play();
                     }
-                }
-                else
-                {
-                    particleSystem.Stop();
-                }
+                }  
             }
         }
 
