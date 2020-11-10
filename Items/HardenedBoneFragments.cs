@@ -6,7 +6,7 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using K1454.SupplyDrop;
-using K1454.Utils;
+using SupplyDrop.Utils;
 
 //TO-DO: Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain. Plus fix model (Rico says some of the vertices still don't have closed faces???)
 namespace SupplyDrop.Items

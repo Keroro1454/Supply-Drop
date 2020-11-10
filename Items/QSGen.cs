@@ -5,6 +5,7 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using K1454.SupplyDrop;
+using SupplyDrop.Utils;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
@@ -12,22 +13,21 @@ using System.Reflection;
 
 namespace SupplyDrop.Items
 {
-    class QSGen : Item<QSGen>
+    class QSGen : Item_V2<QSGen>
     {
         public override string displayName => "Quantum Shield Generator";
 
-        public override ItemTier itemTier => RoR2.ItemTier.Tier3;
+        public override ItemTier itemTier => ItemTier.Tier3;
 
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string NewLangName(string langid = null) => displayName;
+        protected override string GetNameString(string langid = null) => displayName;
 
-        protected override string NewLangPickup(string langID = null) => "If shields are active, any damage that exceeds the active shield amount is weakened.";
+        protected override string GetPickupString(string langID = null) => "If shields are active, any damage that exceeds the active shield amount is weakened.";
 
-        protected override string NewLangDesc(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>16%</style> of your maximum health. " +
-            "If an attack exceeds your active shields, the excess damage is <style=cIsUtility>reduced by 10%</style> <style=cStack>(+5% per stack)</style>, " +
-            "plus an additional <style=cIsUtility>0.5%</style> <style=cStack>(+0.25% per stack)</style> per 1% of maximum <style=cIsUtility>shield</style> that was depleted.";
+        protected override string GetDescString(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>16%</style> of your maximum health. " +
+            "If an attack exceeds your active shields, the excess damage is <style=cIsUtility>negated</style>. This ability has a 5 second cooldown <style=cStack>(-0.5 seconds per stack)</style>.";
 
-        protected override string NewLangLore(string landID = null) => "Order: \"Quantum Shield Generator\"\nTracking Number: 06******\nEstimated Delivery: 12/21/2055\nShipping Method: High Priority/Fragile" +
+        protected override string GetLoreString(string landID = null) => "Order: \"Quantum Shield Generator\"\nTracking Number: 06******\nEstimated Delivery: 12/21/2055\nShipping Method: High Priority/Fragile" +
             "\nShipping Address: 6900 West, Advanced Warfare, Mars\nShipping Details:\n\nAfter months of development, we finally have a functioning prototype for your approval." +
             "\n\nThe stabilizer functions mostly, but not entirely, off of uncertainty. Basing the design entirely off uncertainty would make the functionality too limited; as a result some shield is guaranteed, " +
             "to serve as the foundation. In addition to this foundation, the stabilizer is also providing, yet not providing, additional shield. This shield both exists and doesn't until the stabilizer is activated, " +
@@ -40,19 +40,40 @@ namespace SupplyDrop.Items
             "and should be responded to within 3 solar months. Once the invoice has been paid please contact the usual representative with your thoughts on the prototype. " +
             "If it is satisfactory, we can begin moving forward releasing the blueprints, for the additional agreed-upon cost.\n\nThe Order thanks you for your patronage.";
 
-        private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
+        private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
+        public BuffIndex ShieldGateCooldown { get; private set; }
 
         public QSGen()
         {
-            modelPathName = "@SupplyDrop:Assets/Main/Models/Prefabs/QSGen.prefab";
-            iconPathName = "@SupplyDrop:Assets/Main/Textures/Icons/QSGenIcon.png";
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/QSGen.prefab";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/QSGenIcon.png";
         }
+        public override void SetupAttributes()
+        {
+            if (ItemBodyModelPrefab == null)
+            {
+                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                var meshes = ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
+                meshes[1].gameObject.AddComponent<Spin>();
+                displayRules = GenerateItemDisplayRules();
+            }
 
+            base.SetupAttributes();
+                    var shieldGateCooldown = new CustomBuff(
+                    new BuffDef
+                    {
+                        canStack = false,
+                        isDebuff = true,
+                        name = "ShieldGateCooldown",
+                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ShieldGateCooldownIcon.png"
+                    });
+                ShieldGateCooldown = BuffAPI.Add(shieldGateCooldown);
+        }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = SupplyDropPlugin.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(.1f, .1f, .1f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
@@ -179,25 +200,23 @@ namespace SupplyDrop.Items
             return rules;
         }
 
-        protected override void LoadBehavior()
+        public override void Install()
         {
+            base.Install();
 
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = regDef.pickupModelPrefab;
-                regItem.ItemDisplayRules = GenerateItemDisplayRules();
-                regDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-                var meshes = regDef.pickupModelPrefab.GetComponentsInChildren<MeshRenderer>();
-                meshes[1].gameObject.AddComponent<Spin>();
-                //meshes[2].gameObject.AddComponent<Bobbing>();
-            }
+            var meshes = itemDef.pickupModelPrefab.GetComponentsInChildren<MeshRenderer>();
+            meshes[1].gameObject.AddComponent<Spin>();
+            //meshes[2].gameObject.AddComponent<Bobbing>();
+            itemDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
+
             On.RoR2.HealthComponent.TakeDamage += CalculateDamageReduction;
 
             IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
         }
 
-        protected override void UnloadBehavior()
+        public override void Uninstall()
         {
+            base.Uninstall();
             IL.RoR2.CharacterBody.RecalculateStats -= IL_AddMaxShield;
 
             On.RoR2.HealthComponent.TakeDamage -= CalculateDamageReduction;
@@ -224,23 +243,23 @@ namespace SupplyDrop.Items
             );
             c.Emit(OpCodes.Stloc, 43);
         }
-        private void CalculateDamageReduction(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
+        private void CalculateDamageReduction(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             float currentShield = self.body.healthComponent.shield;
             orig(self, damageInfo);
             var inventoryCount = GetCount(self.body);
-            if (inventoryCount > 0)
+            if (inventoryCount > 0 && self.body.GetBuffCount(ShieldGateCooldown) <= 0)
             {
                 float dmgTaken = damageInfo.damage;
-                float maxShield = self.body.maxShield;
                 float shieldDamage = Math.Min(dmgTaken, currentShield);
                 if (currentShield > 0 && dmgTaken > currentShield)
                 {
-                    float baseReduction = dmgTaken * (.1f + (.05f * (inventoryCount - 1)));
-                    float bonusReduction = ((shieldDamage / maxShield) * 100) * (0.05f + ((inventoryCount - 1) * 0.025f));
-                    float totalDamageReduction = baseReduction + bonusReduction;
-                    damageInfo.damage -= totalDamageReduction;
-                }
+                    float damageReduction = dmgTaken - shieldDamage;
+                    damageInfo.damage += damageReduction;
+
+                    float timerReduction = Mathf.Min(((inventoryCount - 1) * .5f), 5f);
+                    self.body.AddTimedBuff(ShieldGateCooldown, (5 - timerReduction));
+                }     
             }
         }
     }

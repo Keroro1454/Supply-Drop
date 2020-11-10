@@ -6,24 +6,25 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using K1454.SupplyDrop;
+using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items
 {
-    class NumbingBerries : Item<NumbingBerries>
+    class NumbingBerries : Item_V2<NumbingBerries>
     {
         public override string displayName => "Numbing Berries";
 
-        public override ItemTier itemTier => RoR2.ItemTier.Tier1;
+        public override ItemTier itemTier => ItemTier.Tier1;
 
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string NewLangName(string langid = null) => displayName;
+        protected override string GetNameString(string langid = null) => displayName;
 
-        protected override string NewLangPickup(string langID = null) => "Gain temporary armor upon taking damage.";
+        protected override string GetPickupString(string langID = null) => "Gain temporary armor upon taking damage.";
 
-        protected override string NewLangDesc(string langID = null) => "Gain <style=cIsUtility>5</style> <style=cStack>(+5 per stack)</style> <style=cIsUtility>armor</style> for 2 seconds " +
+        protected override string GetDescString(string langID = null) => "Gain <style=cIsUtility>5</style> <style=cStack>(+5 per stack)</style> <style=cIsUtility>armor</style> for 2 seconds " +
             "<style=cStack>(+0.5 second per stack)</style> upon taking damage.";
 
-        protected override string NewLangLore(string landID = null) => "<style=cMono>> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION..." +
+        protected override string GetLoreString(string landID = null) => "<style=cMono>> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION..." +
             "\n> VERIFICATION SUCCESS. ACCESSING YOUR QUERY...\n> OUTPUT:</style>\n\nSpecies Genus: Vaccinum\nSpecies Section: Achilococcus" +
             "\n\nSpecies is native to the Andromeda system, though the exact planetary origin is currently unknown. Species is a flowering bush. Both the branches and leaves display dark green coloration, " +
             "and substantial hydrophobic tendencies.\n\nThe fruit of the flowering bush is officially called numbberries. It forms as small, round berries with a mint skin coloration, and a bright purple flesh. " +
@@ -37,33 +38,38 @@ namespace SupplyDrop.Items
             "Soon after (usually between 1-2 days), regardless of if they acquire more numbberries at this point, they will succumb to a violent series of spasms before suddenly dying of unknown causes." +
             "\n\n<style=cMono>END OUTPUT</style>";
 
-        private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
+        private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public BuffIndex NumbBerryBuff { get; private set; }
 
         public NumbingBerries()
         {
-            modelPathName = "@SupplyDrop:Assets/Main/Models/Prefabs/Berry.prefab";
-            iconPathName = "@SupplyDrop:Assets/Main/Textures/Icons/BerryIcon.png";
-
-            onAttrib += (tokenIdent, namePrefix) =>
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Berry.prefab";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/BerryIcon.png";
+        }
+        public override void SetupAttributes()
+        {
+            if (ItemBodyModelPrefab == null)
             {
-                var numbBerryBuff = new R2API.CustomBuff(
+                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                displayRules = GenerateItemDisplayRules();
+            }
+
+            base.SetupAttributes();
+            var numbBerryBuff = new R2API.CustomBuff(
                     new BuffDef
                     {
                         canStack = false,
                         isDebuff = false,
-                        name = namePrefix + "NumbBerryBuff",
+                        name = "NumbBerryBuff",
                         iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BerryBuffIcon.png"
                     });
                 NumbBerryBuff = R2API.BuffAPI.Add(numbBerryBuff);
-            };
         }
-
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = SupplyDropPlugin.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(0f, 0f, 0f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
@@ -170,10 +176,10 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0f, 0f),
+                    localPos = new Vector3(-0.7f, 5f, -1.3f),
                     localAngles = new Vector3(115f, 0f, 0f),
-                    localScale = generalScale * 8
-                }
+                    localScale = new Vector3(.5f, .5f, .5f)
+        }
             });
             rules.Add("mdlCaptain", new ItemDisplayRule[]
             {
@@ -190,28 +196,25 @@ namespace SupplyDrop.Items
             return rules;
         }
 
-        protected override void LoadBehavior()
+        public override void Install()
         {
-            
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = regDef.pickupModelPrefab;
-                regItem.ItemDisplayRules = GenerateItemDisplayRules();
-                regDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
-            }
-            On.RoR2.HealthComponent.TakeDamage += CalculateBerryBuff;
+            base.Install();
 
+            itemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
+
+            On.RoR2.HealthComponent.TakeDamage += CalculateBerryBuff;
             GetStatCoefficients += AddBerryBuff;
         }
 
-        protected override void UnloadBehavior()
+        public override void Uninstall()
         {
+            base.Uninstall();
             On.RoR2.HealthComponent.TakeDamage -= CalculateBerryBuff;
 
             GetStatCoefficients -= AddBerryBuff;
         }
 
-        private void CalculateBerryBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
+        private void CalculateBerryBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
 
             var InventoryCount = GetCount(self.body);
@@ -227,7 +230,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(sender);
             if (sender.HasBuff(NumbBerryBuff))
             {
-                args.armorAdd += 5f * (5 * (InventoryCount - 1));
+                args.armorAdd += 5f + (5 * (InventoryCount - 1));
             }
         }
     }

@@ -5,7 +5,7 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using K1454.SupplyDrop;
-using K1454.Utils;
+using SupplyDrop.Utils;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
@@ -41,7 +41,7 @@ namespace SupplyDrop.Items
             "but it's true. I've tested my suspicions...these things are even more disturbing than I thought.\n\nThe plankton respond to sound by seemingly converting it to energy, and in massive amounts too. " +
             "But the only sound they react to is vocalizations of pain. The worse, the more energy they release. And you can't trick them either. It has to be genuine. It can't be a recording. They know. Somehow." +
             "\n\n<style=cMono>END OF EXPERIMENT DATA</style>" +
-            "\n<style=cMono>> DELETE FILE\n> DO YOU WANT TO PROCEED AND DELETE THIS FILE? [Y/N]\n> Y</style>" +
+            "\n\n<style=cMono>> DELETE FILE\n\n> DO YOU WANT TO PROCEED AND DELETE THIS FILE? [Y/N]\n> Y</style>" +
             "\n\n<style=cMono>ERROR: FILE CANNOT BE REMOVED. S.R. THOMAS ENCRYPTION KEY REQUIRED.\n\n> SEND MESSAGE TO |||||||||||</style>" +
             "\n\nJ-\nI want those logs off the server now. The test generator has already been shipped off to M.\n\nOh, and I want that idiot dealt with.\n- S";
 

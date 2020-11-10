@@ -6,6 +6,7 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using K1454.SupplyDrop;
+using SupplyDrop.Utils;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
@@ -13,21 +14,21 @@ using System.Reflection;
 
 namespace SupplyDrop.Items
 {
-    class SalvagedWires : Item<SalvagedWires>
+    class SalvagedWires : Item_V2<SalvagedWires>
     {
         public override string displayName => "Salvaged Wires";
 
-        public override ItemTier itemTier => RoR2.ItemTier.Tier1;
+        public override ItemTier itemTier => ItemTier.Tier1;
 
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string NewLangName(string langid = null) => displayName;
+        protected override string GetNameString(string langid = null) => displayName;
 
-        protected override string NewLangPickup(string langID = null) => "Gain some shield, and gain increased attack speed while your shield is active.";
+        protected override string GetPickupString(string langID = null) => "Gain some shield, and gain increased attack speed while your shield is active.";
 
-        protected override string NewLangDesc(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>4%</style> <style=cStack>(+4% per stack)</style> of your maximum health. " +
+        protected override string GetDescString(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>4%</style> <style=cStack>(+2% per stack)</style> of your maximum health. " +
             "While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>10%</style> <style=cStack>(+10% per stack)</style>.";
 
-        protected override string NewLangLore(string landID = null) => "\"Now remember y'all. There are three rules of Space Scrappin'. You squirts may be dumber than rocks, but I 'spect y'all to remember them.\"" +
+        protected override string GetLoreString(string landID = null) => "\"Now remember y'all. There are three rules of Space Scrappin'. You squirts may be dumber than rocks, but I 'spect y'all to remember them.\"" +
             "\n\n." +
             "\n." +
             "\n." +
@@ -42,19 +43,28 @@ namespace SupplyDrop.Items
             "\n\nThe thought of smiles on his family's faces pushed the young boy forward. He stuffed the wires he had already claimed from the metal husk, and turned to face the dark tunnel before him. " +
             "Alyk took a deep breath, clenched his small hands into tight fists, then clamored down further into the silent wreck.";
 
-        private static List<RoR2.CharacterBody> Playername = new List<RoR2.CharacterBody>();
+        private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
 
         public SalvagedWires()
         {
-            modelPathName = "@SupplyDrop:Assets/Main/Models/Prefabs/WireBundle.prefab";
-            iconPathName = "@SupplyDrop:Assets/Main/Textures/Icons/SalvagedWiresIcon.png";
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/WireBundle.prefab";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/SalvagedWiresIcon.png";
         }
+        public override void SetupAttributes()
+        {
+            if (ItemBodyModelPrefab == null)
+            {
+                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                displayRules = GenerateItemDisplayRules();
+            }
 
+            base.SetupAttributes();
+        }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = SupplyDropPlugin.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(0.5f, 0.5f, 0.5f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
@@ -180,20 +190,19 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-        protected override void LoadBehavior()
+        public override void Install()
         {
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = regDef.pickupModelPrefab;
-                regItem.ItemDisplayRules = GenerateItemDisplayRules();
-            }
-            regDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f) * 6f;
+            base.Install();
+
+            itemDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f) * 6f;
+
             GetStatCoefficients += AttackSpeedBonus;
             IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
         }
 
-        protected override void UnloadBehavior()
+        public override void Uninstall()
         {
+            base.Uninstall();
             GetStatCoefficients -= AttackSpeedBonus;
             IL.RoR2.CharacterBody.RecalculateStats -= IL_AddMaxShield;
         }
@@ -212,7 +221,7 @@ namespace SupplyDrop.Items
             {
                 if (GetCount(characterBody) > 0)
                 {
-                    return shield + (characterBody.maxHealth * (0.04f * GetCount(characterBody)));
+                    return shield + (characterBody.maxHealth * (0.04f + (0.02f * (GetCount(characterBody) - 1))));
                 }
                 return shield;
             }
