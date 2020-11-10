@@ -2,18 +2,19 @@
 
 using System.Collections;
 
-public class Spin : MonoBehaviour
+namespace SupplyDrop.Utils
 {
-
-	public float speed = 20;
-
-
-	void Update()
+	public class Spin : MonoBehaviour
 	{
-		if (Time.deltaTime == 0f)
+		public float speed = 20;
+
+		void Update()
 		{
-			return;
+			if (Time.deltaTime == 0f)
+			{
+				return;
+			}
+			transform.Rotate(Vector3.up, speed * Time.deltaTime);
 		}
-		transform.Rotate(Vector3.up, speed * Time.deltaTime);
 	}
 }
