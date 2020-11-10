@@ -7,14 +7,13 @@ using BepInEx.Configuration;
 using Path = System.IO.Path;
 using TILER2;
 using static TILER2.MiscUtil;
-using RoR2;
 
 namespace K1454.SupplyDrop
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(SoundAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
     {
         public const string ModVer = "1.2.2";
@@ -46,11 +45,19 @@ namespace K1454.SupplyDrop
                 mainConfigFile = ConfigFile
             });
 
+            using (var bankStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SupplyDrop.SupplyDropSounds.bnk"))
+            {
+                var bytes = new byte[bankStream.Length];
+                bankStream.Read(bytes, 0, bytes.Length);
+                SoundAPI.SoundBanks.Add(bytes);
+            }
+
             T2Module.SetupAll_PluginAwake(masterItemList);
+            T2Module.SetupAll_PluginStart(masterItemList);
         }
         private void Start()
         {
-            T2Module.SetupAll_PluginStart(masterItemList);
+            
             CatalogBoilerplate.ConsoleDump(Logger, masterItemList);
         }
     }
