@@ -8,13 +8,10 @@ namespace SupplyDrop.Utils
 {
     public class BleedingScript : MonoBehaviour
     {
-        public ParticleSystem particles;    
+        public ParticleSystem particles;
         public CharacterModel model;
 
-        public void Awake()
-        {
-            model = GetComponentInParent<CharacterModel>();
-        }
+
         public void FixedUpdate()
         {
             var particleSystem = particles;
@@ -22,7 +19,8 @@ namespace SupplyDrop.Utils
             {
                 if (model.body)
                 {
-                    Chat.AddMessage("Blood should be pouring");
+                    if (particles)
+                    { 
                         int currentBuffLevel = Array.FindIndex(BloodBook.ranges, r => model.body.HasBuff(r.Buff));
                         if (Enumerable.Range(0, 5).Contains(currentBuffLevel))                        
                         {
@@ -65,7 +63,7 @@ namespace SupplyDrop.Utils
                         {
                             particleSystem.Stop();
                         }
-                    
+                    }
                 }
             }
         }
