@@ -9,15 +9,17 @@ using SupplyDrop.Utils;
 using System;
 using System.Linq;
 
-
-//STILL NEEDS: Rigging to characters, improved icon. That's it tho!
 namespace SupplyDrop.Items
 {
     class BloodBook : Item_V2<BloodBook>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("If set to true, the tome will become haunted with the spirit of a wise-cracking, explosives-loving cursed book.", AutoConfigFlags.None)]
-        public bool fearOfReading { get; private set; } = true;
+        public bool fearOfReading { get; private set; } = false;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("If fear of reading is enabled, this sets the chance the book will speak. A value of 10 equals a 10% chance.", AutoConfigFlags.None)]
+        public int chanceBookReads { get; private set; } = 10;
 
         public override string displayName => "Tome of Bloodletting";
 
@@ -28,8 +30,9 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Convert some damage taken into a temporary damage boost.";
 
-        protected override string GetDescString(string langID = null) => "Convert <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> of the damage you take into a <style=cIsDamage>temporary damage boost</style>, " +
-            "up to <style=cIsDamage>20</style> <style=cStack>(+10 per stack)</style>. The boost is powered up based on damage taken; every 10% max HP, up to 50%, that was depleted increases the base duration of 4s by +2s.";
+        protected override string GetDescString(string langID = null) => "Convert <style=cIsDamage>10%</style> <style=cStack>(+5% per stack)</style> of the damage you take into a <style=cIsDamage>damage boost</style> " +
+            "of up to <style=cIsDamage>20</style> <style=cStack>(+10 per stack)</style> for <style=cIsDamage>4s</style>. The <style=cIsDamage>boost</style> duration is increased based on damage taken; " +
+            "every <style=cIsHealth>10%</style> max health that was depleted, up to <style=cIsHealth>50%</style>, increases the duration by <style=cIsDamage>+2s</style>.";
 
         protected override string GetLoreString(string landID = null) => "Nature learns from pain. Nature willingly suffers, without protest. Nature studies what gifts pain provides. " +
             "It takes the lessons that pain gives out freely, and it grows stronger, more capable of survival." +
@@ -138,15 +141,15 @@ namespace SupplyDrop.Items
         }
 
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
-        {
-            var ItemFollower = ItemBodyModelPrefab.AddComponent<ItemFollowerSmooth>();
+        {           
+            var ItemFollower = ItemBodyModelPrefab.AddComponent<Utils.ItemFollower>();
             ItemFollower.itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
             ItemFollower.itemDisplay.rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
             ItemFollower.followerPrefab = ItemFollowerPrefab;
             ItemFollower.targetObject = ItemBodyModelPrefab;
-            ItemFollower.distanceDampTime = 0.25f;
+            ItemFollower.distanceDampTime = 0.15f;
             ItemFollower.distanceMaxSpeed = 100;
-            ItemFollower.SmoothingNumber = 0.25f;
+            ItemFollower.SmoothingNumber = 0.25f;            
 
             Vector3 generalScale = new Vector3(0.08f, 0.08f, 0.08f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
@@ -168,7 +171,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(0f, 0.1f, 0f),
+                    localPos = new Vector3(0.3f, -0.7f, 0f),
                     localAngles = new Vector3(-100f, 0f, 0f),
                     localScale = generalScale
                 }
@@ -180,9 +183,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-6f, 5f, -4f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = generalScale * 8
+                    localPos = new Vector3(-4f, -4f, 8f),
+                    localAngles = new Vector3(-90f, 180f, 0f),
+                    localScale = generalScale * 1.5f
                 }
             });
             rules.Add("mdlEngi", new ItemDisplayRule[]
@@ -192,9 +195,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-0.6f, 0.65f, 0.5f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
+                    localPos = new Vector3(0.8f, -0.6f, -0.5f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale * 1.25f
                 }
             });
             rules.Add("mdlMage", new ItemDisplayRule[]
@@ -204,9 +207,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-0.5f, 0.6f, -0.5f),
-                    localAngles = new Vector3(-22.5f, 0f, 0f),
-                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
+                    localPos = new Vector3(-0.5f, -0.5f, -0.2f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale
                 }
             });
             rules.Add("mdlMerc", new ItemDisplayRule[]
@@ -216,9 +219,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-0.5f, 0.5f, -0.45f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
+                    localPos = new Vector3(-0.5f, -0.7f, -0.3f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale
                 }
             });
             rules.Add("mdlTreebot", new ItemDisplayRule[]
@@ -228,9 +231,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-1.4f, 1.5f, -0.3f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = new Vector3(0.04f, 0.04f, 0.04f)
+                    localPos = new Vector3(-1.5f, -1f, -2.5f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale * 1.5f
                 }
             });
             rules.Add("mdlLoader", new ItemDisplayRule[]
@@ -240,9 +243,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-0.6f, 0.75f, -0.6f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = generalScale
+                    localPos = new Vector3(-0.5f, -0.8f, -0.6f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale * 1.25f
                 }
             });
             rules.Add("mdlCroco", new ItemDisplayRule[]
@@ -252,9 +255,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(5f, 7f, 3f),
-                    localAngles = new Vector3(340f, 180f, 0f),
-                    localScale = generalScale * 8
+                    localPos = new Vector3(-7f, 7f, 5f),
+                    localAngles = new Vector3(90f, 0f, 0f),
+                    localScale = generalScale * 2
                 }
             });
             rules.Add("mdlCaptain", new ItemDisplayRule[]
@@ -264,25 +267,22 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-0.6f, 0.6f, -0.5f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = new Vector3(0.02f, 0.02f, 0.02f)
+                    localPos = new Vector3(-0.7f, -0.8f, -0.5f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale
                 }
             });
             return rules;
         }
-
         public override void Install()
         {
             base.Install();
 
-            itemDef.pickupModelPrefab.transform.localScale = new Vector3(.5f, .5f, .5f);
-            itemDef.pickupModelPrefab.transform.localEulerAngles = new Vector3(0f, 0f, 90f);
+            itemDef.pickupModelPrefab.transform.localScale = new Vector3(.85f, .85f, .85f);
             
             On.RoR2.HealthComponent.TakeDamage += ApplyBloodBookBuff;
             GetStatCoefficients += AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
-
         }
         public override void Uninstall()
         {
@@ -290,7 +290,6 @@ namespace SupplyDrop.Items
             On.RoR2.HealthComponent.TakeDamage -= ApplyBloodBookBuff;
             GetStatCoefficients -= AddBloodBuffStats;
             On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
-
         }
         public struct Range
         {
@@ -314,13 +313,12 @@ namespace SupplyDrop.Items
         }
         private void ApplyBloodBookBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, RoR2.HealthComponent self, RoR2.DamageInfo damageInfo)
         {
-            var inventoryCount = GetCount(self.body);
+            int inventoryCount = GetCount(self.body);
             float dmgTaken = damageInfo.damage;
             float maxHealth = self.body.maxHealth;
 
             if (inventoryCount > 0)
             {
-
                 //This bit will cache the damage you took for use by the actual damage boost calculator, only if the damage exceeds any previous cached damage numbers
                 var cachedDamageComponent = self.body.gameObject.GetComponent<DamageComponent>();
                 if (!cachedDamageComponent)
@@ -333,7 +331,7 @@ namespace SupplyDrop.Items
                     cachedDamageComponent.cachedDamage = dmgTaken;
                 }
 
-                //This block is designed to ensure you have one of the buffs before the array is accessed
+                //Check your current buff, and what your potential next buff would be. currentBuffLevel returns -1 if you don't have a buff already
                 int currentBuffLevel = Array.FindIndex(ranges, r => self.body.HasBuff(r.Buff));
                 int nextBuffLevel = Array.FindIndex(ranges, r => r.Contains((dmgTaken / maxHealth) * 100));
                 if (nextBuffLevel > currentBuffLevel)
@@ -345,12 +343,12 @@ namespace SupplyDrop.Items
 
                     self.body.AddTimedBuff(ranges[nextBuffLevel].Buff, ranges[nextBuffLevel].Duration);
 
-                    //Bombinomicon here. Whenever a buff is applied while config is true, there is a 1 in 10 chance 
+                    //Bombinomicon stuff is here 
                     if (fearOfReading == true)
                     {
-                        int willBookRead = new System.Random().Next(9);
+                        int willBookRead = new System.Random().Next(1, 101);
 
-                        if (willBookRead >= 0)
+                        if (willBookRead <= chanceBookReads)
                         {
                             AkSoundEngine.PostEvent(4030648726u, self.body.gameObject);
 
@@ -362,7 +360,6 @@ namespace SupplyDrop.Items
             }
             orig(self, damageInfo);
         }
-
         private void DamageBoostReset(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
         {
             orig(self, buffType);
@@ -377,15 +374,16 @@ namespace SupplyDrop.Items
         {
             var cachedDamageComponent = sender.GetComponent<DamageComponent>();
             var InventoryCount = GetCount(sender);
-
-            int currentBuffLevel = Array.FindIndex(ranges, r => sender.HasBuff(r.Buff));
-
-            if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
+           
+            if (InventoryCount > 0)
             {
-                args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), 20);
+                int currentBuffLevel = Array.FindIndex(ranges, r => sender.HasBuff(r.Buff));
+                if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
+                {
+                    args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), (20 + ((InventoryCount - 1) * 10)));
+                }
             }
         }
-
         public class DamageComponent : MonoBehaviour
         {
             public float cachedDamage = 0f;
