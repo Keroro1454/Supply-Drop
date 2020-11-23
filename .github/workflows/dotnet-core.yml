@@ -21,3 +21,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.1
+      with:
+        # Artifact name
+        name: SupplyDrop.dll
+        # A file, directory or wildcard pattern that describes what to upload
+        path: bin/Release/netstandard2.0/SupplyDrop.dll
+        # The desired behavior if no files are found using the provided path.
