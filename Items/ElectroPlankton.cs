@@ -4,12 +4,8 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
-using K1454.SupplyDrop;
+using static TILER2.StatHooks;
 using SupplyDrop.Utils;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using System;
-using System.Reflection;
 
 namespace SupplyDrop.Items
 {
@@ -198,40 +194,27 @@ namespace SupplyDrop.Items
         public override void Install()
         {
             base.Install();
+
             var meshes = itemDef.pickupModelPrefab.GetComponentsInChildren<MeshRenderer>();
             meshes[3].gameObject.AddComponent<Wobble>();
-            IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
             On.RoR2.HealthComponent.TakeDamage += ShieldOnHit;
+            GetStatCoefficients += AddMaxShield;
         }
 
         public override void Uninstall()
         {
             base.Uninstall();
-            IL.RoR2.CharacterBody.RecalculateStats -= IL_AddMaxShield;
+
+            GetStatCoefficients -= AddMaxShield;
             On.RoR2.HealthComponent.TakeDamage -= ShieldOnHit;
         }
-            
-        private void IL_AddMaxShield(ILContext il)
+        private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
-            ILCursor c = new ILCursor(il);
-
-            c.GotoNext(
-                x => x.MatchLdloc(43),
-                x => x.MatchCallvirt(typeof(CharacterBody).GetMethod("set_maxShield", BindingFlags.Instance | BindingFlags.NonPublic))
-                );
-
-            c.Emit(OpCodes.Ldarg, 0);
-            c.Emit(OpCodes.Ldloc, 43);
-            c.EmitDelegate<Func<CharacterBody, float, float>>((characterBody, shield) =>
+            var inventoryCount = GetCount(sender);
+            if (inventoryCount > 0 && inventoryCount < 2)
             {
-                    if (GetCount(characterBody) > 0)
-                    {
-                        return shield + (characterBody.maxHealth * 0.08f);
-                    }
-                return shield;
+                args.baseShieldAdd += (sender.maxHealth * 0.08f);
             }
-            );
-            c.Emit(OpCodes.Stloc, 43);
         }
 
         private void ShieldOnHit(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)

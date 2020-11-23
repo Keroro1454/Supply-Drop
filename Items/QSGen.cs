@@ -4,12 +4,9 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
-using K1454.SupplyDrop;
+using static TILER2.StatHooks;
 using SupplyDrop.Utils;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using System;
-using System.Reflection;
 
 namespace SupplyDrop.Items
 {
@@ -210,39 +207,26 @@ namespace SupplyDrop.Items
             itemDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
 
             On.RoR2.HealthComponent.TakeDamage += CalculateDamageReduction;
-
-            IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
+            GetStatCoefficients += AddMaxShield;
         }
 
         public override void Uninstall()
         {
             base.Uninstall();
-            IL.RoR2.CharacterBody.RecalculateStats -= IL_AddMaxShield;
 
             On.RoR2.HealthComponent.TakeDamage -= CalculateDamageReduction;
+            GetStatCoefficients -= AddMaxShield;
         }
-        private void IL_AddMaxShield(ILContext il)
+
+        private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
-            ILCursor c = new ILCursor(il);
-
-            c.GotoNext(
-                x => x.MatchLdloc(43),
-                x => x.MatchCallvirt(typeof(CharacterBody).GetMethod("set_maxShield", BindingFlags.Instance | BindingFlags.NonPublic))
-                );
-
-            c.Emit(OpCodes.Ldarg, 0);
-            c.Emit(OpCodes.Ldloc, 43);
-            c.EmitDelegate<Func<CharacterBody, float, float>>((characterBody, shield) =>
+            var inventoryCount = GetCount(sender);
+            if (inventoryCount > 0)
             {
-                if (GetCount(characterBody) > 0)
-                {
-                    return shield + (characterBody.maxHealth * 0.16f);
-                }
-                return shield;
+                args.baseShieldAdd += (sender.maxHealth * 0.16f);
             }
-            );
-            c.Emit(OpCodes.Stloc, 43);
         }
+
         private void CalculateDamageReduction(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             float currentShield = self.body.healthComponent.shield;

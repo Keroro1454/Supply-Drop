@@ -5,7 +5,6 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
-using K1454.SupplyDrop;
 using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items

@@ -272,6 +272,18 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
+            rules.Add("mdlBandit", new ItemDisplayRule[]
+{
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.4f, -0.45f, -0.2f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale
+                }
+});
             return rules;
         }
         public override void Install()
@@ -351,12 +363,9 @@ namespace SupplyDrop.Items
                         if (willBookRead <= chanceBookReads)
                         {
                             AkSoundEngine.PostEvent(4030648726u, self.body.gameObject);
-
-                            Chat.AddMessage("Ay, dis is gonna be good!");
                         }
                     }
-                }
-                
+                }               
             }
             orig(self, damageInfo);
         }
@@ -372,15 +381,20 @@ namespace SupplyDrop.Items
         }
         private void AddBloodBuffStats(CharacterBody sender, StatHookEventArgs args)
         {
-            var cachedDamageComponent = sender.GetComponent<DamageComponent>();
-            var InventoryCount = GetCount(sender);
+            var cachedDamageComponent = sender.gameObject.GetComponent<DamageComponent>();
+            if (!cachedDamageComponent)
+            {
+                cachedDamageComponent = sender.gameObject.AddComponent<DamageComponent>();
+            }
+
+            var inventoryCount = GetCount(sender);
            
-            if (InventoryCount > 0)
+            if (inventoryCount > 0)
             {
                 int currentBuffLevel = Array.FindIndex(ranges, r => sender.HasBuff(r.Buff));
                 if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                 {
-                    args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (InventoryCount - 1)), (20 + ((InventoryCount - 1) * 10)));
+                    args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (inventoryCount - 1)), (20 + ((inventoryCount - 1) * 10)));
                 }
             }
         }

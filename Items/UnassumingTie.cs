@@ -5,12 +5,7 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
-using K1454.SupplyDrop;
 using SupplyDrop.Utils;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using System;
-using System.Reflection;
 
 namespace SupplyDrop.Items
 {
@@ -213,7 +208,7 @@ namespace SupplyDrop.Items
             itemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
 
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
-            IL.RoR2.CharacterBody.RecalculateStats += IL_AddMaxShield;
+            GetStatCoefficients += AddMaxShield;
             GetStatCoefficients += AddSecondWindBuff;
             On.RoR2.CharacterBody.RemoveBuff += AddWindedDebuff;
         }
@@ -221,10 +216,19 @@ namespace SupplyDrop.Items
         public override void Uninstall()
         {
             base.Uninstall();
-            IL.RoR2.CharacterBody.RecalculateStats -= IL_AddMaxShield;
+
+            GetStatCoefficients -= AddMaxShield;
             On.RoR2.HealthComponent.TakeDamage -= CalculateBuff;
             GetStatCoefficients -= AddSecondWindBuff;
             On.RoR2.CharacterBody.RemoveBuff -= AddWindedDebuff;
+        }
+        private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
+        {
+            var inventoryCount = GetCount(sender);
+            if (inventoryCount > 0)
+            {
+                args.baseShieldAdd += (sender.maxHealth * 0.04f);
+            }
         }
         private void AddWindedDebuff(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
         {
@@ -234,28 +238,7 @@ namespace SupplyDrop.Items
                 self.AddTimedBuffAuthority(WindedDebuff, 10f);
             }             
         }
-        private void IL_AddMaxShield(ILContext il)
-        {
-            ILCursor c = new ILCursor(il);
 
-            c.GotoNext(
-                x => x.MatchLdloc(43),
-                x => x.MatchCallvirt(typeof(CharacterBody).GetMethod("set_maxShield", BindingFlags.Instance | BindingFlags.NonPublic))
-                );
-
-            c.Emit(OpCodes.Ldarg, 0);
-            c.Emit(OpCodes.Ldloc, 43);
-            c.EmitDelegate<Func<CharacterBody, float, float>>((characterBody, shield) =>
-            {
-                if (GetCount(characterBody) > 0)
-                {
-                    return shield + (characterBody.maxHealth * (0.04f + (0.02f * (GetCount(characterBody) - 1))));
-                }
-                return shield;
-            }
-            );
-            c.Emit(OpCodes.Stloc, 43);
-        }
         private void CalculateBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             var preDamageShield = self.body.healthComponent.shield; 
