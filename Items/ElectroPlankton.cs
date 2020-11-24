@@ -211,7 +211,7 @@ namespace SupplyDrop.Items
         private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
             var inventoryCount = GetCount(sender);
-            if (inventoryCount > 0 && inventoryCount < 2)
+            if (inventoryCount > 0)
             {
                 args.baseShieldAdd += (sender.maxHealth * 0.08f);
             }

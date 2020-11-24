@@ -206,7 +206,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                args.baseShieldAdd += (sender.maxHealth * 0.04f);
+                args.baseShieldAdd += ((sender.maxHealth * 0.04f) * inventoryCount);
             }
         }
 
