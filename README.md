@@ -6,9 +6,9 @@ More items are coming soon--over a dozen are planned as of now!
 # What's New with Update 1.3 Part One: The Doctor is In!
 Modern problems may require modern solutions, but medieval problems like a pandemic require equally time-appropriate solutions. And that may or may not mean the medicinal practices showcased in this update will be somewhat...unconventional. But despite these questionable methods, we can guarantee the items in this update are sure to cure your what ails\* your patients\**! 
 
-<sub>\* Disclaimer: Applicable ailments are: being alive.</sub>
+* Disclaimer: Applicable ailments are: being alive.
 
-<sub>** Disclaimer: Your patients refers to anything that moves.</sub>
+** Disclaimer: Your patients refers to anything that moves.
 
 A little note from the developer: Hey everyone, going forward I intend to split major releases into two parts. The first part will reveal the update theme and what rarity the items of the second part will be. Then, the second part will reveal the name/rarity of ONE item in the next major release. Both parts, of course, will include items, as well as other major improvements/reworks. This method will allow me to get some items to you all faster, when otherwise pushing full releases would take a while.
 
