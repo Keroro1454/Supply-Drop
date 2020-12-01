@@ -48,6 +48,15 @@ A little note from the developer: Hey everyone, going forward I intend to split 
 ## Equipment:
 
 ## Changelog:
+- 1.3.2
+	- Publicized item displays so devs of modded characters can add displays for Supply Drop items
+	- Cleaned stuff up a bit
+
+- 1.3.1
+	- Patched a bug related to using the Tome of Bloodletting on Bandit that caused frame drops
+	- Added rigging for ALL items to Bandit!
+	- Fixed shield items still using manual IL hooks instead of new TILER2 functionality, should make things run a smidge faster
+	
 - 1.3.0
 	- Added one new item: The Tome of Bloodletting. KNOWN ISSUE: Display in the logbook is weirdly off-center, this will be addressed in an upcoming patch.
 	- Re-worked Quantum Shield Stabilizer. Still provides 16% max HP shield. Now completely negates excess damage when an attack breaks your shields, but has a 5 second cooldown before the effect can activate again.
