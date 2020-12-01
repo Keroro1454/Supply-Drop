@@ -10,7 +10,7 @@ using System;
 
 namespace SupplyDrop.Items
 {
-    class QSGen : Item_V2<QSGen>
+    public class QSGen : Item_V2<QSGen>
     {
         public override string displayName => "Quantum Shield Generator";
 

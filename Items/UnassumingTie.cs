@@ -9,7 +9,7 @@ using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items
 {
-    class UnassumingTie : Item_V2<UnassumingTie>
+    public class UnassumingTie : Item_V2<UnassumingTie>
     {
         public override string displayName => "Unassuming Tie";
 

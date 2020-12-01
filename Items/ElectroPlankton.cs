@@ -9,7 +9,7 @@ using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items
 {
-    class ElectroPlankton : Item_V2<ElectroPlankton>
+    public class ElectroPlankton : Item_V2<ElectroPlankton>
     {
         public override string displayName => "Echo-Voltaic Plankton";
 

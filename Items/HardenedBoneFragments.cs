@@ -10,7 +10,7 @@ using SupplyDrop.Utils;
 //TO-DO: Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain. Plus fix model (Rico says some of the vertices still don't have closed faces???)
 namespace SupplyDrop.Items
 {
-    class HardenedBoneFragments : Item_V2<HardenedBoneFragments>
+    public class HardenedBoneFragments : Item_V2<HardenedBoneFragments>
     {
         public override string displayName => "Hardened Bone Fragments";
 

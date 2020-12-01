@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace SupplyDrop.Items
 {
-    class BloodBook : Item_V2<BloodBook>
+    public class BloodBook : Item_V2<BloodBook>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("If set to true, the tome will become haunted with the spirit of a wise-cracking, explosives-loving cursed book.", AutoConfigFlags.None)]

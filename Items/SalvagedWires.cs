@@ -9,7 +9,7 @@ using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items
 {
-    class SalvagedWires : Item_V2<SalvagedWires>
+    public class SalvagedWires : Item_V2<SalvagedWires>
     {
         public override string displayName => "Salvaged Wires";
 

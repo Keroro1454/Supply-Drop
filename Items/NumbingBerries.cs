@@ -10,7 +10,7 @@ using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items
 {
-    class NumbingBerries : Item_V2<NumbingBerries>
+    public class NumbingBerries : Item_V2<NumbingBerries>
     {
         public override string displayName => "Numbing Berries";
 

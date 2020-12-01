@@ -9,7 +9,7 @@ using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items
 {
-    class ShellPlating : Item_V2<ShellPlating>
+    public class ShellPlating : Item_V2<ShellPlating>
     {
         public override string displayName => "Shell Plating";
 
