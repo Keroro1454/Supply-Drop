@@ -6,11 +6,27 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
+using static TILER2.MiscUtil;
 
 namespace SupplyDrop.Items
 {
     public class SalvagedWires : Item_V2<SalvagedWires>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: 4% (.04)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseStackHPPercent { get; private set; } = .04f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for additional stacks of item. Default: 2% (.02)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addStackHPPercent { get; private set; } = .02f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of bonus attack speed gained for the first stack of item. Default: 10% (10)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseAttackSpeedPercent { get; private set; } = 10f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of bonus attack speed gained for additional stacks of item. Default: 10% (10)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addAttackSpeedPercent { get; private set; } = 10f;
         public override string displayName => "Salvaged Wires";
 
         public override ItemTier itemTier => ItemTier.Tier1;
@@ -20,8 +36,10 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Gain some shield, and gain increased attack speed while your shield is active.";
 
-        protected override string GetDescString(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>4%</style> <style=cStack>(+2% per stack)</style> of your maximum health. " +
-            "While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>10%</style> <style=cStack>(+10% per stack)</style>.";
+        protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
+            $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health." +
+            $" While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>{baseAttackSpeedPercent}%</style>" +
+            $" <style=cStack>(+{addAttackSpeedPercent}% per stack)</style>.";
 
         protected override string GetLoreString(string landID = null) => "\"Now remember y'all. There are three rules of Space Scrappin'. You squirts may be dumber than rocks, but I 'spect y'all to remember them.\"" +
             "\n\n." +
@@ -206,17 +224,16 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                args.baseShieldAdd += ((sender.maxHealth * 0.04f) * inventoryCount);
+                args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
             }
         }
 
         private void AttackSpeedBonus(CharacterBody sender, StatHookEventArgs args)
         {
-            var InventoryCount = GetCount(sender);
-            if (sender.healthComponent.shield != 0)
+            var inventoryCount = GetCount(sender);
+            if (sender.healthComponent.shield != 0 && inventoryCount > 0)
             {
-                args.attackSpeedMultAdd += .1f * InventoryCount;
-
+                    args.attackSpeedMultAdd += (baseAttackSpeedPercent + (addAttackSpeedPercent * (inventoryCount - 1)));
             }
         }
     }

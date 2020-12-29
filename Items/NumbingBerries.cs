@@ -5,13 +5,28 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
-using K1454.SupplyDrop;
 using SupplyDrop.Utils;
 
 namespace SupplyDrop.Items
 {
     public class NumbingBerries : Item_V2<NumbingBerries>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The amount of temporary armor gained after taking damage for the first stack of the item. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseBonusArmor { get; private set; } = 5f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The amount of temporary armor gained after taking damage for additional stacks of the item. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addBonusArmor { get; private set; } = 5f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In seconds, the duration of the armor boost for the first stack of the item. Default: 2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseBerryBuffDuration { get; private set; } = 2f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In seconds, the duration of the armor boost for additional stacks of the item. Default: 2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addBerryBuffDuration { get; private set; } = .5f;
+
         public override string displayName => "Numbing Berries";
 
         public override ItemTier itemTier => ItemTier.Tier1;
@@ -21,8 +36,8 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Gain temporary armor upon taking damage.";
 
-        protected override string GetDescString(string langID = null) => "Gain <style=cIsUtility>5</style> <style=cStack>(+5 per stack)</style> <style=cIsUtility>armor</style> for 2 seconds " +
-            "<style=cStack>(+0.5 second per stack)</style> upon taking damage.";
+        protected override string GetDescString(string langID = null) => $"Gain <style=cIsUtility>{baseBonusArmor}</style> <style=cStack>(+{addBonusArmor} per stack)</style> " +
+            $"<style=cIsUtility>armor</style> for {baseBerryBuffDuration} seconds <style=cStack>(+{addBerryBuffDuration} seconds per stack)</style> upon taking damage.";
 
         protected override string GetLoreString(string landID = null) => "<style=cMono>> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION..." +
             "\n> VERIFICATION SUCCESS. ACCESSING YOUR QUERY...\n> OUTPUT:</style>\n\nSpecies Genus: Vaccinum\nSpecies Section: Achilococcus" +
@@ -220,7 +235,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(self.body);
             if (InventoryCount > 0)
                 {
-                self.body.AddTimedBuffAuthority(NumbBerryBuff, 2f + (.5f * (InventoryCount - 1)));
+                self.body.AddTimedBuffAuthority(NumbBerryBuff, baseBerryBuffDuration + (addBerryBuffDuration * (InventoryCount - 1)));
                 }
             orig(self, damageInfo);
         }
@@ -230,7 +245,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(sender);
             if (sender.HasBuff(NumbBerryBuff))
             {
-                args.armorAdd += 5f + (5 * (InventoryCount - 1));
+                args.armorAdd += baseBonusArmor + (addBonusArmor * (InventoryCount - 1));
             }
         }
     }

@@ -6,11 +6,39 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
+using static TILER2.MiscUtil;
 
 namespace SupplyDrop.Items
 {
     public class UnassumingTie : Item_V2<UnassumingTie>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: 4% (.04)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseStackHPPercent { get; private set; } = .04f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for additional stacks of item. Default: 2% (.02)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addStackHPPercent { get; private set; } = .02f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In seconds, the duration of the 'Winded' debuff. Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float windedDebuffDuration { get; private set; } = 10f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In seconds, the base duration of the 'Second Wind' buff. Default: 4", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float secondWindBaseDuration { get; private set; } = 4f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In seconds, the multiplier applied to the shield/HP ratio, used to calculate the bonus duration of the 'Second Wind' buff. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float secondWindBonusMultiplier { get; private set; } = 5f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for the first stack of the item. Default: 15%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float secondWindBaseSpeedPercent { get; private set; } = 15f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for additional stacks of the item. Default: 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float secondWindAddSpeedPercent { get; private set; } = 10f;
         public override string displayName => "Unassuming Tie";
 
         public override ItemTier itemTier => ItemTier.Tier1;
@@ -20,9 +48,10 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Gain some shield, and receive a speed boost when your shield is broken.";
 
-        protected override string GetDescString(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>4%</style> <style=cStack>(+2% per stack)</style> of your maximum health. " +
-            "Breaking your <style=cIsUtility>shield</style> gives you a <style=cIsUtility>Second Wind</style> for 4s, plus a bonus amount based on your <style=cIsUtility>maximum shield</style>. " +
-            "Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>15%</style> <style=cStack>(+10% per stack)</style>.";
+        protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
+            $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health. Breaking your <style=cIsUtility>shield</style> gives you a" +
+            $" <style=cIsUtility>Second Wind</style> for {secondWindBaseDuration}s, plus a bonus amount based on your <style=cIsUtility>maximum shield</style>. " +
+            $"Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{secondWindBaseSpeedPercent}%</style> <style=cStack>(+{secondWindBonusMultiplier}% per stack)</style>.";
 
         protected override string GetLoreString(string landID = null) => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters which were active during the early 21st century.The gang was wildly successful while active, breaking into, looting, and escaping from some of the most secure sites on Earth at the time. Even when authorities attempted to apprehend the criminals, reports state that shooting at them 'only seem to make [the heisters] move faster, however the hell that works.' While the identities of these criminals were never discovered, the gang ceased operations for unknown reasons after over a decade of activity. This piece serves as a testament to their dedication to style, no matter the situation.\"\n\n- Placard description for \"Striped Tie\" at the Galactic Museum of Law Enforcement and Criminality";
 
@@ -227,7 +256,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                args.baseShieldAdd += ((sender.maxHealth * 0.04f) * inventoryCount);
+                args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
             }
         }
         private void AddWindedDebuff(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
@@ -235,7 +264,7 @@ namespace SupplyDrop.Items
             orig(self, buffType);
             if (buffType == SecondWindBuff)
             {
-                self.AddTimedBuffAuthority(WindedDebuff, 10f);
+                self.AddTimedBuffAuthority(WindedDebuff, windedDebuffDuration);
             }             
         }
 
@@ -251,7 +280,7 @@ namespace SupplyDrop.Items
                 {
                     if (self.body.GetBuffCount(SecondWindBuff) == 0 && self.body.GetBuffCount(WindedDebuff) == 0)
                     {
-                        self.body.AddTimedBuffAuthority(SecondWindBuff, 4f + (5f * (self.body.maxShield / self.body.maxHealth)));
+                        self.body.AddTimedBuffAuthority(SecondWindBuff, secondWindBaseDuration + (secondWindBonusMultiplier * (self.body.maxShield / self.body.maxHealth)));
                     }
                 }
             }
@@ -261,7 +290,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(sender);
             if (sender.HasBuff(SecondWindBuff))
             {
-                args.moveSpeedMultAdd += (0.15f + ((InventoryCount-1) * 0.10f));
+                args.moveSpeedMultAdd += (secondWindBaseSpeedPercent + ((InventoryCount-1) * secondWindAddSpeedPercent));
 
             }
         }
