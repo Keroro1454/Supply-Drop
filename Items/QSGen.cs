@@ -19,7 +19,7 @@ namespace SupplyDrop.Items
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
         protected override string GetNameString(string langid = null) => displayName;
 
-        protected override string GetPickupString(string langID = null) => "If shields are active, any damage that exceeds the active shield amount is weakened.";
+        protected override string GetPickupString(string langID = null) => "If shields are active, any damage that exceeds the active shield amount is negated.";
 
         protected override string GetDescString(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>16%</style> of your maximum health. " +
             "If an attack exceeds your active shields, the excess damage is <style=cIsUtility>negated</style>. This ability has a cooldown of 5s <style=cStack>(-0.5s per stack)</style>.";
