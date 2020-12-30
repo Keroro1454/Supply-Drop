@@ -6,11 +6,19 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
+using static TILER2.MiscUtil;
 
 namespace SupplyDrop.Items
 {
     public class ElectroPlankton : Item_V2<ElectroPlankton>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: 8% (.08)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseStackHPPercent { get; private set; } = .08f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("Amount of shield gained on hit. Is multiplied by the number of stacks of the item you have. Default: 1 ", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float shieldAmountOnHit { get; private set; } = 1f;
         public override string displayName => "Echo-Voltaic Plankton";
 
         public override ItemTier itemTier => ItemTier.Tier2;
@@ -20,8 +28,8 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Recharge shield upon dealing damage.";
 
-        protected override string GetDescString(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>8%</style> of your maximum health. " +
-            "Dealing damage recharges <style=cIsUtility>1</style> <style=cStack>(+1 per stack)</style> <style=cIsUtility>shield</style>.";
+        protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style> of your maximum health. " +
+            $"Dealing damage recharges <style=cIsUtility>{shieldAmountOnHit}</style> <style=cStack>(+{shieldAmountOnHit} per stack)</style> <style=cIsUtility>shield</style>.";
 
         protected override string GetLoreString(string landID = null) => "<style=cMono>ACCESSING EXPERIMENT DATA FOR PROJECT B:O:M:37543</style>" +
             "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:1</style>\nNewly-minted Senior Researcher Thomas here! This is my first time as project lead, pretty exciting.\n\nThese micro-organisms were recovered under the ice around Titan's equator region. " +
@@ -213,7 +221,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                args.baseShieldAdd += (sender.maxHealth * 0.08f);
+                args.baseShieldAdd += (sender.maxHealth * baseStackHPPercent);
             }
         }
 
@@ -229,7 +237,7 @@ namespace SupplyDrop.Items
                     if (invenCount > 0)
                     {
                         float procCoeff = damageInfo.procCoefficient;
-                        cbAttacker.healthComponent.RechargeShield(invenCount * procCoeff);
+                        cbAttacker.healthComponent.RechargeShield((invenCount * shieldAmountOnHit) * procCoeff);
                     }
                 }
             }     

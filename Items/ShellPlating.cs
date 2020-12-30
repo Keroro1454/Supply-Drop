@@ -11,6 +11,17 @@ namespace SupplyDrop.Items
 {
     public class ShellPlating : Item_V2<ShellPlating>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The amount of armor granted on kill. Default: .2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float armorOnKillAmount { get; private set; } = .2f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The maximum amount of armor obtainable from the first stack of the item. Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseMaxArmorGain { get; private set; } = 10f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The maximum amount of armor obtainable from additional stacks of the item. Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addMaxArmorGain { get; private set; } = 10f;
         public override string displayName => "Shell Plating";
 
         public override ItemTier itemTier => ItemTier.Tier2;
@@ -20,8 +31,9 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Gain armor on kill.";
 
-        protected override string GetDescString(string langID = null) => "Killing an enemy increases your <style=cIsUtility>armor</style> permanently by <style=cIsUtility>.2</style>, " +
-            "up to a maximum of <style=cIsUtility>10</style> <style=cStack>(+10 per stack)</style> <style=cIsUtility>armor</style>.";
+        protected override string GetDescString(string langID = null) => $"Killing an enemy increases your <style=cIsUtility>armor</style> permanently by " +
+            $"<style=cIsUtility>{armorOnKillAmount}</style>, up to a maximum of <style=cIsUtility>{baseMaxArmorGain}</style> <style=cStack>(+{addMaxArmorGain} per stack)</style>" +
+            $" <style=cIsUtility>armor</style>.";
 
         protected override string GetLoreString(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\nEstimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan" +
             "\nShipping Details:\n\nI've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. The story behind this piece should be especially interesting to you, " +
@@ -236,7 +248,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                var currentShellStackMax = (((inventoryCount - 1) * 50) + 50);
+                var currentShellStackMax = (((inventoryCount - 1) * (addMaxArmorGain/armorOnKillAmount)) + (baseMaxArmorGain/armorOnKillAmount));
                 if (sender.inventory.GetItemCount(shellStack) >= currentShellStackMax && sender.GetBuffCount(ShellStackMax) <= 0)
                 {
                     sender.AddBuff(ShellStackMax);
@@ -247,7 +259,7 @@ namespace SupplyDrop.Items
                     sender.RemoveBuff(ShellStackMax);
                 }
                 var currentShellStack = sender.inventory.GetItemCount(shellStack);
-                args.armorAdd += (.2f * currentShellStack);
+                args.armorAdd += (armorOnKillAmount * currentShellStack);
             }
         }
     }

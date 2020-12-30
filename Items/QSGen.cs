@@ -5,6 +5,7 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
+using static TILER2.MiscUtil;
 using SupplyDrop.Utils;
 using System;
 
@@ -12,6 +13,17 @@ namespace SupplyDrop.Items
 {
     public class QSGen : Item_V2<QSGen>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: 16% (.16)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseStackHPPercent { get; private set; } = .16f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In seconds, length of time for the shield gate cooldown. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float shieldGateCooldownAmount { get; private set; } = 5f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In seconds, amount of shield gate cooldown reduced by additional stacks of the item. Default: .5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float shieldGateCooldownReduction { get; private set; } = .5f;
         public override string displayName => "Quantum Shield Generator";
 
         public override ItemTier itemTier => ItemTier.Tier3;
@@ -21,8 +33,9 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "If shields are active, any damage that exceeds the active shield amount is negated.";
 
-        protected override string GetDescString(string langID = null) => "Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>16%</style> of your maximum health. " +
-            "If an attack exceeds your active shields, the excess damage is <style=cIsUtility>negated</style>. This ability has a cooldown of 5s <style=cStack>(-0.5s per stack)</style>.";
+        protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style> " +
+            $"of your maximum health. If an attack exceeds your active shields, the excess damage is <style=cIsUtility>negated</style>. " +
+            $"This ability has a cooldown of {shieldGateCooldownAmount}s <style=cStack>(-{shieldGateCooldownReduction}s per stack)</style>.";
 
         protected override string GetLoreString(string landID = null) => "Order: \"Quantum Shield Generator\"\nTracking Number: 06******\nEstimated Delivery: 12/21/2055\nShipping Method: High Priority/Fragile" +
             "\nShipping Address: 6900 West, Advanced Warfare, Mars\nShipping Details:\n\nAfter months of development, we finally have a functioning prototype for your approval." +
@@ -223,7 +236,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                args.baseShieldAdd += (sender.maxHealth * 0.16f);
+                args.baseShieldAdd += sender.maxHealth * baseStackHPPercent;
             }
         }
 
@@ -241,8 +254,8 @@ namespace SupplyDrop.Items
                     float damageReduction = dmgTaken - shieldDamage;
                     damageInfo.damage += damageReduction;
 
-                    float timerReduction = Mathf.Min(((inventoryCount - 1) * .5f), 5f);
-                    self.body.AddTimedBuff(ShieldGateCooldown, (5 - timerReduction));
+                    float timerReduction = Mathf.Min(((inventoryCount - 1) * shieldGateCooldownReduction), shieldGateCooldownAmount);
+                    self.body.AddTimedBuff(ShieldGateCooldown, (shieldGateCooldownAmount - timerReduction));
                 }     
             }
         }

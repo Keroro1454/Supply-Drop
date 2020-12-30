@@ -5,6 +5,7 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
+using static TILER2.MiscUtil;
 using SupplyDrop.Utils;
 using System;
 using System.Linq;
@@ -14,12 +15,31 @@ namespace SupplyDrop.Items
     public class BloodBook : Item_V2<BloodBook>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("If set to true, the tome will become haunted with the spirit of a wise-cracking, explosives-loving cursed book.", AutoConfigFlags.None)]
-        public bool fearOfReading { get; private set; } = false;
+        [AutoConfig("If true, the tome will be haunted with the spirit of a wise-cracking, explosives-loving cursed book. Default = true ", AutoConfigFlags.PreventNetMismatch)]
+        public bool fearOfReading { get; private set; } = true;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("If fear of reading is enabled, this sets the chance the book will speak. A value of 10 equals a 10% chance.", AutoConfigFlags.None)]
-        public int chanceBookReads { get; private set; } = 10;
+        [AutoConfig("In percentage, the chance the book will speak. Fear of Reading must be enabled. Default: 10% (10)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float chanceBookReads { get; private set; } = 10;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The maximum base damage boost the item can grant for the first stack of the item. Default: 20", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseDamageBoostLimit { get; private set; } = 20;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The amount the maximum base damage boost the item can grant is raised by for additional stacks of the item. " +
+            "Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addDamageBoostLimit { get; private set; } = 10;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, the amount of an instance of damage that is converted into the temporary damage boost for the first stack of the item. " +
+            "Default: 10% (.1)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseDamageConversionPercent { get; private set; } = .1f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, the extra amount of an instance of damage that is converted into the temporary damage boost for additional stacks of the item. " +
+            "Default: 5% (.05)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addDamageConversionPercent { get; private set; } = .05f;
 
         public override string displayName => "Tome of Bloodletting";
 
@@ -30,9 +50,11 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Convert some damage taken into a temporary damage boost.";
 
-        protected override string GetDescString(string langID = null) => "Convert <style=cIsDamage>10%</style> <style=cStack>(+5% per stack)</style> of the damage you take into a <style=cIsDamage>damage boost</style> " +
-            "of up to <style=cIsDamage>20</style> <style=cStack>(+10 per stack)</style> for <style=cIsDamage>4s</style>. The <style=cIsDamage>boost</style> duration is increased based on damage taken; " +
-            "every <style=cIsHealth>10%</style> max health that was depleted, up to <style=cIsHealth>50%</style>, increases the duration by <style=cIsDamage>+2s</style>.";
+        protected override string GetDescString(string langID = null) => $"Convert <style=cIsDamage>{Pct(baseDamageConversionPercent)}</style> " +
+            $"<style=cStack>(+{Pct(addDamageConversionPercent)}% per stack)</style> of the damage you take into a <style=cIsDamage>damage boost</style> " +
+            $"of up to <style=cIsDamage>{baseDamageBoostLimit}</style> <style=cStack>(+{addDamageBoostLimit} per stack)</style> for <style=cIsDamage>4s</style>. " +
+            $"The <style=cIsDamage>boost</style> duration is increased based on damage taken; every <style=cIsHealth>10%</style> max health that was depleted, " +
+            $"up to <style=cIsHealth>50%</style>, increases the duration by <style=cIsDamage>+2s</style>.";
 
         protected override string GetLoreString(string landID = null) => "Nature learns from pain. Nature willingly suffers, without protest. Nature studies what gifts pain provides. " +
             "It takes the lessons that pain gives out freely, and it grows stronger, more capable of survival." +
@@ -355,7 +377,7 @@ namespace SupplyDrop.Items
 
                     self.body.AddTimedBuff(ranges[nextBuffLevel].Buff, ranges[nextBuffLevel].Duration);
 
-                    //Bombinomicon stuff is here 
+                    //Bombinomicon (Fear of Reading) stuff is handled here 
                     if (fearOfReading == true)
                     {
                         int willBookRead = new System.Random().Next(1, 101);
@@ -370,6 +392,7 @@ namespace SupplyDrop.Items
             orig(self, damageInfo);
         }
         private void DamageBoostReset(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
+        //Resets the cachedDamageComponent variable, preventing it from getting stuck on a value from a high-damage attack
         {
             orig(self, buffType);
 
@@ -394,7 +417,7 @@ namespace SupplyDrop.Items
                 int currentBuffLevel = Array.FindIndex(ranges, r => sender.HasBuff(r.Buff));
                 if (Enumerable.Range(0, 5).Contains(currentBuffLevel))
                 {
-                    args.baseDamageAdd += Mathf.Min(.1f * cachedDamageComponent.cachedDamage + (.05f * (inventoryCount - 1)), (20 + ((inventoryCount - 1) * 10)));
+                    args.baseDamageAdd += Mathf.Min(baseDamageConversionPercent * cachedDamageComponent.cachedDamage + (addDamageConversionPercent * (inventoryCount - 1)), (baseDamageBoostLimit + ((inventoryCount - 1) * addDamageBoostLimit)));
                 }
             }
         }
