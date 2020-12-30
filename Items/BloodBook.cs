@@ -351,7 +351,7 @@ namespace SupplyDrop.Items
             float dmgTaken = damageInfo.damage;
             float maxHealth = self.body.maxHealth;
 
-            if (inventoryCount > 0)
+            if (inventoryCount > 0 && damageInfo.rejected != true)
             {
                 //This bit will cache the damage you took for use by the actual damage boost calculator, only if the damage exceeds any previous cached damage numbers
                 var cachedDamageComponent = self.body.gameObject.GetComponent<DamageComponent>();
