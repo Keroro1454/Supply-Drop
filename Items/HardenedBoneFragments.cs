@@ -7,11 +7,22 @@ using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
 
-//TO-DO: Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain. Plus fix model (Rico says some of the vertices still don't have closed faces???)
+//TO-DO: FIX/REMAKE MODEL. Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain.
 namespace SupplyDrop.Items
 {
     public class HardenedBoneFragments : Item_V2<HardenedBoneFragments>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The amount of temporary armor gained from each kill for the first stack of the item. Default: 2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseBonusArmor { get; private set; } = 2f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The amount of additional temporary armor gained from each kill from additional stacks of the item. Default: 1", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addBonusArmor { get; private set; } = 1f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("The percentage of maximum HP needed to be lost to lose 1 additional bone fragment buff stack when taking damage. Default: 2% (2)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float healthPercentBuffLoss { get; private set; } = 2f;
         public override string displayName => "Hardened Bone Fragments";
 
         public override ItemTier itemTier => ItemTier.Tier1;
@@ -21,8 +32,8 @@ namespace SupplyDrop.Items
 
         protected override string GetPickupString(string langID = null) => "Gain temporary armor on kill. Armor is lost when injured.";
 
-        protected override string GetDescString(string langID = null) => "Gain <style=cIsUtility>2</style> <style=cStack>(+1 per stack)</style> <style=cIsUtility>armor</style> on kill. " +
-            "All <style=cIsUtility>armor</style> is lost upon taking damage.";
+        protected override string GetDescString(string langID = null) => $"Gain <style=cIsUtility>{baseBonusArmor}</style> <style=cStack>(+{addBonusArmor} per stack)</style> " +
+            $"<style=cIsUtility>armor</style> on kill. Some <style=cIsUtility>armor</style> is lost upon taking damage; higher damage loses more armor.";
 
         protected override string GetLoreString(string landID = null) => "The last attacker hissed its final breath before falling silent next to its brethren.\n\nThe man holstered his weapon, " +
             "wisps of smoke curling around the barrel, before falling to his knees with a sigh. Taking his knife from its hilt, he stabbed through the purple scales of his defeated foes, " +
@@ -225,12 +236,17 @@ namespace SupplyDrop.Items
             orig(self, damageReport);
         }
         private void BFBuffLoss(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
-        {  
-            var BuffCount = self.body.GetBuffCount(BFBuff);
-            while (BuffCount > 0)
+        {
+            if (damageInfo.rejected != true)
             {
-                self.body.RemoveBuff(BFBuff);
-                BuffCount -= 1;
+                var buffCount = self.body.GetBuffCount(BFBuff);
+                float buffsToLose = (((damageInfo.damage / self.body.maxHealth) / healthPercentBuffLoss) * 100) + 1;
+                while (buffsToLose > 0)
+                {
+                    self.body.RemoveBuff(BFBuff);
+                    buffCount -= 1;
+                    buffsToLose -= 1;
+                }
             }
             orig(self, damageInfo);
         }
