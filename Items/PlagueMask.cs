@@ -247,6 +247,7 @@ namespace SupplyDrop.Items
                     return newHeal;
                 }
                 );
+                c.Emit(OpCodes.Stloc_2);
             }            
         }   
     }
