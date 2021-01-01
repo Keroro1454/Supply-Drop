@@ -186,7 +186,7 @@ namespace SupplyDrop.Items
             base.Install();
 
             runDuringRUNStart();
-            On.RoR2.Inventory.GetItemCount += GetTotalDamageItems;
+            On.RoR2.CharacterBody.OnInventoryChanged += GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal += IL_AddBonusHeal;
         }
 
@@ -194,7 +194,7 @@ namespace SupplyDrop.Items
         {
             base.Uninstall();
 
-            On.RoR2.Inventory.GetItemCount -= GetTotalDamageItems;
+            On.RoR2.CharacterBody.OnInventoryChanged -= GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal -= IL_AddBonusHeal;
         }
         private void runDuringRUNStart()
@@ -203,15 +203,18 @@ namespace SupplyDrop.Items
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
         }
 
-        public int GetTotalDamageItems(On.RoR2.Inventory.orig_GetItemCount orig, Inventory self, ItemIndex itemIndex)
+        public int GetTotalDamageItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
-            orig(self, itemIndex);
-            foreach (ItemIndex x in indiciiToCheck)
+            if (GetCount() > 0)
             {
-                damageItemCount += self.GetItemCount(x);
-                Chat.AddMessage("Your damage item count is" + damageItemCount);
+                foreach (ItemIndex x in indiciiToCheck)
+                {
+                    damageItemCount += self.GetItemCount(x);
+                    Chat.AddMessage("Your damage item count is" + damageItemCount);
+                }
+                return damageItemCount;
             }
-            return damageItemCount;
+            orig(self, itemIndex);
         }
 
         private void IL_AddBonusHeal(ILContext il)
@@ -237,6 +240,7 @@ namespace SupplyDrop.Items
                     {
                         if (GetCount(body) > 0)
                         {
+
                             newHeal = amount + (amount * (.02f * damageItemCount * GetCount(body)));
                         }
                         else
