@@ -36,7 +36,7 @@ namespace SupplyDrop.Items
 
         public PlagueMask()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/WireBundle.prefab";
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueMask.prefab";
             iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/QSGenIcon.png";
         }
 
@@ -216,38 +216,37 @@ namespace SupplyDrop.Items
 
             bool found;
 
-            found = c.TryGotoNext(
+            found = c.TryGotoNext(MoveType.After,
                 x => x.MatchLdarg(1),
                 x => x.MatchStloc(2)
                 );
             
             if (found)
             {
-                c.Emit(OpCodes.Ldarg, 1);
-                c.Emit(OpCodes.Stloc, 2);
-                c.EmitDelegate<Func<float, HealthComponent, float>>((origHeal, component) =>
+                c.Emit(OpCodes.Ldloc_2);
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<float, HealthComponent, float>>((amount, component) =>
                 {
                     float newHeal;
                     if (component.GetComponent<CharacterBody>() is CharacterBody body)
                     {
                         if (GetCount(body) > 0)
                         {
-                            newHeal = origHeal + (origHeal * (.02f * damageItemCount * GetCount(body)));
+                            newHeal = amount + (amount * (.02f * damageItemCount * GetCount(body)));
                         }
                         else
                         {
-                            newHeal = origHeal;
+                            newHeal = amount;
                         }
                         return newHeal;
                     }
                     else
                     {
-                        newHeal = origHeal;
+                        newHeal = amount;
                     }
                     return newHeal;
                 }
                 );
-                c.Emit(OpCodes.Ldarg, 0);
             }            
         }   
     }
