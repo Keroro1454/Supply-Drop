@@ -4,8 +4,6 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
-using static TILER2.StatHooks;
-using K1454.SupplyDrop;
 using SupplyDrop.Utils;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -27,21 +25,19 @@ namespace SupplyDrop.Items
 
         protected override string GetDescString(string langID = null) => "All <style=cIsHealing>healing</style> is increased by <style=cIsHealing>2%</style> <style=cStack>(+2% per stack)</style> for every <style=cIsDamage>damage item" +
             "</style> you possess.";
-
-        protected override string GetLoreString(string landID = null) => "";
+            
+        protected override string GetLoreString(string landID = null) => "Uh oh, no lore here. Try again later.";
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        public BuffIndex ShellStackMax { get; private set; }
-        public ItemIndex shellStack { get; private set; }
-        List<int> indiciiToCheck;
+        private List<int> indiciiToCheck;
         private int damageItemCount = 0;
 
 
         public PlagueMask()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueMask.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlagueMaskIcon.png";
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/WireBundle.prefab";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/QSGenIcon.png";
         }
 
         public override void SetupAttributes()
@@ -189,8 +185,8 @@ namespace SupplyDrop.Items
         {
             base.Install();
 
+            runDuringRUNStart();
             IL.RoR2.HealthComponent.Heal += IL_AddBonusHeal;
-            On.RoR2.Inventory. += getTotalUniqueItems;
         }
 
         public override void Uninstall()
@@ -198,18 +194,18 @@ namespace SupplyDrop.Items
             base.Uninstall();
 
             IL.RoR2.HealthComponent.Heal -= IL_AddBonusHeal;
-            On.RoR2.Inventory. -= getTotalUniqueItems;
         }
         private void runDuringRUNStart()
         {
-            indiciiToCheck = new List<int>();
-            indiciiToCheck.AddRange(ItemCatalog.allItems.Where((index) => ItemCatalog.GetItemDef(index).inDroppableTier).Cast<int>());
+            ItemIndex[] indiciiToCheck;
+            indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
         }
-        private int getTotalUniqueItems(Inventory inventory)
-        {  
-            foreach (int index in indiciiToCheck)
+
+        public int getTotalDamageItems(Inventory inventory)
+        {
+            foreach (ItemIndex x in indiciiToCheck)
             {
-                damageItemCount += inventory.itemStacks[index] != 0 ? 1 : 0;
+                damageItemCount += inventory.GetItemCount(x);
             }
             return damageItemCount;
         }
