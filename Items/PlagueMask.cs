@@ -186,6 +186,7 @@ namespace SupplyDrop.Items
             base.Install();
 
             runDuringRUNStart();
+            On.RoR2.Inventory.GetItemCount += GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal += IL_AddBonusHeal;
         }
 
@@ -193,6 +194,7 @@ namespace SupplyDrop.Items
         {
             base.Uninstall();
 
+            On.RoR2.Inventory.GetItemCount -= GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal -= IL_AddBonusHeal;
         }
         private void runDuringRUNStart()
@@ -201,11 +203,13 @@ namespace SupplyDrop.Items
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
         }
 
-        public int getTotalDamageItems(Inventory inventory)
+        public int GetTotalDamageItems(On.RoR2.Inventory.orig_GetItemCount orig, Inventory self, ItemIndex itemIndex)
         {
+            orig(self, itemIndex);
             foreach (ItemIndex x in indiciiToCheck)
             {
-                damageItemCount += inventory.GetItemCount(x);
+                damageItemCount += self.GetItemCount(x);
+                Chat.AddMessage("Your damage item count is" + damageItemCount);
             }
             return damageItemCount;
         }
@@ -215,20 +219,21 @@ namespace SupplyDrop.Items
             ILCursor c = new ILCursor(il);
 
             bool found;
+            int local = 2; //As of 1.0.5.1 this was 2
 
             found = c.TryGotoNext(MoveType.After,
                 x => x.MatchLdarg(1),
-                x => x.MatchStloc(2)
+                x => x.MatchStloc(out local)
                 );
             
             if (found)
             {
-                c.Emit(OpCodes.Ldloc_2);
-                c.Emit(OpCodes.Ldarg_0);
+                c.Emit(OpCodes.Ldloc, local);
+                c.Emit(OpCodes.Ldarg, 0);
                 c.EmitDelegate<Func<float, HealthComponent, float>>((amount, component) =>
                 {
                     float newHeal;
-                    if (component.GetComponent<CharacterBody>() is CharacterBody body)
+                    if (component.body is CharacterBody body)
                     {
                         if (GetCount(body) > 0)
                         {
@@ -247,7 +252,7 @@ namespace SupplyDrop.Items
                     return newHeal;
                 }
                 );
-                c.Emit(OpCodes.Stloc_2);
+                c.Emit(OpCodes.Stloc, local);
             }            
         }   
     }
