@@ -15,7 +15,7 @@ A little note from the developer: Hey everyone, going forward I intend to split 
 # Included Items:
 ## Common Items:
 - **Hardened Bone Fragments**
-	- Killing an enemy temporarily grants 2 (+1 per stack) armor. All armor is lost upon taking damage.
+	- Killing an enemy temporarily grants 2 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor.
 - **Numbing Berries**
 	- Gain 5 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds.
 - **Unassuming Tie**
@@ -48,6 +48,14 @@ A little note from the developer: Hey everyone, going forward I intend to split 
 ## Equipment:
 
 ## Changelog:
+- 1.4: The Doctor is BACK!
+	- Added two new items, the Plague Mask and Plague Hat
+	- Added configuration options to ALL pre-existing items (excludes newest additions). Any config changes are reflected in item logs/descriptions
+	- Reworked Hardened Bone Fragments slightly; the number of fragment stacks lost on hit is now tied to the amount of damage you receive
+	- Fixed items based on taking damage not ignoring instances of damage that were rejected (ex. blocked by Tougher Times)
+	- Fixed shield items not granting reduced shield gains on additional stacks
+	- Fixed a typo in the QSS pick-up description
+
 - 1.3.2
 	- Publicized item displays so devs of modded characters can add displays for Supply Drop items
 	- Cleaned stuff up a bit
@@ -57,7 +65,7 @@ A little note from the developer: Hey everyone, going forward I intend to split 
 	- Added rigging for ALL items to Bandit!
 	- Fixed shield items still using manual IL hooks instead of new TILER2 functionality, should make things run a smidge faster
 	
-- 1.3.0
+- 1.3.0: The Doctor is In...
 	- Added one new item: The Tome of Bloodletting. KNOWN ISSUE: Display in the logbook is weirdly off-center, this will be addressed in an upcoming patch.
 	- Re-worked Quantum Shield Stabilizer. Still provides 16% max HP shield. Now completely negates excess damage when an attack breaks your shields, but has a 5 second cooldown before the effect can activate again.
 	- Fixed issue causing console to throw warnings regarding missing scripts
