@@ -16,17 +16,12 @@ namespace SupplyDrop.Items
     class PlagueMask : Item_V2<PlagueMask>
     {
         public override string displayName => "Vintage Plague Mask";
-
         public override ItemTier itemTier => ItemTier.Tier2;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Heal extra the more damage items you have.";
-
         protected override string GetDescString(string langID = null) => "All <style=cIsHealing>healing</style> is increased by <style=cIsHealing>2%</style> <style=cStack>(+2% per stack)</style> for every <style=cIsDamage>damage item" +
-            "</style> you possess.";
-            
+            "</style> you possess.";           
         protected override string GetLoreString(string landID = null) => "A fire crackled from within the ornate fireplace that dominated one side " +
             "of the pristine office. Across, beautiful bookshelves that seemed to stretch into the heavens were packed with tomes, " +
             "ancient and modern, as well as various priceless curios.\n\n" +
@@ -39,7 +34,7 @@ namespace SupplyDrop.Items
             "\"Doctor. You have broken the Oath of the Order.\"\n\n" + 
             "\"Fuck you.\"\n\n" + 
             "The Administrator did not flinch at the words, simply watching motionlessly the increasingly agitated man before them. " +
-            "\"Your attempts to reveal the Order's involvement within recent UES voyages have, of course, been abject failures.\"" + 
+            "\"Your attempts to reveal the Order's involvement within recent UES voyages have, of course, been abject failures.\"\n\n" + 
             "\"Fu-\"\n\n" +
             "The Adminstrator raised their hand; \"But the Order does not tolerate such blasphemous acts. We are an Order of science and reason, " +
             "and you have acted against reason.\"\n\n" +
@@ -86,9 +81,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0.25f, 0.3f),
+                    localPos = new Vector3(0f, 0.2f, 0.3f),
                     localAngles = new Vector3(0f, 180f, 0f),
-                    localScale = new Vector3(.3f, .3f, .3f)
+                    localScale = new Vector3(.275f, .275f, .275f)
 
         }
             });
@@ -233,16 +228,13 @@ namespace SupplyDrop.Items
         private void GetTotalDamageItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         //This compares your inventory to the damage item list each time your inventory changes, and generates the appropriate value for damageItemCount
         {
-            if (GetCount(self) > 0)
+            orig(self);
+            var damageItemCount = 0;
+            foreach (ItemIndex x in indiciiToCheck)
             {
-                var damageItemCount = 0;
-                foreach (ItemIndex x in indiciiToCheck)
-                {
-                    damageItemCount += self.inventory.GetItemCount(x);
-                }
-                DamageItemCounts[self.netId] = damageItemCount;
-                orig(self);
+                damageItemCount += self.inventory.GetItemCount(x);
             }
+            DamageItemCounts[self.netId] = damageItemCount;
         }
 
         private void IL_AddBonusHeal(ILContext il)
@@ -269,7 +261,8 @@ namespace SupplyDrop.Items
                     {
                         if (GetCount(body) > 0)
                         {
-                            newHeal = amount + (amount * (.02f * DamageItemCounts[body.netId] * GetCount(body)));
+                            newHeal = amount + (amount * (0.02f * DamageItemCounts[body.netId] * GetCount(body)));
+                            Debug.LogError("You currently have " + DamageItemCounts[body.netId] + " damage items.");
                         }
                         else
                         {
