@@ -16,11 +16,11 @@ namespace SupplyDrop.Items
         public float armorOnKillAmount { get; private set; } = .2f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The maximum amount of armor obtainable from the first stack of the item. Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The maximum amount of armor obtainable from the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseMaxArmorGain { get; private set; } = 10f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The maximum amount of armor obtainable from additional stacks of the item. Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The maximum amount of armor obtainable from additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addMaxArmorGain { get; private set; } = 10f;
         public override string displayName => "Shell Plating";
 

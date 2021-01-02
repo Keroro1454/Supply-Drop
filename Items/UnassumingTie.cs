@@ -13,31 +13,31 @@ namespace SupplyDrop.Items
     public class UnassumingTie : Item_V2<UnassumingTie>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: 4% (.04)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .04 = 4%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseStackHPPercent { get; private set; } = .04f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for additional stacks of item. Default: 2% (.02)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for additional stacks of item. Default: .02 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addStackHPPercent { get; private set; } = .02f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the duration of the 'Winded' debuff. Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In seconds, the duration of the 'Winded' debuff.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float windedDebuffDuration { get; private set; } = 10f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the base duration of the 'Second Wind' buff. Default: 4", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In seconds, the base duration of the 'Second Wind' buff.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float secondWindBaseDuration { get; private set; } = 4f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the multiplier applied to the shield/HP ratio, used to calculate the bonus duration of the 'Second Wind' buff. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In seconds, the multiplier applied to the shield/HP ratio, used to calculate the bonus duration of the 'Second Wind' buff.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float secondWindBonusMultiplier { get; private set; } = 5f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for the first stack of the item. Default: 15%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for the first stack of the item. Default: 15 = 15%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float secondWindBaseSpeedPercent { get; private set; } = 15f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for additional stacks of the item. Default: 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for additional stacks of the item. Default: 10 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float secondWindAddSpeedPercent { get; private set; } = 10f;
         public override string displayName => "Unassuming Tie";
 

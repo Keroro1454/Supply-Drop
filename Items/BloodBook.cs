@@ -15,30 +15,29 @@ namespace SupplyDrop.Items
     public class BloodBook : Item_V2<BloodBook>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("If true, the tome will be haunted with the spirit of a wise-cracking, explosives-loving cursed book. Default = true ", AutoConfigFlags.PreventNetMismatch)]
+        [AutoConfig("If true, the tome will be haunted with the spirit of a wise-cracking, explosives-loving cursed book. ", AutoConfigFlags.PreventNetMismatch)]
         public bool fearOfReading { get; private set; } = true;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, the chance the book will speak. Fear of Reading must be enabled. Default: 10% (10)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In percentage, the chance the book will speak. Fear of Reading must be enabled. Default: 10 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float chanceBookReads { get; private set; } = 10;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The maximum base damage boost the item can grant for the first stack of the item. Default: 20", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The maximum base damage boost the item can grant for the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseDamageBoostLimit { get; private set; } = 20;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The amount the maximum base damage boost the item can grant is raised by for additional stacks of the item. " +
-            "Default: 10", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The amount the maximum base damage boost the item can grant is raised by for additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addDamageBoostLimit { get; private set; } = 10;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("In percentage, the amount of an instance of damage that is converted into the temporary damage boost for the first stack of the item. " +
-            "Default: 10% (.1)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            "Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseDamageConversionPercent { get; private set; } = .1f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("In percentage, the extra amount of an instance of damage that is converted into the temporary damage boost for additional stacks of the item. " +
-            "Default: 5% (.05)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            "Default: .05 = 5%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addDamageConversionPercent { get; private set; } = .05f;
 
         public override string displayName => "Tome of Bloodletting";

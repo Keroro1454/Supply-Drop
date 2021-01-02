@@ -13,11 +13,11 @@ namespace SupplyDrop.Items
     public class ElectroPlankton : Item_V2<ElectroPlankton>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: 8% (.08)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .08 = 8%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseStackHPPercent { get; private set; } = .08f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("Amount of shield gained on hit. Is multiplied by the number of stacks of the item you have. Default: 1 ", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Amount of shield gained on hit. Is multiplied by the number of stacks of the item you have.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float shieldAmountOnHit { get; private set; } = 1f;
         public override string displayName => "Echo-Voltaic Plankton";
 

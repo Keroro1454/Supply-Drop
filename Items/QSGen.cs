@@ -14,15 +14,15 @@ namespace SupplyDrop.Items
     public class QSGen : Item_V2<QSGen>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: 16% (.16)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .16 = 16%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseStackHPPercent { get; private set; } = .16f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, length of time for the shield gate cooldown. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In seconds, length of time for the shield gate cooldown.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float shieldGateCooldownAmount { get; private set; } = 5f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, amount of shield gate cooldown reduced by additional stacks of the item. Default: .5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In seconds, amount of shield gate cooldown reduced by additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float shieldGateCooldownReduction { get; private set; } = .5f;
         public override string displayName => "Quantum Shield Generator";
 

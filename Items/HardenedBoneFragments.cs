@@ -13,15 +13,15 @@ namespace SupplyDrop.Items
     public class HardenedBoneFragments : Item_V2<HardenedBoneFragments>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The amount of temporary armor gained from each kill for the first stack of the item. Default: 2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The amount of temporary armor gained from each kill for the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseBonusArmor { get; private set; } = 2f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The amount of additional temporary armor gained from each kill from additional stacks of the item. Default: 1", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The amount of additional temporary armor gained from each kill from additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addBonusArmor { get; private set; } = 1f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The percentage of maximum HP needed to be lost to lose 1 additional bone fragment buff stack when taking damage. Default: 2% (2)", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The percentage of maximum HP needed to be lost to lose 1 additional bone fragment buff stack when taking damage. Default: 2 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float healthPercentBuffLoss { get; private set; } = 2f;
         public override string displayName => "Hardened Bone Fragments";
 

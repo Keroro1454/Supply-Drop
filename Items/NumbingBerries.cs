@@ -12,19 +12,19 @@ namespace SupplyDrop.Items
     public class NumbingBerries : Item_V2<NumbingBerries>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The amount of temporary armor gained after taking damage for the first stack of the item. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The amount of temporary armor gained after taking damage for the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseBonusArmor { get; private set; } = 5f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The amount of temporary armor gained after taking damage for additional stacks of the item. Default: 5", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("The amount of temporary armor gained after taking damage for additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addBonusArmor { get; private set; } = 5f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the duration of the armor boost for the first stack of the item. Default: 2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In seconds, the duration of the armor boost for the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseBerryBuffDuration { get; private set; } = 2f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the duration of the armor boost for additional stacks of the item. Default: 2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("In seconds, the duration of the armor boost for additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addBerryBuffDuration { get; private set; } = .5f;
 
         public override string displayName => "Numbing Berries";
