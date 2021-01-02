@@ -19,7 +19,7 @@ namespace SupplyDrop.Items
 
         public override ItemTier itemTier => ItemTier.Tier2;
 
-        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
+        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
         protected override string GetNameString(string langid = null) => displayName;
 
         protected override string GetPickupString(string langID = null) => "Heal extra the more damage items you have.";
@@ -64,9 +64,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(-0.025f, 0.05f, -.23f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(.2f, .2f, .2f)
+                    localPos = new Vector3(0f, 0.25f, 0.3f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(.3f, .3f, .3f)
 
         }
             });
