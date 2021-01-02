@@ -31,7 +31,6 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         private List<int> indiciiToCheck;
-        private int damageItemCount = 0;
 
 
         public PlagueMask()
@@ -203,18 +202,18 @@ namespace SupplyDrop.Items
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
         }
 
-        public int GetTotalDamageItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
+        private void GetTotalDamageItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
-            if (GetCount() > 0)
+            if (GetCount(self) > 0)
             {
+                orig(self);
+                var damageItemCount = 0;
                 foreach (ItemIndex x in indiciiToCheck)
                 {
-                    damageItemCount += self.GetItemCount(x);
+                    damageItemCount += self.inventory.GetItemCount(x);
                     Chat.AddMessage("Your damage item count is" + damageItemCount);
                 }
-                return damageItemCount;
             }
-            orig(self, itemIndex);
         }
 
         private void IL_AddBonusHeal(ILContext il)
@@ -235,6 +234,7 @@ namespace SupplyDrop.Items
                 c.Emit(OpCodes.Ldarg, 0);
                 c.EmitDelegate<Func<float, HealthComponent, float>>((amount, component) =>
                 {
+                    
                     float newHeal;
                     if (component.body is CharacterBody body)
                     {
