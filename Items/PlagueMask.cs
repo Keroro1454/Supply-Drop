@@ -27,7 +27,29 @@ namespace SupplyDrop.Items
         protected override string GetDescString(string langID = null) => "All <style=cIsHealing>healing</style> is increased by <style=cIsHealing>2%</style> <style=cStack>(+2% per stack)</style> for every <style=cIsDamage>damage item" +
             "</style> you possess.";
             
-        protected override string GetLoreString(string landID = null) => "Uh oh, no lore here. Try again later.";
+        protected override string GetLoreString(string landID = null) => "A fire crackled from within the ornate fireplace that dominated one side " +
+            "of the pristine office. Across, beautiful bookshelves that seemed to stretch into the heavens were packed with tomes, " +
+            "ancient and modern, as well as various priceless curios.\n\n" +
+            "One of the office's great mahogany doors, covered in carvings of men and women of science, opened silently. Three men walked into room. " +
+            "Two of the men were massive; they were dressed in fine suits, and had their faces obscured with menacing hoods of black fabric and steel. " +
+            "The last, a tall, gaunt man being led by the other two, wore a simple white lab uniform, and a terrifying leather hat and mask with " +
+            "a beak. The two hooded figures sat him in a simple chair at the foot of a magnificent desk, facing away from the shut doors.\n\n" +
+            "The man peered through the glass lenses of his mask at the Administrator. The leader of The Order stared impassively back from behind " +
+            "a mask made of solid gold, intricately sculpted into the face the Order had proven to be god.\n\n" +
+            "\"Doctor. You have broken the Oath of the Order.\"\n\n" + 
+            "\"Fuck you.\"\n\n" + 
+            "The Administrator did not flinch at the words, simply watching motionlessly the increasingly agitated man before them. " +
+            "\"Your attempts to reveal the Order's involvement within recent UES voyages have, of course, been abject failures.\"" + 
+            "\"Fu-\"\n\n" +
+            "The Adminstrator raised their hand; \"But the Order does not tolerate such blasphemous acts. We are an Order of science and reason, " +
+            "and you have acted against reason.\"\n\n" +
+            "\"Reason? You idiots are going to unleash those two! Onto everyone! How's that for reasonable?!\"\n\n" +
+            "\"You have thusly been deemed Unreasonable. Your membership to the Order has been severed. Goodbye Doctor.\"\n\n" +
+            "The two men stepped forward, and ripped away the man's mask, revealing a face full of emotion. Rage. Grief. Terror. " +
+            "The exposed man yelled at those in the room, cried and struggled, but he was easily hoisted out of the chair and dragged " +
+            "out of the room by the two men.\n\n" +
+            "The golden face stared stoicly as the man it just condemned was removed from the room. As the doors slammed shut, " +
+            "it looked down at the mask that had been left behind.";
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
@@ -37,7 +59,7 @@ namespace SupplyDrop.Items
         public PlagueMask()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueMask.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/QSGenIcon.png";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png";
         }
 
         public override void SetupAttributes()
