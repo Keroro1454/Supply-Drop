@@ -32,7 +32,7 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         private List<int> indiciiToCheck;
-        Dictionary<NetworkInstanceId, int> damageItemCount = new Dictionary<NetworkInstanceId, int>();
+        Dictionary<NetworkInstanceId, int> DamageItemCounts = new Dictionary<NetworkInstanceId, int>();
 
         public PlagueMask()
         {
@@ -208,17 +208,13 @@ namespace SupplyDrop.Items
             if (GetCount(self) > 0)
             {
                 orig(self);
-                var damageItemTrackerComponent = self.master.gameObject.GetComponent<ItemTrackers>();
-                if (!damageItemTrackerComponent)
-                {
-                    self.master.gameObject.AddComponent<ItemTrackers>();
-                }
                 var damageItemCount = 0;
                 foreach (ItemIndex x in indiciiToCheck)
                 {
                     damageItemCount += self.inventory.GetItemCount(x);
                     Chat.AddMessage("Your damage item count is" + damageItemCount);
                 }
+                DamageItemCounts[self.netId] = damageItemCount;
             }
         }
 
@@ -240,19 +236,12 @@ namespace SupplyDrop.Items
                 c.Emit(OpCodes.Ldarg, 0);
                 c.EmitDelegate<Func<float, HealthComponent, float>>((amount, component) =>
                 {
-                    
                     float newHeal;
                     if (component.body is CharacterBody body)
                     {
                         if (GetCount(body) > 0)
                         {
-                            var damageItemTrackerComponent = body.master.gameObject.GetComponent<ItemTrackers>();
-                            if (!damageItemTrackerComponent)
-                            {
-                                body.master.gameObject.AddComponent<ItemTrackers>();
-                            }
-                            var damageItemCount = body.master.gameObject.GetComponent<ItemTrackers>().damageItemCount;
-                            newHeal = amount + (amount * (.02f * damageItemCount * GetCount(body)));
+                            newHeal = amount + (amount * (.02f * DamageItemCounts[body.netId] * GetCount(body)));
                         }
                         else
                         {
