@@ -31,7 +31,7 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        private List<int> indiciiToCheck;
+        private ItemIndex[] indiciiToCheck;
         Dictionary<NetworkInstanceId, int> DamageItemCounts = new Dictionary<NetworkInstanceId, int>();
 
         public PlagueMask()
@@ -185,7 +185,7 @@ namespace SupplyDrop.Items
         {
             base.Install();
 
-            runDuringRUNStart();
+            On.RoR2.Run.Start += DamageItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal += IL_AddBonusHeal;
         }
@@ -194,31 +194,37 @@ namespace SupplyDrop.Items
         {
             base.Uninstall();
 
+            On.RoR2.Run.Start -= DamageItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged -= GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal -= IL_AddBonusHeal;
         }
-        private void runDuringRUNStart()
+
+        private void DamageItemListCreator(On.RoR2.Run.orig_Start orig, Run self)
+        //This creates a list of all damage items. May need to be moved to a separate class if multiple items need to access this list
         {
-            ItemIndex[] indiciiToCheck;
+            orig(self);
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
+            Debug.Log("Item List Method has been run and a Damage Item List has been created");
+            Debug.Log(indiciiToCheck.Length);
         }
 
         private void GetTotalDamageItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
+        //This compares your inventory to the damage item list each time your inventory changes, and generates the appropriate value for damageItemCount
         {
             if (GetCount(self) > 0)
             {
-                orig(self);
                 var damageItemCount = 0;
                 foreach (ItemIndex x in indiciiToCheck)
                 {
                     damageItemCount += self.inventory.GetItemCount(x);
-                    Chat.AddMessage("Your damage item count is" + damageItemCount);
                 }
                 DamageItemCounts[self.netId] = damageItemCount;
+                orig(self);
             }
         }
 
         private void IL_AddBonusHeal(ILContext il)
+        //This uses the calculated damageItemCount variable to determine how much bonus healing you get. IL is pain.
         {
             ILCursor c = new ILCursor(il);
 
