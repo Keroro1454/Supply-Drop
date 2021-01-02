@@ -17,14 +17,10 @@ namespace SupplyDrop.Items
     class PlagueHat : Item_V2<PlagueHat>
     {
         public override string displayName => "Vintage Plague Hat";
-
         public override ItemTier itemTier => ItemTier.Tier2;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Gain HP the more utility items you have.";
-
         protected override string GetDescString(string langID = null) => "Increase maximum <style=cIsHealing>HP</style> by <style=cIsHealing>2%</style> " +
             "<style=cStack>(+2% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
 
@@ -54,7 +50,6 @@ namespace SupplyDrop.Items
 
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
-
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
@@ -65,9 +60,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0.25f, 0.3f),
+                    localPos = new Vector3(-0.175f, -1.224f, 0.05f),
                     localAngles = new Vector3(0f, 180f, 0f),
-                    localScale = new Vector3(.3f, .3f, .3f)
+                    localScale = new Vector3(.015f, .015f, .015f)
 
         }
             });
@@ -186,6 +181,8 @@ namespace SupplyDrop.Items
         {
             base.Install();
 
+            itemDef.pickupModelPrefab.transform.localPosition = new Vector3(0f, -2f, 0f);
+
             On.RoR2.Run.Start += UtilityItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalUtilityItems;
             GetStatCoefficients += GainBonusHP;
@@ -212,21 +209,21 @@ namespace SupplyDrop.Items
         private void GetTotalUtilityItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         //This compares your inventory to the utilitye item list each time your inventory changes, and generates the appropriate value for damageItemCount
         {
-            if (GetCount(self) > 0)
+            orig(self);
+            var utilityItemCount = 0;
+            foreach (ItemIndex x in indiciiToCheck)
             {
-                var utilityItemCount = 0;
-                foreach (ItemIndex x in indiciiToCheck)
-                {
-                    utilityItemCount += self.inventory.GetItemCount(x);
-                }
-                UtilityItemCounts[self.netId] = utilityItemCount;
-                orig(self);
+                utilityItemCount += self.inventory.GetItemCount(x);
             }
+            UtilityItemCounts[self.netId] = utilityItemCount;
         }
         private void GainBonusHP(CharacterBody sender, StatHookEventArgs args)
         //This calculates the bonus HP
         {
-            args.healthMultAdd += GetCount(sender) * UtilityItemCounts[sender.netId] * 0.02f;
+            if (GetCount(sender) > 0 && UtilityItemCounts.ContainsKey(sender.netId))
+            {
+                args.healthMultAdd += GetCount(sender) * UtilityItemCounts[sender.netId] * .02f;
+            }
         }
     }
 }
