@@ -38,7 +38,7 @@ namespace SupplyDrop.Items
         public PlagueHat()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueHat.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/QSGenIcon.png";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png";
         }
 
         public override void SetupAttributes()
