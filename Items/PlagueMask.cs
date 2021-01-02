@@ -32,7 +32,6 @@ namespace SupplyDrop.Items
         public static GameObject ItemBodyModelPrefab;
         private List<int> indiciiToCheck;
 
-
         public PlagueMask()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueMask.prefab";
@@ -207,6 +206,11 @@ namespace SupplyDrop.Items
             if (GetCount(self) > 0)
             {
                 orig(self);
+                var damageItemTrackerComponent = self.master.gameObject.GetComponent<ItemTrackers>();
+                if (!damageItemTrackerComponent)
+                {
+                    self.master.gameObject.AddComponent<ItemTrackers>();
+                }
                 var damageItemCount = 0;
                 foreach (ItemIndex x in indiciiToCheck)
                 {
@@ -240,7 +244,11 @@ namespace SupplyDrop.Items
                     {
                         if (GetCount(body) > 0)
                         {
-
+                            var damageItemTrackerComponent = body.master.gameObject.GetComponent<ItemTrackers>();
+                            if (!damageItemTrackerComponent)
+                            {
+                                body.master.gameObject.AddComponent<ItemTrackers>();
+                            }
                             newHeal = amount + (amount * (.02f * damageItemCount * GetCount(body)));
                         }
                         else
