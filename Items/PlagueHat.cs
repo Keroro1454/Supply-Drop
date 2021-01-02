@@ -10,6 +10,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Linq;
+using static TILER2.StatHooks;
 
 namespace SupplyDrop.Items
 {
@@ -187,6 +188,7 @@ namespace SupplyDrop.Items
 
             On.RoR2.Run.Start += UtilityItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalUtilityItems;
+            GetStatCoefficients += GainBonusHP;
         }
 
         public override void Uninstall()
@@ -195,6 +197,7 @@ namespace SupplyDrop.Items
 
             On.RoR2.Run.Start -= UtilityItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged -= GetTotalUtilityItems;
+            GetStatCoefficients -= GainBonusHP;
         }
 
         private void UtilityItemListCreator(On.RoR2.Run.orig_Start orig, Run self)
@@ -219,6 +222,11 @@ namespace SupplyDrop.Items
                 UtilityItemCounts[self.netId] = utilityItemCount;
                 orig(self);
             }
+        }
+        private void GainBonusHP(CharacterBody sender, StatHookEventArgs args)
+        //This calculates the bonus HP
+        {
+            args.healthMultAdd += GetCount(sender) * UtilityItemCounts[sender.netId] * 0.02f;
         }
     }
 }
