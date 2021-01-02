@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using R2API;
 using RoR2;
 using UnityEngine;
+using UnityEngine.Networking;
 using TILER2;
 using SupplyDrop.Utils;
 using Mono.Cecil.Cil;
@@ -31,6 +32,7 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         private List<int> indiciiToCheck;
+        Dictionary<NetworkInstanceId, int> damageItemCount = new Dictionary<NetworkInstanceId, int>();
 
         public PlagueMask()
         {
@@ -249,6 +251,7 @@ namespace SupplyDrop.Items
                             {
                                 body.master.gameObject.AddComponent<ItemTrackers>();
                             }
+                            var damageItemCount = body.master.gameObject.GetComponent<ItemTrackers>().damageItemCount;
                             newHeal = amount + (amount * (.02f * damageItemCount * GetCount(body)));
                         }
                         else
