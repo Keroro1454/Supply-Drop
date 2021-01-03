@@ -202,6 +202,7 @@ namespace SupplyDrop.Items
         {
             orig(self);
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Utility)).ToArray();
+            UtilityItemCounts = new Dictionary<NetworkInstanceId, int>();
             Debug.Log("Item List Method has been run and a Utility Item List has been created");
             Debug.Log(indiciiToCheck.Length);
         }

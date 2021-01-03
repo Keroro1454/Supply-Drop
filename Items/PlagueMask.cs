@@ -49,7 +49,7 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         private ItemIndex[] indiciiToCheck;
-        Dictionary<NetworkInstanceId, int> DamageItemCounts = new Dictionary<NetworkInstanceId, int>();
+        public static Dictionary<NetworkInstanceId, int> DamageItemCounts { get; private set; } = new Dictionary<NetworkInstanceId, int>();
 
         public PlagueMask()
         {
@@ -221,6 +221,7 @@ namespace SupplyDrop.Items
         {
             orig(self);
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
+            DamageItemCounts = new Dictionary<NetworkInstanceId, int>();
             Debug.Log("Item List Method has been run and a Damage Item List has been created");
             Debug.Log(indiciiToCheck.Length);
         }
@@ -242,43 +243,51 @@ namespace SupplyDrop.Items
         {
             ILCursor c = new ILCursor(il);
 
-            bool found;
-            int local = 2; //As of 1.0.5.1 this was 2
+            bool found = false;
+            int amountArg = 1;
 
             found = c.TryGotoNext(MoveType.After,
-                x => x.MatchLdarg(1),
-                x => x.MatchStloc(out local)
-                );
-            
-            if (found)
+                x => x.MatchLdfld(typeof(HealthComponent.ItemCounts).GetField("increaseHealing")),
+                x => x.MatchLdcI4(0),
+                x => x.MatchBle(out _)
+            );
+            if (!found)
             {
-                c.Emit(OpCodes.Ldloc, local);
-                c.Emit(OpCodes.Ldarg, 0);
-                c.EmitDelegate<Func<float, HealthComponent, float>>((amount, component) =>
-                {
-                    float newHeal;
-                    if (component.body is CharacterBody body)
-                    {
-                        if (GetCount(body) > 0)
-                        {
-                            newHeal = amount + (amount * (0.02f * DamageItemCounts[body.netId] * GetCount(body)));
-                            Debug.LogError("You currently have " + DamageItemCounts[body.netId] + " damage items.");
-                        }
-                        else
-                        {
-                            newHeal = amount;
-                        }
-                        return newHeal;
-                    }
-                    else
-                    {
-                        newHeal = amount;
-                    }
-                    return newHeal;
-                }
-                );
-                c.Emit(OpCodes.Stloc, local);
-            }            
-        }   
+                Debug.LogError("Couldn't find where HealthComponent::Heal() reads number of Rejuvenation Racks, aborting PlagueMask hook...");
+                this.enabled = false;
+                return;
+            }
+
+            Instruction ifToChange = c.Previous;
+
+            found = c.TryGotoNext(MoveType.After,
+                x => x.MatchStarg(out amountArg)
+            );
+            if (!found)
+            {
+                Debug.LogError("HealthComponent::Heal() does not store the muliplied heal value after Rejuvenation Racks back into the arg, aborting PlagueMask hook...");
+                this.enabled = false;
+                return;
+            }
+
+            c.Emit(OpCodes.Ldarg_0);
+
+            ILLabel newLabel = c.DefineLabel();
+            newLabel.Target = c.Previous;
+            ifToChange.Operand = newLabel;
+
+            c.Emit(OpCodes.Ldc_I4, (int)this.catalogIndex);
+            c.Emit(OpCodes.Ldarg_1);
+            c.EmitDelegate<Func<HealthComponent, ItemIndex, float, float>>((healthComponent, maskIndex, healAmount) =>
+            {
+                int damageItemCount = 0;
+                if (!PlagueMask.DamageItemCounts.TryGetValue(healthComponent.body.netId, out damageItemCount))
+                    damageItemCount = 0;
+                return healAmount * ((0.02f * (float)healthComponent.body.inventory.GetItemCount(maskIndex)) * damageItemCount);
+            });
+            c.Emit(OpCodes.Ldarg_1);
+            c.Emit(OpCodes.Add);
+            c.Emit(OpCodes.Starg, amountArg);
+        }
     }
 }
