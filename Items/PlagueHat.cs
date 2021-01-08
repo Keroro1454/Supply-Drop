@@ -6,9 +6,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using TILER2;
 using SupplyDrop.Utils;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using System;
 using System.Linq;
 using static TILER2.StatHooks;
 
@@ -24,7 +21,19 @@ namespace SupplyDrop.Items
         protected override string GetDescString(string langID = null) => "Increase maximum <style=cIsHealing>HP</style> by <style=cIsHealing>2%</style> " +
             "<style=cStack>(+2% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
 
-        protected override string GetLoreString(string landID = null) => "Uh oh, no lore here. Try again later.";
+        protected override string GetLoreString(string landID = null) => "Order: \"NR-G Sports Soda (49)\"\nTracking Number: 49******\n" +
+            "Estimated Delivery: 3/01/2056\nShipping Method: Priority\nShipping Address: P.O. Box 749, Sector A, Moon\nShipping Details:" +
+            "You are cordially invited to the Order's 49th Annual Induction Gala.\n\n" +
+            "Enclosed with this invitation is your unique sigil, encoded coordinates for 'Party' cipher decryption, " +
+            "and your mask and headwear selected for your pre-destined role within the Order.\n\n" +
+            "Please note that attendance is mandatory. Missing the Sigil Ceremony will be noted, " +
+            "and absenteeism will result in you being deemed Unreasonable.\n\n" +
+            "Please also note the mask and hat are mandatory attire. Deviation of any kind will result in you being deemed Unreasonable.\n\n" +
+            "Cordially,\n" +
+            "The Administrator's Right Hand\n\n" +
+            "<style=i>We seek truth and knowledge in the darkness\n" +
+            "For on the day we achieve True Knowledge\n" +
+            "We shall reveal our faces and rule in the light</style>";
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
@@ -34,7 +43,7 @@ namespace SupplyDrop.Items
         public PlagueHat()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueHat.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlagueHatIcon.png";
         }
 
         public override void SetupAttributes()
@@ -60,9 +69,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(-0.175f, -1.224f, 0.05f),
+                    localPos = new Vector3(0f, 0.385f, 0f),
                     localAngles = new Vector3(0f, 180f, 0f),
-                    localScale = new Vector3(.015f, .015f, .015f)
+                    localScale = new Vector3(.2f, .2f, .2f)
 
         }
             });
@@ -73,9 +82,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0.05f, -0.2f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(0.125f, 0.125f, 0.125f)
+                    localPos = new Vector3(0f, 0.31f, -0.05f),
+                    localAngles = new Vector3(12f, 180f, 0f),
+                    localScale = new Vector3(0.175f, 0.175f, 0.175f)
         }
             });
             rules.Add("mdlToolbot", new ItemDisplayRule[]
@@ -85,9 +94,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(2.37f, 2.3f, -0.4f),
-                    localAngles = new Vector3(-30f, 90f, 180f),
-                    localScale = new Vector3(2f, 2f, 2f)
+                    localPos = new Vector3(-0.2f, 2.5f, 2f),
+                    localAngles = new Vector3(70f, 0f, 0f),
+                    localScale = new Vector3(1.25f, 1.25f, 1.25f)
                 }
             });
             rules.Add("mdlEngi", new ItemDisplayRule[]
@@ -96,9 +105,9 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Head",
-                    localPos = new Vector3(0f, 0f, -0.3f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
+                    childName = "HeadCenter",
+                    localPos = new Vector3(0f, 0.167f, 0f),
+                    localAngles = new Vector3(0f, 180f, 0f),
                     localScale = new Vector3(.2f, .2f, .2f)
                 }
             });
@@ -109,8 +118,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(-0.02f, -0.05f, -0.23f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
+                    localPos = new Vector3(0f, 0.15f, -0.1f),
+                    localAngles = new Vector3(30f, 180f, 0f),
                     localScale = new Vector3(0.14f, 0.14f, 0.14f)
                 }
             });
@@ -121,8 +130,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0.025f, 0.15f, -0.28f),
-                    localAngles = new Vector3(-149f, 0f, 0f),
+                    localPos = new Vector3(0f, 0.25f, 0f),
+                    localAngles = new Vector3(15f, 180f, 0f),
                     localScale = new Vector3(0.17f, 0.17f, 0.17f)
                 }
             });
@@ -133,9 +142,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "FlowerBase",
-                    localPos = new Vector3(0f, -1f, -0.9f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(0.5f, 0.5f, 0.5f)
+                    localPos = new Vector3(0.25f, 1.65f, 0.55f),
+                    localAngles = new Vector3(0f, 180f, -5f),
+                    localScale = new Vector3(0.25f, 0.25f, 0.25f)
                 }
             });
             rules.Add("mdlLoader", new ItemDisplayRule[]
@@ -145,9 +154,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(-0.02f, 0.19f, -0.285f),
-                    localAngles = new Vector3(-149f, 0f, 0f),
-                    localScale = new Vector3(.2f, .2f, .2f)
+                    localPos = new Vector3(0f, 0.23f, 0f),
+                    localAngles = new Vector3(15f, 180f, 0f),
+                    localScale = new Vector3(.18f, .18f, .18f)
                 }
             });
             rules.Add("mdlCroco", new ItemDisplayRule[]
@@ -157,9 +166,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0.7f, -3f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(2f, 2f, 2f)
+                    localPos = new Vector3(0f, 1f, 1.6f),
+                    localAngles = new Vector3(90f, 0f, 0f),
+                    localScale = new Vector3(1f, 1f, 1f)
                 }
             });
             rules.Add("mdlCaptain", new ItemDisplayRule[]
@@ -169,8 +178,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, -0.1f, -0.28f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
+                    localPos = new Vector3(0f, 0.275f, 0f),
+                    localAngles = new Vector3(25f, 180f, 0f),
                     localScale = new Vector3(0.15f, 0.15f, 0.15f)
                 }
             });
@@ -180,8 +189,6 @@ namespace SupplyDrop.Items
         public override void Install()
         {
             base.Install();
-
-            itemDef.pickupModelPrefab.transform.localPosition = new Vector3(0f, -2f, 0f);
 
             On.RoR2.Run.Start += UtilityItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalUtilityItems;

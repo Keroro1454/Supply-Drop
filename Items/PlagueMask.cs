@@ -54,7 +54,7 @@ namespace SupplyDrop.Items
         public PlagueMask()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueMask.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/TestIcon.png";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlagueMaskIcon.png";
         }
 
         public override void SetupAttributes()
@@ -94,9 +94,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0.05f, -0.2f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(0.125f, 0.125f, 0.125f)
+                    localPos = new Vector3(0f, 0.17f, 0.22f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(0.25f, 0.25f, 0.25f)
         }
             });
             rules.Add("mdlToolbot", new ItemDisplayRule[]
@@ -106,8 +106,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(2.37f, 2.3f, -0.4f),
-                    localAngles = new Vector3(-30f, 90f, 180f),
+                    localPos = new Vector3(0f, 5f, -1.5f),
+                    localAngles = new Vector3(120f, 0f, 0f),
                     localScale = new Vector3(2f, 2f, 2f)
                 }
             });
@@ -117,10 +117,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Head",
-                    localPos = new Vector3(0f, 0f, -0.3f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(.2f, .2f, .2f)
+                    childName = "HeadCenter",
+                    localPos = new Vector3(0f, -0.03f, 0.3f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(.25f, .25f, .25f)
                 }
             });
             rules.Add("mdlMage", new ItemDisplayRule[]
@@ -130,9 +130,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(-0.02f, -0.05f, -0.23f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(0.14f, 0.14f, 0.14f)
+                    localPos = new Vector3(0f, 0.03f, 0.23f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(0.2f, 0.2f, 0.2f)
                 }
             });
             rules.Add("mdlMerc", new ItemDisplayRule[]
@@ -142,9 +142,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0.025f, 0.15f, -0.28f),
-                    localAngles = new Vector3(-149f, 0f, 0f),
-                    localScale = new Vector3(0.17f, 0.17f, 0.17f)
+                    localPos = new Vector3(0f, 0.1f, 0.32f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(0.22f, 0.22f, 0.22f)
                 }
             });
             rules.Add("mdlTreebot", new ItemDisplayRule[]
@@ -154,9 +154,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "FlowerBase",
-                    localPos = new Vector3(0f, -1f, -0.9f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(0.5f, 0.5f, 0.5f)
+                    localPos = new Vector3(0f, 4.7f, 2.3f),
+                    localAngles = new Vector3(160f, 0f, 0f),
+                    localScale = new Vector3(2.25f, 2.25f, 2.25f)
                 }
             });
             rules.Add("mdlLoader", new ItemDisplayRule[]
@@ -166,9 +166,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(-0.02f, 0.19f, -0.285f),
-                    localAngles = new Vector3(-149f, 0f, 0f),
-                    localScale = new Vector3(.2f, .2f, .2f)
+                    localPos = new Vector3(0f, 0.08f, 0.25f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(.25f, .25f, .25f)
                 }
             });
             rules.Add("mdlCroco", new ItemDisplayRule[]
@@ -178,9 +178,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0.7f, -3f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(2f, 2f, 2f)
+                    localPos = new Vector3(0f, 4.7f, 2.3f),
+                    localAngles = new Vector3(160f, 0f, 0f),
+                    localScale = new Vector3(2.25f, 2.25f, 2.25f)
                 }
             });
             rules.Add("mdlCaptain", new ItemDisplayRule[]
@@ -190,9 +190,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, -0.1f, -0.28f),
-                    localAngles = new Vector3(-138f, 0f, 0f),
-                    localScale = new Vector3(0.15f, 0.15f, 0.15f)
+                    localPos = new Vector3(0f, 0.05f, 0.25f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(0.2f, 0.2f, 0.2f)
                 }
             });
             return rules;
@@ -280,6 +280,10 @@ namespace SupplyDrop.Items
             c.Emit(OpCodes.Ldarg_1);
             c.EmitDelegate<Func<HealthComponent, ItemIndex, float, float>>((healthComponent, maskIndex, healAmount) =>
             {
+                if (!healthComponent || !healthComponent.body || !healthComponent.body.inventory)
+                {
+                    return 0;
+                }
                 int damageItemCount = 0;
                 if (!PlagueMask.DamageItemCounts.TryGetValue(healthComponent.body.netId, out damageItemCount))
                     damageItemCount = 0;
