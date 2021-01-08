@@ -15,7 +15,7 @@ namespace SupplyDrop.Items
     public class BloodBook : Item_V2<BloodBook>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("If true, the tome will be haunted with the spirit of a wise-cracking, explosives-loving cursed book. ", AutoConfigFlags.PreventNetMismatch)]
+        [AutoConfig("If true, the tome will be haunted with the spirit of a wise-cracking, explosives-loving cursed book.", AutoConfigFlags.PreventNetMismatch)]
         public bool fearOfReading { get; private set; } = true;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
@@ -228,7 +228,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-0.5f, -0.5f, -0.2f),
+                    localPos = new Vector3(-0.6f, -0.6f, -0.2f),
                     localAngles = new Vector3(-90f, 0f, 0f),
                     localScale = generalScale
                 }
@@ -350,7 +350,7 @@ namespace SupplyDrop.Items
             float dmgTaken = damageInfo.damage;
             float maxHealth = self.body.maxHealth;
 
-            if (inventoryCount > 0 && damageInfo.rejected != true)
+            if (inventoryCount > 0)
             {
                 //This bit will cache the damage you took for use by the actual damage boost calculator, only if the damage exceeds any previous cached damage numbers
                 var cachedDamageComponent = self.body.gameObject.GetComponent<DamageComponent>();
