@@ -21,12 +21,12 @@ namespace SupplyDrop.Items
         public float addStackHPPercent { get; private set; } = .02f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of bonus attack speed gained for the first stack of item. Default: 10 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float baseAttackSpeedPercent { get; private set; } = 10f;
+        [AutoConfig("In percentage, amount of bonus attack speed gained for the first stack of item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseAttackSpeedPercent { get; private set; } = .1f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of bonus attack speed gained for additional stacks of item. Default: 10 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float addAttackSpeedPercent { get; private set; } = 10f;
+        [AutoConfig("In percentage, amount of bonus attack speed gained for additional stacks of item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addAttackSpeedPercent { get; private set; } = .1f;
         public override string displayName => "Salvaged Wires";
 
         public override ItemTier itemTier => ItemTier.Tier1;

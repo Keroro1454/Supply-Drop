@@ -33,12 +33,12 @@ namespace SupplyDrop.Items
         public float secondWindBonusMultiplier { get; private set; } = 5f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for the first stack of the item. Default: 15 = 15%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float secondWindBaseSpeedPercent { get; private set; } = 15f;
+        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for the first stack of the item. Default: .15 = 15%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float secondWindBaseSpeedPercent { get; private set; } = .15f;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for additional stacks of the item. Default: 10 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float secondWindAddSpeedPercent { get; private set; } = 10f;
+        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for additional stacks of the item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float secondWindAddSpeedPercent { get; private set; } = .1f;
         public override string displayName => "Unassuming Tie";
 
         public override ItemTier itemTier => ItemTier.Tier1;
