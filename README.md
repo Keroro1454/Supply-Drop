@@ -3,14 +3,12 @@ Supply Drop is a mod for Risk of Rain 2 designed to add a number of items.
 Items are designed with not just variety in mind, but with the goal of staying true to the game's design aesthetic, as well as balance.
 More items are coming soon--over a dozen are planned as of now!
 
-# What's New with Update 1.3 Part One: The Doctor is In!
-Modern problems may require modern solutions, but medieval problems like a pandemic require equally time-appropriate solutions. And that may or may not mean the medicinal practices showcased in this update will be somewhat...unconventional. But despite these questionable methods, we can guarantee the items in this update are sure to cure your what ails\* your patients\**! 
+# What's New with Update 1.4: The Doctor is Back!
+It's definitely been a few! But Supply Drop is back, and with it, bug fixes, improvements, rebalances, and two new items to help you pretend you're qualified to be handling any medical emergency. Admittedly, some people are probably going to panic when they see a person clad in a horrifying bird-like mask striding towards them when they call for a doctor. Thankfully, they'll be quickly calmed by your outlandish yet stylish headwear. And then even more quickly panicked again when you start beating the poor chap choking on their sandwich with your self-proclaimed 'medicine stick'. But hey, give those science-hating jerks a taste of their own medicine. 
 
-* Disclaimer: Applicable ailments are: being alive.
+From the stick. 
 
-** Disclaimer: Your patients refers to anything that moves.
-
-A little note from the developer: Hey everyone, going forward I intend to split major releases into two parts. The first part will reveal the update theme and what rarity the items of the second part will be. Then, the second part will reveal the name/rarity of ONE item in the next major release. Both parts, of course, will include items, as well as other major improvements/reworks. This method will allow me to get some items to you all faster, when otherwise pushing full releases would take a while.
+That'll teach 'em to question science!
 
 # Included Items:
 ## Common Items:
@@ -30,11 +28,11 @@ A little note from the developer: Hey everyone, going forward I intend to split 
 - **Echo-Voltaic Plankton**
 	- Gain shield equal to 8% of your max HP. Dealing damage recharges 1 (+1 per stack) shield.
 
-- **UNKNOWN ITEM**
-	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
+- **Vintage Plague Mask**
+	- All healing is increased by 4% (+2% per stack) for every damage item you possess.
 
 - **UNKNOWN ITEM**
-	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
+	- Increase maximum HP by 4% (+2% per stack) for every utility item you possess.
 	
 ## Legendary Items:
 - **Quantum Shield Stabilizer**
@@ -44,15 +42,21 @@ A little note from the developer: Hey everyone, going forward I intend to split 
 	- Convert 10% (+5% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s.
 	
 ## Lunar Items:
-
-## Equipment:
+- **UNKNOWN ITEM**
+	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
+	
+- **UNKNOWN ITEM**
+	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
+	
+- **UNKNOWN EQUIPMENT**
+	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
 - 1.4: The Doctor is BACK!
-	- Added two new items, the Plague Mask and Plague Hat
+	- Added two new items, the Vintage Plague Mask and Vintage Plague Hat
 	- Added configuration options to ALL pre-existing items (excludes newest additions). Any config changes are reflected in item logs/descriptions
+	- Remade ALL item icons to be more visually-consistent with vanilla icons
 	- Reworked Hardened Bone Fragments slightly; the number of fragment stacks lost on hit is now tied to the amount of damage you receive
-	- Fixed items based on taking damage not ignoring instances of damage that were rejected (ex. blocked by Tougher Times)
 	- Fixed shield items not granting reduced shield gains on additional stacks
 	- Fixed a typo in the QSS pick-up description
 
