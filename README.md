@@ -59,6 +59,7 @@ That'll teach 'em to question science!
 	- Reworked Hardened Bone Fragments slightly; the number of fragment stacks lost on hit is now tied to the amount of damage you receive
 	- Fixed shield items not granting reduced shield gains on additional stacks
 	- Fixed a typo in the QSS pick-up description
+	- Cleaned stuff up even more
 
 - 1.3.2
 	- Publicized item displays so devs of modded characters can add displays for Supply Drop items
