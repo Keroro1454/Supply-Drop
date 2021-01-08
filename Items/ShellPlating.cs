@@ -35,13 +35,19 @@ namespace SupplyDrop.Items
             $"<style=cIsUtility>{armorOnKillAmount}</style>, up to a maximum of <style=cIsUtility>{baseMaxArmorGain}</style> <style=cStack>(+{addMaxArmorGain} per stack)</style>" +
             $" <style=cIsUtility>armor</style>.";
 
-        protected override string GetLoreString(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\nEstimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan" +
-            "\nShipping Details:\n\nI've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. The story behind this piece should be especially interesting to you, " +
-            "given your fascination with sea-faring cultures.\n\nThe artifact comes from a small tribal community that lived on Earth long ago. The tribe would pay tributes into the sea, " +
-            "though it's not clear if this was in appeasement, celebration; in fact, it's unknown to what they were even paying tribute to.\n\nEither way, legend goes that one day, invaders appeared on the horizon in mighty vessels. " +
-            "The people, sensing the impending danger, sacrificed all they had in a terrified frenzy. Texts of theirs mention blood, possibly human, staining the foam red. In return...something...gave them shells to adorn their bodies with." +
-            "\n\nGovernment reports state casualities were in the hundreds. The few that survived described those clad with shells as literally invincible, grinning like madmen and shouting praises as armaments hit them without effect." +
-            "\n\nThere's still a few shells floating out there today, including this one here. Of course, no one has found them to be quite as...effective as those old reports claimed them to be. But it's still a neat little trinket, eh?";
+        protected override string GetLoreString(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\n" +
+            "Estimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan\nShipping Details:\n\n" +
+            "I've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. " +
+            "The story behind this piece should be especially interesting to you, given your fascination with sea-faring cultures.\n\n" +
+            "The artifact comes from a small tribal community that lived on Earth long ago. The tribe would pay tributes into the sea, " +
+            "though it's not clear if this was in appeasement, celebration; in fact, it's unknown to what they were even paying tribute to.\n\n" +
+            "Either way, legend goes that one day, invaders appeared on the horizon in mighty vessels. The people, sensing the impending danger, " +
+            "sacrificed all they had in a terrified frenzy. Texts of theirs mention blood, possibly human, staining the foam red. " +
+            "In return...something...gave them shells to adorn their bodies with." +
+            "\n\nGovernment reports state casualities were in the hundreds. The few that survived described those clad with shells as literally invincible, " +
+            "grinning like madmen and shouting praises as armaments hit them without effect." +
+            "\n\nThere's still a few shells floating out there today, including this one here. " +
+            "Of course, no one has found them to be quite as...effective as those old reports claimed them to be. But it's still a neat little trinket, eh?";
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
