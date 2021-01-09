@@ -228,7 +228,7 @@ namespace SupplyDrop.Items
             if(damageReport.attackerBody)
             {
                 var inventoryCount = GetCount(damageReport.attackerBody);
-                if(GetCount(damageReport.attackerBody) > 0)
+                if(inventoryCount > 0)
                 {
                     damageReport.attackerBody.AddBuff(BFBuff);
                 }
@@ -237,16 +237,11 @@ namespace SupplyDrop.Items
         }
         private void BFBuffLoss(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            if (damageInfo.rejected != true)
+            float buffsToLose = Mathf.Min((Mathf.RoundToInt((damageInfo.damage / self.body.maxHealth) / healthPercentBuffLoss) * 100) + 1, self.body.GetBuffCount(BFBuff));
+            while (buffsToLose > 0)
             {
-                var buffCount = self.body.GetBuffCount(BFBuff);
-                float buffsToLose = (((damageInfo.damage / self.body.maxHealth) / healthPercentBuffLoss) * 100) + 1;
-                while (buffsToLose > 0)
-                {
-                    self.body.RemoveBuff(BFBuff);
-                    buffCount -= 1;
-                    buffsToLose -= 1;
-                }
+                self.body.RemoveBuff(BFBuff);
+                buffsToLose -= 1;
             }
             orig(self, damageInfo);
         }
