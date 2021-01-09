@@ -273,7 +273,7 @@ namespace SupplyDrop.Items
             var preDamageShield = self.body.healthComponent.shield; 
             orig(self, damageInfo);
             var inventoryCount = GetCount(self.body);
-            if (inventoryCount > 0 && damageInfo.rejected != true)
+            if (inventoryCount > 0)
             {
                 float dmgTaken = damageInfo.damage;
                 if (dmgTaken >= preDamageShield && preDamageShield > 0)
