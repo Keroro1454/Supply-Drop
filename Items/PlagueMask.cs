@@ -107,7 +107,7 @@ namespace SupplyDrop.Items
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
                     localPos = new Vector3(0f, 5f, -1.5f),
-                    localAngles = new Vector3(120f, 0f, 0f),
+                    localAngles = new Vector3(120f, 180f, 0f),
                     localScale = new Vector3(2f, 2f, 2f)
                 }
             });
@@ -155,7 +155,7 @@ namespace SupplyDrop.Items
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "FlowerBase",
                     localPos = new Vector3(0f, 4.7f, 2.3f),
-                    localAngles = new Vector3(160f, 0f, 0f),
+                    localAngles = new Vector3(160f, 180f, 0f),
                     localScale = new Vector3(2.25f, 2.25f, 2.25f)
                 }
             });
@@ -284,8 +284,7 @@ namespace SupplyDrop.Items
                 {
                     return 0;
                 }
-                int damageItemCount = 0;
-                if (!PlagueMask.DamageItemCounts.TryGetValue(healthComponent.body.netId, out damageItemCount))
+                if (!PlagueMask.DamageItemCounts.TryGetValue(healthComponent.body.netId, out int damageItemCount))
                     damageItemCount = 0;
                 return healAmount * (0.04f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount);
             });
