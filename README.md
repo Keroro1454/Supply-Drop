@@ -31,7 +31,7 @@ That'll teach 'em to question science!
 - **Vintage Plague Mask**
 	- All healing is increased by 4% (+2% per stack) for every damage item you possess.
 
-- **UNKNOWN ITEM**
+- **Vintage Plague Hat**
 	- Increase maximum HP by 4% (+2% per stack) for every utility item you possess.
 	
 ## Legendary Items:
@@ -45,21 +45,18 @@ That'll teach 'em to question science!
 - **UNKNOWN ITEM**
 	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
 	
-- **UNKNOWN ITEM**
-	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
-	
 - **UNKNOWN EQUIPMENT**
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
 - 1.4: The Doctor is BACK!
-	- Added two new items, the Vintage Plague Mask and Vintage Plague Hat
+	- Added two new items: The Vintage Plague Mask and Vintage Plague Hat
 	- Added configuration options to ALL pre-existing items (excludes newest additions). Any config changes are reflected in item logs/descriptions
 	- Remade ALL item icons to be more visually-consistent with vanilla icons
 	- Reworked Hardened Bone Fragments slightly; the number of fragment stacks lost on hit is now tied to the amount of damage you receive
 	- Fixed shield items not granting reduced shield gains on additional stacks
 	- Fixed a typo in the QSS pick-up description
-	- Cleaned stuff up even more
+	- Cleaned stuff up a lot
 
 - 1.3.2
 	- Publicized item displays so devs of modded characters can add displays for Supply Drop items
