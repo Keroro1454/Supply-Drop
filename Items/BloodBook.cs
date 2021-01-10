@@ -294,7 +294,7 @@ namespace SupplyDrop.Items
                 }
             });
             rules.Add("mdlBandit", new ItemDisplayRule[]
-{
+            {
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -304,7 +304,7 @@ namespace SupplyDrop.Items
                     localAngles = new Vector3(-90f, 0f, 0f),
                     localScale = generalScale
                 }
-});
+            });
             return rules;
         }
         public override void Install()
