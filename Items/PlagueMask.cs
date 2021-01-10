@@ -107,7 +107,7 @@ namespace SupplyDrop.Items
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
                     localPos = new Vector3(0f, 5f, -1.5f),
-                    localAngles = new Vector3(120f, 180f, 0f),
+                    localAngles = new Vector3(60f, 0f, 0f),
                     localScale = new Vector3(2f, 2f, 2f)
                 }
             });
@@ -142,7 +142,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(0f, 0.1f, 0.32f),
+                    localPos = new Vector3(0f, 0.1f, 0.295f),
                     localAngles = new Vector3(0f, 180f, 0f),
                     localScale = new Vector3(0.22f, 0.22f, 0.22f)
                 }
@@ -154,9 +154,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "FlowerBase",
-                    localPos = new Vector3(0f, 4.7f, 2.3f),
-                    localAngles = new Vector3(160f, 180f, 0f),
-                    localScale = new Vector3(2.25f, 2.25f, 2.25f)
+                    localPos = new Vector3(0f, 0f, 1f),
+                    localAngles = new Vector3(0f, 180f, 0f),
+                    localScale = new Vector3(0.5f, 0.5f, 0.5f)
                 }
             });
             rules.Add("mdlLoader", new ItemDisplayRule[]
@@ -195,6 +195,7 @@ namespace SupplyDrop.Items
                     localScale = new Vector3(0.2f, 0.2f, 0.2f)
                 }
             });
+            //To-do: Add Bandit rigging
             return rules;
         }
 

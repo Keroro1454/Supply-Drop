@@ -94,8 +94,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Head",
-                    localPos = new Vector3(-0.2f, 2.5f, 2f),
-                    localAngles = new Vector3(70f, 0f, 0f),
+                    localPos = new Vector3(-0.5f, 2.45f, 1.7f),
+                    localAngles = new Vector3(70f, 0f, 20f),
                     localScale = new Vector3(1.25f, 1.25f, 1.25f)
                 }
             });
@@ -142,8 +142,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "FlowerBase",
-                    localPos = new Vector3(0.25f, 1.65f, 0.55f),
-                    localAngles = new Vector3(0f, 180f, -5f),
+                    localPos = new Vector3(-0.6f, 0.05f, 0.2f),
+                    localAngles = new Vector3(0f, 180f, -40f),
                     localScale = new Vector3(0.25f, 0.25f, 0.25f)
                 }
             });
