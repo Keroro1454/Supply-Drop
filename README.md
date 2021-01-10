@@ -130,3 +130,5 @@ That'll teach 'em to question science!
 **WaltzingPhantom:** They provided the lovely item icon designs for Hardened Bone Fragments and Numbing Berries!
 
 **Rein:** They provided so much help with getting the different components in the Tome of Bloodletting working. I can't thank them enough!
+
+**Aaron:** They helped a ton with puzzling through the Plague Hat's IL hook!
