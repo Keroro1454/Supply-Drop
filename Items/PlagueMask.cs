@@ -195,7 +195,18 @@ namespace SupplyDrop.Items
                     localScale = new Vector3(0.2f, 0.2f, 0.2f)
                 }
             });
-            //To-do: Add Bandit rigging
+            rules.Add("mdlBandit", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Head",
+                    localPos = new Vector3(0f, 0.2f, 0.25f),
+                    localAngles = new Vector3(10f, 180f, 0f),
+                    localScale = new Vector3(0.25f, 0.25f, 0.25f)
+                }
+            });
             return rules;
         }
 

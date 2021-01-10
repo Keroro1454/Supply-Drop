@@ -31,9 +31,9 @@ namespace SupplyDrop.Items
             "Please also note the mask and hat are mandatory attire. Deviation of any kind will result in you being deemed Unreasonable.\n\n" +
             "Cordially,\n" +
             "The Administrator's Right Hand\n\n" +
-            "<style=i>We seek truth and knowledge in the darkness\n" +
+            "<i>We seek truth and knowledge in the darkness\n" +
             "For on the day we achieve True Knowledge\n" +
-            "We shall reveal our faces and rule in the light</style>";
+            "We shall reveal our faces and rule in the light</i>";
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
@@ -181,6 +181,18 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(0f, 0.275f, 0f),
                     localAngles = new Vector3(25f, 180f, 0f),
                     localScale = new Vector3(0.15f, 0.15f, 0.15f)
+                }
+            });
+            rules.Add("mdlBandit", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Head",
+                    localPos = new Vector3(0f, 0.38f, -0.15f),
+                    localAngles = new Vector3(30f, 180f, 0f),
+                    localScale = new Vector3(0.2f, 0.2f, 0.2f)
                 }
             });
             return rules;
