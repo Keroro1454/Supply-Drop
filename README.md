@@ -14,10 +14,13 @@ That'll teach 'em to question science!
 ## Common Items:
 - **Hardened Bone Fragments**
 	- Killing an enemy temporarily grants 2 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor.
+
 - **Numbing Berries**
 	- Gain 5 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds.
+
 - **Unassuming Tie**
 	- Gain shield equal to 4% (+4% per stack) of your max HP. Breaking your shield gives you a Second Wind for 4 seconds, plus an additional amount based on max shield. Second Wind increases movement speed by 15% (+15% per stack).
+
 - **Salvaged Wires**
 	- Gain shield equal to 4% (+4% per stack) of your max HP. While shields are active, gain 10% (+10% per stack) increased attack speed.
 
