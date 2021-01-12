@@ -49,7 +49,11 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
-- 1.4: The Doctor is BACK!
+- 1.4.1
+	- Fixed formatting errors in the logbook descriptions of Unassuming Tie, Salvaged Wires, and Plague Hat
+	- Added missing credit to Aaron for the help with the IL hook of Plague Hat
+
+- 1.4.0: The Doctor is BACK!
 	- Added two new items: The Vintage Plague Mask and Vintage Plague Hat
 	- Added configuration options to ALL pre-existing items (excludes newest additions). Any config changes are reflected in item logs/descriptions
 	- Remade ALL item icons to be more visually-consistent with vanilla icons
