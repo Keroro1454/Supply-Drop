@@ -38,8 +38,8 @@ namespace SupplyDrop.Items
 
         protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
             $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health." +
-            $" While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>{Pct(baseAttackSpeedPercent)}%</style>" +
-            $" <style=cStack>(+{Pct(addAttackSpeedPercent)}% per stack)</style>.";
+            $" While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>{Pct(baseAttackSpeedPercent)}</style>" +
+            $" <style=cStack>(+{Pct(addAttackSpeedPercent)} per stack)</style>.";
 
         protected override string GetLoreString(string landID = null) => "\"Now remember y'all. There are three rules of Space Scrappin'. You squirts may be dumber than rocks, but I 'spect y'all to remember them.\"" +
             "\n\n." +

@@ -51,9 +51,15 @@ namespace SupplyDrop.Items
         protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
             $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health. Breaking your <style=cIsUtility>shield</style> gives you a" +
             $" <style=cIsUtility>Second Wind</style> for {secondWindBaseDuration}s, plus a bonus amount based on your <style=cIsUtility>maximum shield</style>. " +
-            $"Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{secondWindBaseSpeedPercent}%</style> <style=cStack>(+{secondWindBonusMultiplier}% per stack)</style>.";
+            $"Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{Pct(secondWindBaseSpeedPercent)}</style> <style=cStack>(+{Pct(secondWindAddSpeedPercent)} per stack)</style>.";
 
-        protected override string GetLoreString(string landID = null) => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters which were active during the early 21st century.The gang was wildly successful while active, breaking into, looting, and escaping from some of the most secure sites on Earth at the time. Even when authorities attempted to apprehend the criminals, reports state that shooting at them 'only seem to make [the heisters] move faster, however the hell that works.' While the identities of these criminals were never discovered, the gang ceased operations for unknown reasons after over a decade of activity. This piece serves as a testament to their dedication to style, no matter the situation.\"\n\n- Placard description for \"Striped Tie\" at the Galactic Museum of Law Enforcement and Criminality";
+        protected override string GetLoreString(string landID = null) => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters " +
+            "which were active during the early 21st century. The gang was wildly successful while active, breaking into, looting, " +
+            "and escaping from some of the most secure sites on Earth at the time. Even when authorities attempted to apprehend the criminals, " +
+            "reports state that shooting at them 'only seem to make [the heisters] move faster, however the hell that works.'\n" +
+            "While the identities of these criminals were never discovered, the gang ceased operations for unknown reasons after over a decade of activity. " +
+            "This piece serves as a testament to their dedication to style, no matter the situation.\"\n\n" +
+            "- <i>Placard description for \"Striped Tie\" at the Galactic Museum of Law Enforcement and Criminality</i>";
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;

@@ -50,7 +50,7 @@ namespace SupplyDrop.Items
         protected override string GetPickupString(string langID = null) => "Convert some damage taken into a temporary damage boost.";
 
         protected override string GetDescString(string langID = null) => $"Convert <style=cIsDamage>{Pct(baseDamageConversionPercent)}</style> " +
-            $"<style=cStack>(+{Pct(addDamageConversionPercent)}% per stack)</style> of the damage you take into a <style=cIsDamage>damage boost</style> " +
+            $"<style=cStack>(+{Pct(addDamageConversionPercent)} per stack)</style> of the damage you take into a <style=cIsDamage>damage boost</style> " +
             $"of up to <style=cIsDamage>{baseDamageBoostLimit}</style> <style=cStack>(+{addDamageBoostLimit} per stack)</style> for <style=cIsDamage>4s</style>. " +
             $"The <style=cIsDamage>boost</style> duration is increased based on damage taken; every <style=cIsHealth>10%</style> max health that was depleted, " +
             $"up to <style=cIsHealth>50%</style>, increases the duration by <style=cIsDamage>+2s</style>.";
