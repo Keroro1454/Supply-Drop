@@ -39,16 +39,11 @@ namespace SupplyDrop.Items
         [AutoConfig("In percentage, the extra amount of an instance of damage that is converted into the temporary damage boost for additional stacks of the item. " +
             "Default: .05 = 5%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addDamageConversionPercent { get; private set; } = .05f;
-
         public override string displayName => "Tome of Bloodletting";
-
         public override ItemTier itemTier => ItemTier.Tier3;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Damage });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Convert some damage taken into a temporary damage boost.";
-
         protected override string GetDescString(string langID = null) => $"Convert <style=cIsDamage>{Pct(baseDamageConversionPercent)}</style> " +
             $"<style=cStack>(+{Pct(addDamageConversionPercent)} per stack)</style> of the damage you take into a <style=cIsDamage>damage boost</style> " +
             $"of up to <style=cIsDamage>{baseDamageBoostLimit}</style> <style=cStack>(+{addDamageBoostLimit} per stack)</style> for <style=cIsDamage>4s</style>. " +
