@@ -241,7 +241,7 @@ namespace SupplyDrop.Items
             if (damageReport.attackerBody)
             {
                 var inventoryCount = GetCount(damageReport.attackerBody);
-                var currentShellStackMax = (((inventoryCount - 1) * 50) + 50);
+                var currentShellStackMax = (baseMaxArmorGain / armorOnKillAmount + ((inventoryCount - 1) * addMaxArmorGain / armorOnKillAmount));
                 var currentShellStack = damageReport.attackerBody.inventory.GetItemCount(shellStack);
                 if (inventoryCount > 0 && currentShellStack < currentShellStackMax)
                 {
