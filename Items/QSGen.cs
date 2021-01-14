@@ -242,22 +242,20 @@ namespace SupplyDrop.Items
 
         private void CalculateDamageReduction(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            orig(self, damageInfo);
-            float currentShield = self.body.healthComponent.shield;
             var inventoryCount = GetCount(self.body);
             if (inventoryCount > 0 && self.body.GetBuffCount(ShieldGateCooldown) <= 0)
             {
+                float currentShield = self.body.healthComponent.shield;
                 float dmgTaken = damageInfo.damage;
-                float shieldDamage = Math.Min(dmgTaken, currentShield);
                 if (currentShield > 0 && dmgTaken > currentShield)
                 {
-                    float damageReduction = dmgTaken - shieldDamage;
-                    damageInfo.damage += damageReduction;
+                    damageInfo.damage = currentShield;
 
                     float timerReduction = Mathf.Min(((inventoryCount - 1) * shieldGateCooldownReduction), shieldGateCooldownAmount);
                     self.body.AddTimedBuff(ShieldGateCooldown, (shieldGateCooldownAmount - timerReduction));
                 }
             }
+            orig(self, damageInfo);
         }
     }
 }
