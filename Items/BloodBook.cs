@@ -159,7 +159,7 @@ namespace SupplyDrop.Items
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {           
             var ItemFollower = ItemBodyModelPrefab.AddComponent<Utils.ItemFollower>();
-            ItemFollower.itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            ItemFollower.itemDisplay = ItemBodyModelPrefab.AddComponent<ItemDisplay>();
             ItemFollower.itemDisplay.rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
             ItemFollower.followerPrefab = ItemFollowerPrefab;
             ItemFollower.targetObject = ItemBodyModelPrefab;

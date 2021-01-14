@@ -208,7 +208,6 @@ namespace SupplyDrop.Items
             On.RoR2.HealthComponent.TakeDamage += ShieldOnHit;
             GetStatCoefficients += AddMaxShield;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();
