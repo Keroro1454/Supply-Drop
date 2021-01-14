@@ -4,11 +4,9 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
-using static TILER2.StatHooks;
-using static TILER2.MiscUtil;
 using SupplyDrop.Utils;
 using System;
-using System.Linq;
+using UnityEngine.UI;
 
 namespace SupplyDrop.Items
 {
@@ -208,6 +206,7 @@ namespace SupplyDrop.Items
 
             On.RoR2.DeathRewards.OnKilledServer += MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath += CoverageCheck;
+            On.RoR2.UI.HUD.Awake += insuranceUpgradeBar;
         }
 
         public override void Uninstall()
@@ -216,6 +215,7 @@ namespace SupplyDrop.Items
 
             On.RoR2.DeathRewards.OnKilledServer -= MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath -= CoverageCheck;
+            On.RoR2.UI.HUD.Awake -= insuranceUpgradeBar;
         }
         public struct Range
         {
@@ -275,6 +275,21 @@ namespace SupplyDrop.Items
                 }
             }
             orig(self, body);
+        }
+        private void insuranceUpgradeBar(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
+        {
+            orig(self);
+            var HUDRoot = self.transform.root;
+
+            GameObject GameObjectReference = new GameObject("insuranceUpgradeBar");
+            
+            GameObjectReference.transform.SetParent(HUDRoot);
+            GameObjectReference.AddComponent<RectTransform>();
+            GameObjectReference.GetComponent<RectTransform>().anchorMin = Vector2.zero;
+            GameObjectReference.GetComponent<RectTransform>().anchorMax = Vector2.one;
+            GameObjectReference.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+            GameObjectReference.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
         }
     }
 }
