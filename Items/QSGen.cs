@@ -7,7 +7,6 @@ using TILER2;
 using static TILER2.StatHooks;
 using static TILER2.MiscUtil;
 using SupplyDrop.Utils;
-using System;
 
 namespace SupplyDrop.Items
 {
@@ -236,7 +235,12 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                args.baseShieldAdd += sender.maxHealth * baseStackHPPercent;
+                if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
+                {
+                    var beetleHealthShield = sender.maxHealth + sender.maxShield;
+                    args.baseShieldAdd += ((beetleHealthShield * baseStackHPPercent));
+                }
+                args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent));
             }
         }
 
