@@ -52,6 +52,11 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.4.2
+	- Fixed Quantum Shield Stabilizer proc-ing inconsistently. It should now activate when its supposed to, and not when it shouldn't. Thanks MightyW0lf for the report!
+	- Fixed Shell Plating config options not properly affecting the item in-game. They will actually do something now! Thanks AndyDoe for the report!
+	- (Somewhat) Fixed shield items granting shield based on your post-Transcendence HP (i.e., 1). They will now grant shield based on your HP + Shield, which isn't quite how vanilla does it, but I find is a better alternative. Thanks sanity-dance for the report!
+
 - 1.4.1
 	- Fixed formatting errors in the logbook descriptions of Unassuming Tie, Salvaged Wires, and Plague Hat
 	- Added missing credit to Aaron for the help with the IL hook of Plague Hat
