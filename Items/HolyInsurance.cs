@@ -27,7 +27,7 @@ namespace SupplyDrop.Items
         public static GameObject ItemBodyModelPrefab;
         public static GameObject ItemFollowerPrefab;
 
-        public static Range[] ranges;
+        public Range[] ranges;
 
         public HolyInsurance()
         {
@@ -47,12 +47,13 @@ namespace SupplyDrop.Items
 
             ranges = new Range[]
             {
-                new Range(1, 2, "ICE", "N/A"),
+                
+                new Range(0, 2, "ICE", "N/A"),
                 new Range(2, 3, "BeetleMonster", "BeetleGuardMonster"),
                 new Range(3, 4, "LemurianMonster", "LemurianBruiserMonster"),
                 new Range(4, 5, "Wisp1Monster", "GreaterWispMonster"),
                 new Range(5, 6, "MagmaWorm", "N/A"),
-                new Range(6, 7, "Mithrix", "N/A")
+                new Range(6, uint.MaxValue, "BrotherMonster", "N/A")
             };
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
@@ -204,18 +205,20 @@ namespace SupplyDrop.Items
         {
             base.Install();
 
+            On.RoR2.CharacterBody.RecalculateStats += PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer += MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath += CoverageCheck;
-            On.RoR2.UI.HUD.Awake += insuranceUpgradeBar;
+            On.RoR2.UI.HUD.Awake += InsuranceUpgradeBar;
         }
 
         public override void Uninstall()
         {
             base.Uninstall();
 
+            On.RoR2.CharacterBody.RecalculateStats -= PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer -= MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath -= CoverageCheck;
-            On.RoR2.UI.HUD.Awake -= insuranceUpgradeBar;
+            On.RoR2.UI.HUD.Awake -= InsuranceUpgradeBar;
         }
         public struct Range
         {
@@ -232,8 +235,16 @@ namespace SupplyDrop.Items
             }
             public bool Contains(double value)
             {
-                return value >= Lower && value <= Upper;
+                return value >= Lower && value < Upper;
             }
+        }
+        private void PolicyUpgradePriceCalculator(On.RoR2.CharacterBody.orig_RecalculateStats orig, RoR2.CharacterBody self)
+        {
+            int inventoryCount = GetCount(self);
+            if (inventoryCount > 0)
+            {
+            }
+            orig(self);
         }
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
@@ -256,7 +267,7 @@ namespace SupplyDrop.Items
         private void CoverageCheck(On.RoR2.CharacterMaster.orig_OnBodyDeath orig, CharacterMaster self, CharacterBody body)
         {
             var attackerComponent = self.gameObject.GetComponent<DamageReport>();
-
+            
             if (Array.Exists(ranges, r => r.Equals(attackerComponent.attacker.name)))
             {
                 var insuranceSavingsTrackerComponent = self.gameObject.GetComponent<InsuranceSavingsTracker>();
@@ -276,20 +287,10 @@ namespace SupplyDrop.Items
             }
             orig(self, body);
         }
-        private void insuranceUpgradeBar(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
+        private void InsuranceUpgradeBar(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
         {
             orig(self);
             var HUDRoot = self.transform.root;
-
-            GameObject GameObjectReference = new GameObject("insuranceUpgradeBar");
-            
-            GameObjectReference.transform.SetParent(HUDRoot);
-            GameObjectReference.AddComponent<RectTransform>();
-            GameObjectReference.GetComponent<RectTransform>().anchorMin = Vector2.zero;
-            GameObjectReference.GetComponent<RectTransform>().anchorMax = Vector2.one;
-            GameObjectReference.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-            GameObjectReference.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
         }
     }
 }
