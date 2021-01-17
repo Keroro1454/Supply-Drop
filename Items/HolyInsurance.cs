@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
 using SupplyDrop.Utils;
-using System;
 using UnityEngine.UI;
 
 namespace SupplyDrop.Items
@@ -26,6 +26,7 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public static GameObject ItemFollowerPrefab;
+        Dictionary<string, Range> InsuranceDictionary = new Dictionary<string, Range>();
 
         public Range[] ranges;
 
@@ -34,7 +35,6 @@ namespace SupplyDrop.Items
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/HolyInsurance.prefab";
             iconResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/HolyInsuranceIcon.prefab";
         }
-
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
@@ -47,14 +47,16 @@ namespace SupplyDrop.Items
 
             ranges = new Range[]
             {
-                
-                new Range(0, 2, "ICE", "N/A"),
+                new Range(0, 1, "N/A", "N/A"),
+                new Range(1, 2, "ICE", "N/A"),
                 new Range(2, 3, "BeetleMonster", "BeetleGuardMonster"),
                 new Range(3, 4, "LemurianMonster", "LemurianBruiserMonster"),
                 new Range(4, 5, "Wisp1Monster", "GreaterWispMonster"),
                 new Range(5, 6, "MagmaWorm", "N/A"),
                 new Range(6, uint.MaxValue, "BrotherMonster", "N/A")
             };
+
+            
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -205,7 +207,7 @@ namespace SupplyDrop.Items
         {
             base.Install();
 
-            On.RoR2.CharacterBody.RecalculateStats += PolicyUpgradePriceCalculator;
+            On.RoR2.Run.Start += PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer += MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath += CoverageCheck;
             On.RoR2.UI.HUD.Awake += InsuranceUpgradeBar;
@@ -215,7 +217,7 @@ namespace SupplyDrop.Items
         {
             base.Uninstall();
 
-            On.RoR2.CharacterBody.RecalculateStats -= PolicyUpgradePriceCalculator;
+            On.RoR2.Run.Start -= PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer -= MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath -= CoverageCheck;
             On.RoR2.UI.HUD.Awake -= InsuranceUpgradeBar;
@@ -238,13 +240,13 @@ namespace SupplyDrop.Items
                 return value >= Lower && value < Upper;
             }
         }
-        private void PolicyUpgradePriceCalculator(On.RoR2.CharacterBody.orig_RecalculateStats orig, RoR2.CharacterBody self)
+        private void PolicyUpgradePriceCalculator(On.RoR2.Run.orig_Start orig, RoR2.Run self)
         {
-            int inventoryCount = GetCount(self);
-            if (inventoryCount > 0)
-            {
-            }
             orig(self);
+
+            InsuranceDictionary.Add("Tier0", ranges);
+
+            var xyz = self.difficultyCoefficient;
         }
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
