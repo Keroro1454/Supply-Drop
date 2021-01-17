@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Linq;
 using SupplyDrop.Items;
 using SupplyDrop.Utils;
 
@@ -27,12 +26,14 @@ namespace SupplyDrop.Utilities
                 }
                 var itemComponent = body.gameObject.GetComponent<HolyInsurance>();
 
-                //Finds index where current savings amounts fits in
-                int topTierAffordable = Array.FindIndex(itemComponent.ranges, r => r.Contains(cachedSavingsComponent.insuranceSavings));
-                //Takes the index we just found and determines what the Upper value in that index is
-                var insuranceBarMax = itemComponent.ranges.FirstOrDefault(r => r.Upper == topTierAffordable).Upper;
-                //Convert that Upper value from a double to a float/single
-                insuranceBar.maxValue = Convert.ToSingle(insuranceBarMax);
+                //Checks each Range in the InsuranceDictionary, finds which one our current savings fits in, and then assigns that Range's upper value to maxValue
+                foreach (HolyInsurance.Range range in itemComponent.InsuranceDictionary.Values)
+                {
+                    if (cachedSavingsComponent.insuranceSavings >= range.Lower && cachedSavingsComponent.insuranceSavings < range.Upper)
+                    {
+                        insuranceBar.maxValue = Convert.ToSingle(range.Upper);
+                    }
+                }
                 //Tells the bar what value we actually have
                 insuranceBar.value = cachedSavingsComponent.insuranceSavings;
             }

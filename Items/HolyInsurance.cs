@@ -26,7 +26,7 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public static GameObject ItemFollowerPrefab;
-        Dictionary<string, Range> InsuranceDictionary = new Dictionary<string, Range>();
+        public Dictionary<string, Range> InsuranceDictionary = new Dictionary<string, Range>();
 
         public HolyInsurance()
         {
@@ -43,14 +43,20 @@ namespace SupplyDrop.Items
             }
             base.SetupAttributes();
 
+            //No Coverage
             InsuranceDictionary.Add("Tier0", new Range(0, 1));
+            //T1 Coverage
             InsuranceDictionary.Add("BeetleMonster", new Range(1, 2));
             InsuranceDictionary.Add("BeetleGuardMonster", new Range(1, 2));
+            //T2 Coverage
             InsuranceDictionary.Add("LemurianMonster", new Range(2, 3));
             InsuranceDictionary.Add("LemurianBruiserMonster", new Range(2, 3));
+            //T3 Coverage
             InsuranceDictionary.Add("Wisp1Monster", new Range(3, 4));
             InsuranceDictionary.Add("GreaterWispMonster", new Range(3, 4));
+            //T4 Coverage
             InsuranceDictionary.Add("MagmaWorm", new Range(4, 5));
+            //T5 Coverage
             InsuranceDictionary.Add("BrotherMonster", new Range(6, uint.MaxValue));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
@@ -202,7 +208,7 @@ namespace SupplyDrop.Items
         {
             base.Install();
 
-            On.RoR2.Run.Start += PolicyUpgradePriceCalculator;
+            On.RoR2.Run.RecalculateDifficultyCoefficentInternal += PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer += MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath += CoverageCheck;
             On.RoR2.UI.HUD.Awake += InsuranceUpgradeBar;
@@ -212,7 +218,7 @@ namespace SupplyDrop.Items
         {
             base.Uninstall();
 
-            On.RoR2.Run.Start -= PolicyUpgradePriceCalculator;
+            On.RoR2.Run.RecalculateDifficultyCoefficentInternal -= PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer -= MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath -= CoverageCheck;
             On.RoR2.UI.HUD.Awake -= InsuranceUpgradeBar;
@@ -231,7 +237,7 @@ namespace SupplyDrop.Items
                 return value >= Lower && value < Upper;
             }
         }
-        private void PolicyUpgradePriceCalculator(On.RoR2.Run.orig_Start orig, RoR2.Run self)
+        private void PolicyUpgradePriceCalculator(On.RoR2.Run.orig_RecalculateDifficultyCoefficentInternal orig, Run self)
         {
             orig(self);
 
