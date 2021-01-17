@@ -28,8 +28,6 @@ namespace SupplyDrop.Items
         public static GameObject ItemFollowerPrefab;
         Dictionary<string, Range> InsuranceDictionary = new Dictionary<string, Range>();
 
-        public Range[] ranges;
-
         public HolyInsurance()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/HolyInsurance.prefab";
@@ -45,18 +43,15 @@ namespace SupplyDrop.Items
             }
             base.SetupAttributes();
 
-            ranges = new Range[]
-            {
-                new Range(0, 1, "N/A", "N/A"),
-                new Range(1, 2, "ICE", "N/A"),
-                new Range(2, 3, "BeetleMonster", "BeetleGuardMonster"),
-                new Range(3, 4, "LemurianMonster", "LemurianBruiserMonster"),
-                new Range(4, 5, "Wisp1Monster", "GreaterWispMonster"),
-                new Range(5, 6, "MagmaWorm", "N/A"),
-                new Range(6, uint.MaxValue, "BrotherMonster", "N/A")
-            };
-
-            
+            InsuranceDictionary.Add("Tier0", new Range(0, 1));
+            InsuranceDictionary.Add("BeetleMonster", new Range(1, 2));
+            InsuranceDictionary.Add("BeetleGuardMonster", new Range(1, 2));
+            InsuranceDictionary.Add("LemurianMonster", new Range(2, 3));
+            InsuranceDictionary.Add("LemurianBruiserMonster", new Range(2, 3));
+            InsuranceDictionary.Add("Wisp1Monster", new Range(3, 4));
+            InsuranceDictionary.Add("GreaterWispMonster", new Range(3, 4));
+            InsuranceDictionary.Add("MagmaWorm", new Range(4, 5));
+            InsuranceDictionary.Add("BrotherMonster", new Range(6, uint.MaxValue));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -226,14 +221,10 @@ namespace SupplyDrop.Items
         {
             public double Lower;
             public double Upper;
-            public string Attacker;
-            public string Attacker2;
-            public Range(double lower, double upper, string attacker, string attacker2)
+            public Range(double lower, double upper)
             {
                 Lower = lower;
                 Upper = upper;
-                Attacker = attacker;
-                Attacker2 = attacker2;
             }
             public bool Contains(double value)
             {
@@ -244,9 +235,8 @@ namespace SupplyDrop.Items
         {
             orig(self);
 
-            InsuranceDictionary.Add("Tier0", ranges);
-
             var xyz = self.difficultyCoefficient;
+
         }
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
@@ -269,23 +259,18 @@ namespace SupplyDrop.Items
         private void CoverageCheck(On.RoR2.CharacterMaster.orig_OnBodyDeath orig, CharacterMaster self, CharacterBody body)
         {
             var attackerComponent = self.gameObject.GetComponent<DamageReport>();
-            
-            if (Array.Exists(ranges, r => r.Equals(attackerComponent.attacker.name)))
-            {
-                var insuranceSavingsTrackerComponent = self.gameObject.GetComponent<InsuranceSavingsTracker>();
-                if (!insuranceSavingsTrackerComponent)
-                {
-                    self.gameObject.AddComponent<InsuranceSavingsTracker>();
-                }
 
-                int topTierAffordable = Array.FindIndex(ranges, r => r.Contains(insuranceSavingsTrackerComponent.insuranceSavings));
-                int tierNeeded = Array.FindIndex(ranges, r => r.Equals(attackerComponent.attacker.name));
-                if (topTierAffordable >= tierNeeded && topTierAffordable != -1 && tierNeeded != -1)
-                {
+            var insuranceSavingsTrackerComponent = self.gameObject.GetComponent<InsuranceSavingsTracker>();
+            if (!insuranceSavingsTrackerComponent)
+            {
+                self.gameObject.AddComponent<InsuranceSavingsTracker>();
+            }
+
+            if (InsuranceDictionary.TryGetValue(attackerComponent.attacker.name, out Range insuranceRange) && insuranceRange.Upper < insuranceSavingsTrackerComponent.insuranceSavings)
+            {
                     self.Invoke("RespawnExtraLife", 2f);
                     self.Invoke("PlayExtraLifeSFX", 1f);
                     insuranceSavingsTrackerComponent.insuranceSavings = 0;
-                }
             }
             orig(self, body);
         }
