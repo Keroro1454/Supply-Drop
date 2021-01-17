@@ -298,7 +298,11 @@ namespace SupplyDrop.Items
                 }
                 if (!PlagueMask.DamageItemCounts.TryGetValue(healthComponent.body.netId, out int damageItemCount))
                     damageItemCount = 0;
-                return healAmount * (0.04f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount);
+                if (GetCount(healthComponent.body) == 0)
+                {
+                    return healAmount;
+                }
+                return healAmount + healAmount * (0.04f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount);
             });
             c.Emit(OpCodes.Ldarg_1);
             c.Emit(OpCodes.Add);
