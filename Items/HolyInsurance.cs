@@ -43,21 +43,21 @@ namespace SupplyDrop.Items
             }
             base.SetupAttributes();
 
-            //No Coverage
-            InsuranceDictionary.Add("Tier0", new Range(0, 1));
             //T1 Coverage
-            InsuranceDictionary.Add("BeetleMonster", new Range(1, 2));
-            InsuranceDictionary.Add("BeetleGuardMonster", new Range(1, 2));
+            InsuranceDictionary.Add("BeetleMonster", new Range(0, 1));
+            InsuranceDictionary.Add("BeetleGuardMonster", new Range(0, 1));
             //T2 Coverage
-            InsuranceDictionary.Add("LemurianMonster", new Range(2, 3));
-            InsuranceDictionary.Add("LemurianBruiserMonster", new Range(2, 3));
+            InsuranceDictionary.Add("LemurianMonster", new Range(1, 2));
+            InsuranceDictionary.Add("LemurianBruiserMonster", new Range(1, 2));
             //T3 Coverage
-            InsuranceDictionary.Add("Wisp1Monster", new Range(3, 4));
-            InsuranceDictionary.Add("GreaterWispMonster", new Range(3, 4));
+            InsuranceDictionary.Add("Wisp1Monster", new Range(2, 3));
+            InsuranceDictionary.Add("GreaterWispMonster", new Range(2, 3));
             //T4 Coverage
-            InsuranceDictionary.Add("MagmaWorm", new Range(4, 5));
+            InsuranceDictionary.Add("MagmaWorm", new Range(3, 4));
             //T5 Coverage
-            InsuranceDictionary.Add("BrotherMonster", new Range(6, uint.MaxValue));
+            InsuranceDictionary.Add("BrotherMonster", new Range(4, 5));
+            //T6 Coverage (Not an actual tier, just an catch-all for money past T5)
+            InsuranceDictionary.Add("FullyCovered", new Range(5, uint.MaxValue));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -241,8 +241,19 @@ namespace SupplyDrop.Items
         {
             orig(self);
 
-            var xyz = self.difficultyCoefficient;
+            var diffCoeff = self.difficultyCoefficient;
+            var baseCost = 25 * Mathf.Pow(diffCoeff, 1.25f);
 
+            //Have to redefine all the dictionary entries here to set the Range values to their proper costs
+            InsuranceDictionary["BeetleMonster"] = new Range(0, baseCost);
+            InsuranceDictionary["BeetleGuardMonster"] = new Range(0, baseCost);
+            InsuranceDictionary["LemurianMonster"] = new Range(baseCost, baseCost * 2);
+            InsuranceDictionary["LemurianBruiserMonster"] = new Range(baseCost, baseCost * 2);
+            InsuranceDictionary["Wisp1Monster"] = new Range(baseCost * 2, baseCost * 4);
+            InsuranceDictionary["GreaterWispMonster"] = new Range(baseCost * 2, baseCost * 4);
+            InsuranceDictionary["MagmaWorm"] = new Range(baseCost * 4, baseCost * 8);
+            InsuranceDictionary["BrotherMonster"] = new Range(baseCost * 8, baseCost * 16);
+            InsuranceDictionary["FullyCovered"] = new Range(baseCost * 16, uint.MaxValue);
         }
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
@@ -258,6 +269,7 @@ namespace SupplyDrop.Items
                 rep.attackerBody.master.gameObject.AddComponent<InsuranceSavingsTracker>();
             }
 
+            //Could you theoretically go over uint.MaxValue here? idk
             insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
 
             orig(self, rep);
@@ -272,11 +284,23 @@ namespace SupplyDrop.Items
                 self.gameObject.AddComponent<InsuranceSavingsTracker>();
             }
 
+            //Tries to get a key with the killer's name. If one exists, throws out the corresponding Range to that key.
+            //Then check to ensure that Range's Upper value is less than the amount of gold you saved (confirms you're above that tier)
             if (InsuranceDictionary.TryGetValue(attackerComponent.attacker.name, out Range insuranceRange) && insuranceRange.Upper < insuranceSavingsTrackerComponent.insuranceSavings)
             {
-                    self.Invoke("RespawnExtraLife", 2f);
-                    self.Invoke("PlayExtraLifeSFX", 1f);
-                    insuranceSavingsTrackerComponent.insuranceSavings = 0;
+                self.Invoke("RespawnExtraLife", 2f);
+                self.Invoke("PlayExtraLifeSFX", 1f);
+
+                //This chunk ensures the extra money you are forced to save once you unlock the final coverage tier isn't wasted,
+                //by only reducing your savings = to the cost of unlocking the final coverage tier (or just to zero, if you haven't unlocked that tier)
+                var savingsComponent = body.gameObject.GetComponent<Run>();
+                if (!savingsComponent)
+                {
+                    body.gameObject.AddComponent<Run>();
+                }
+                var diffCoeff = savingsComponent.difficultyCoefficient;
+                var baseCost = Convert.ToUInt32(25 * Math.Pow(diffCoeff, 1.25f));
+                insuranceSavingsTrackerComponent.insuranceSavings = Math.Max(insuranceSavingsTrackerComponent.insuranceSavings - baseCost * 16, 0);
             }
             orig(self, body);
         }
