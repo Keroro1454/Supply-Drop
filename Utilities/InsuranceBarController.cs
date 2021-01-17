@@ -18,7 +18,6 @@ namespace SupplyDrop.Utilities
             {
                 var insuranceBar = GetComponent<Slider>();
 
-                //Acquire components for calculations
                 var cachedSavingsComponent = body.gameObject.GetComponent<InsuranceSavingsTracker>();
                 if (!cachedSavingsComponent)
                 {
@@ -34,7 +33,7 @@ namespace SupplyDrop.Utilities
                         insuranceBar.maxValue = Convert.ToSingle(range.Upper);
                     }
                 }
-                //Tells the bar what value we actually have
+
                 insuranceBar.value = cachedSavingsComponent.insuranceSavings;
             }
         }
