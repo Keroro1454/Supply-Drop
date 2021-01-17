@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
-    <Compile Remove="Items\HolyInsurance.cs" />
     <Compile Remove="PlagueMask.cs" />
   </ItemGroup>
 
