@@ -21,7 +21,7 @@ namespace SupplyDrop.Items
         protected override string GetNameString(string langid = null) => displayName;
         protected override string GetPickupString(string langID = null) => "Heal extra the more damage items you have.";
         protected override string GetDescString(string langID = null) => "All <style=cIsHealing>healing</style> is increased by " +
-            "<style=cIsHealing>4%</style> <style=cStack>(+2% per stack)</style> for every <style=cIsDamage>damage item</style> you possess.";           
+            "<style=cIsHealing>2%</style> <style=cStack>(+2% per stack)</style> for every <style=cIsDamage>damage item</style> you possess.";           
         protected override string GetLoreString(string landID = null) => "A fire crackled from within the ornate fireplace that dominated one side " +
             "of the pristine office. Across, beautiful bookshelves that seemed to stretch into the heavens were packed with tomes, " +
             "ancient and modern, as well as various priceless curios.\n\n" +
@@ -300,9 +300,9 @@ namespace SupplyDrop.Items
                     damageItemCount = 0;
                 if (GetCount(healthComponent.body) == 0)
                 {
-                    return healAmount;
+                    return 0;
                 }
-                return healAmount + healAmount * (0.04f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount);
+                return healAmount * (0.02f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount);
             });
             c.Emit(OpCodes.Ldarg_1);
             c.Emit(OpCodes.Add);

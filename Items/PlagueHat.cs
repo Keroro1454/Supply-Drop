@@ -18,7 +18,7 @@ namespace SupplyDrop.Items
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
         protected override string GetNameString(string langid = null) => displayName;
         protected override string GetPickupString(string langID = null) => "Gain HP the more utility items you have.";
-        protected override string GetDescString(string langID = null) => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>4%</style> " +
+        protected override string GetDescString(string langID = null) => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>2%</style> " +
             "<style=cStack>(+2% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
 
         protected override string GetLoreString(string landID = null) => "Order: \"NR-G Sports Soda (49)\"\nTracking Number: 49******\n" +
@@ -243,7 +243,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (GetCount(sender) > 0 && UtilityItemCounts.ContainsKey(sender.netId))
             {
-                args.healthMultAdd += (UtilityItemCounts[sender.netId] * (0.04f + ((inventoryCount - 1) * .02f)));
+                args.healthMultAdd += (UtilityItemCounts[sender.netId] * (0.02f + ((inventoryCount - 1) * .02f)));
             }
         }
     }
