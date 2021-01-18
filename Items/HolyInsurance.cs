@@ -26,12 +26,14 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public static GameObject ItemFollowerPrefab;
+        public static GameObject GameObjectReference;
         public Dictionary<string, Range> InsuranceDictionary = new Dictionary<string, Range>();
 
         public HolyInsurance()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/HolyInsurance.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/HolyInsuranceIcon.prefab";
+            //Don't forget to change these, currently using test model/icon
+            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/TestModel.prefab";
+            iconResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/TestIcon.prefab";
         }
         public override void SetupAttributes()
         {
@@ -306,8 +308,11 @@ namespace SupplyDrop.Items
         }
         private void InsuranceUpgradeBar(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
         {
-            orig(self);
             var HUDRoot = self.transform.root;
+            GameObjectReference = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Textures/UI/InsuranceBar.prefab");
+            GameObjectReference.transform.SetParent(HUDRoot);
+
+            orig(self);
         }
     }
 }
