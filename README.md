@@ -32,10 +32,10 @@ That'll teach 'em to question science!
 	- Gain shield equal to 8% of your max HP. Dealing damage recharges 1 (+1 per stack) shield.
 
 - **Vintage Plague Mask**
-	- All healing is increased by 4% (+2% per stack) for every damage item you possess.
+	- All healing is increased by 2% (+2% per stack) for every damage item you possess.
 
 - **Vintage Plague Hat**
-	- Increase maximum HP by 4% (+2% per stack) for every utility item you possess.
+	- Increase maximum HP by 2% (+2% per stack) for every utility item you possess.
 	
 ## Legendary Items:
 - **Quantum Shield Stabilizer**
@@ -52,6 +52,13 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.4.4
+	- Actually fixed Vintage Plague Mask not properly granting heal bonus. Thanks SyfleNov for the follow-up!
+	- Nerfed Vintage Plague Mask and Vintage Plague Hat initial stack bonuses, from 4% to 2%
+
+- 1.4.3
+	- Fixed Vintage Plague Mask not properly granting heal bonus. Thanks SyfleNov for the report!
+	
 - 1.4.2
 	- Fixed Quantum Shield Stabilizer proc-ing inconsistently. It should now activate when its supposed to, and not when it shouldn't. Thanks MightyW0lf for the report!
 	- Fixed Shell Plating config options not properly affecting the item in-game. They will actually do something now! Thanks AndyDoe for the report!
