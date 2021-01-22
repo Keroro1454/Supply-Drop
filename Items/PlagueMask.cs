@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace SupplyDrop.Items
 {
-    class PlagueMask : Item_V2<PlagueMask>
+    public class PlagueMask : Item_V2<PlagueMask>
     {
         public override string displayName => "Vintage Plague Mask";
         public override ItemTier itemTier => ItemTier.Tier2;

@@ -11,7 +11,7 @@ using static TILER2.StatHooks;
 
 namespace SupplyDrop.Items
 {
-    class PlagueHat : Item_V2<PlagueHat>
+    public class PlagueHat : Item_V2<PlagueHat>
     {
         public override string displayName => "Vintage Plague Hat";
         public override ItemTier itemTier => ItemTier.Tier2;
