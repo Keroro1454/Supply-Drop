@@ -3,31 +3,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using SupplyDrop.Items;
-using SupplyDrop.Utils;
 
-namespace SupplyDrop.Utilities
+namespace SupplyDrop.Utils
 {
     public class InsuranceBarController : MonoBehaviour
     {
         public CharacterBody body;
-        public static GameObject GameObjectReference;
 
-        public void Start()
-        {
-            var itemComponent = body.gameObject.GetComponent<HolyInsurance>();
-            if (itemComponent.GetCount(body) > 0)
-            {
-                GameObjectReference = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Textures/UI/InsuranceBar.prefab");
-            }
-        }
         public void FixedUpdate()
         {
             if (body)
             {
                 var itemComponent = body.gameObject.GetComponent<HolyInsurance>();
+                
                 if (itemComponent.GetCount(body) > 0)
-                {
-                    var insuranceBar = GameObjectReference.GetComponent<Slider>();
+                { 
+                    var insuranceBar = HolyInsurance.InsuranceBar;
 
                     var cachedSavingsComponent = body.gameObject.GetComponent<InsuranceSavingsTracker>();
                     if (!cachedSavingsComponent)
@@ -40,11 +31,11 @@ namespace SupplyDrop.Utilities
                     {
                         if (cachedSavingsComponent.insuranceSavings >= range.Lower && cachedSavingsComponent.insuranceSavings < range.Upper)
                         {
-                            insuranceBar.maxValue = Convert.ToSingle(range.Upper);
+                            insuranceBar.GetComponentInChildren<Slider>().maxValue = Convert.ToSingle(range.Upper);
                         }
                     }
 
-                    insuranceBar.value = cachedSavingsComponent.insuranceSavings;
+                    insuranceBar.GetComponentInChildren<Slider>().value = cachedSavingsComponent.insuranceSavings;
                 }
             }
         }

@@ -26,8 +26,13 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public static GameObject ItemFollowerPrefab;
-        public static GameObject GameObjectReference;
+
+        public static GameObject InsuranceBar;
+        public static GameObject InsuranceBarImage;
+        public static GameObject InsuranceBarOutline;
+
         public Dictionary<string, Range> InsuranceDictionary = new Dictionary<string, Range>();
+        //Navigation customNav = new Navigation();
 
         public HolyInsurance()
         {
@@ -260,59 +265,78 @@ namespace SupplyDrop.Items
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
             uint inventoryCount = Convert.ToUInt32(GetCount(rep.attackerBody));
-
-            uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((25 * inventoryCount) / 100 + (25 * (inventoryCount - 1)))));
-            uint investedGold = (uint)Mathf.FloorToInt(self.goldReward - reducedGold + ((self.goldReward - reducedGold) * ((inventoryCount - 1) / 4)));
-            self.goldReward = reducedGold;
-
-            var insuranceSavingsTrackerComponent = rep.attackerBody.master.gameObject.GetComponent<InsuranceSavingsTracker>();
-            if (!insuranceSavingsTrackerComponent)
+            if (inventoryCount > 0)
             {
-                rep.attackerBody.master.gameObject.AddComponent<InsuranceSavingsTracker>();
-            }
+                uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((25 * inventoryCount) / 100 + (25 * (inventoryCount - 1)))));
+                uint investedGold = (uint)Mathf.FloorToInt(self.goldReward - reducedGold + ((self.goldReward - reducedGold) * ((inventoryCount - 1) / 4)));
+                self.goldReward = reducedGold;
 
-            //Could you theoretically go over uint.MaxValue here? idk
-            insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
+                var insuranceSavingsTrackerComponent = rep.attackerBody.master.gameObject.GetComponent<InsuranceSavingsTracker>();
+                if (!insuranceSavingsTrackerComponent)
+                {
+                    rep.attackerBody.master.gameObject.AddComponent<InsuranceSavingsTracker>();
+                }
+
+                //Could you theoretically go over uint.MaxValue here? idk
+                insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
+            }
 
             orig(self, rep);
         }
         private void CoverageCheck(On.RoR2.CharacterMaster.orig_OnBodyDeath orig, CharacterMaster self, CharacterBody body)
         {
-            var attackerComponent = self.gameObject.GetComponent<DamageReport>();
-
-            var insuranceSavingsTrackerComponent = self.gameObject.GetComponent<InsuranceSavingsTracker>();
-            if (!insuranceSavingsTrackerComponent)
+            if (GetCount(body) > 0)
             {
-                self.gameObject.AddComponent<InsuranceSavingsTracker>();
-            }
+                var attackerComponent = self.gameObject.GetComponent<DamageReport>();
 
-            //Tries to get a key with the killer's name. If one exists, throws out the corresponding Range to that key.
-            //Then check to ensure that Range's Upper value is less than the amount of gold you saved (confirms you're above that tier)
-            if (InsuranceDictionary.TryGetValue(attackerComponent.attacker.name, out Range insuranceRange) && insuranceRange.Upper < insuranceSavingsTrackerComponent.insuranceSavings)
-            {
-                self.Invoke("RespawnExtraLife", 2f);
-                self.Invoke("PlayExtraLifeSFX", 1f);
-
-                //This chunk ensures the extra money you are forced to save once you unlock the final coverage tier isn't wasted,
-                //by only reducing your savings = to the cost of unlocking the final coverage tier (or just to zero, if you haven't unlocked that tier)
-                var savingsComponent = body.gameObject.GetComponent<Run>();
-                if (!savingsComponent)
+                var insuranceSavingsTrackerComponent = self.gameObject.GetComponent<InsuranceSavingsTracker>();
+                if (!insuranceSavingsTrackerComponent)
                 {
-                    body.gameObject.AddComponent<Run>();
+                    self.gameObject.AddComponent<InsuranceSavingsTracker>();
                 }
-                var diffCoeff = savingsComponent.difficultyCoefficient;
-                var baseCost = Convert.ToUInt32(25 * Math.Pow(diffCoeff, 1.25f));
-                insuranceSavingsTrackerComponent.insuranceSavings = Math.Max(insuranceSavingsTrackerComponent.insuranceSavings - baseCost * 16, 0);
+
+                //Tries to get a key with the killer's name. If one exists, throws out the corresponding Range to that key.
+                //Then check to ensure that Range's Upper value is less than the amount of gold you saved (confirms you're above that tier)
+                if (InsuranceDictionary.TryGetValue(attackerComponent.attacker.name, out Range insuranceRange) && insuranceRange.Upper < insuranceSavingsTrackerComponent.insuranceSavings)
+                {
+                    self.Invoke("RespawnExtraLife", 2f);
+                    self.Invoke("PlayExtraLifeSFX", 1f);
+
+                    //This chunk ensures the extra money you are forced to save once you unlock the final coverage tier isn't wasted,
+                    //by only reducing your savings = to the cost of unlocking the final coverage tier (or just to zero, if you haven't unlocked that tier)
+                    var savingsComponent = body.gameObject.GetComponent<Run>();
+                    if (!savingsComponent)
+                    {
+                        body.gameObject.AddComponent<Run>();
+                    }
+                    var diffCoeff = savingsComponent.difficultyCoefficient;
+                    var baseCost = Convert.ToUInt32(25 * Math.Pow(diffCoeff, 1.25f));
+                    insuranceSavingsTrackerComponent.insuranceSavings = Math.Max(insuranceSavingsTrackerComponent.insuranceSavings - baseCost * 16, 0);
+                }
             }
             orig(self, body);
         }
-        private void InsuranceUpgradeBar(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
+        public void InsuranceUpgradeBar(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
         {
-            var HUDRoot = self.transform.root;
-            GameObjectReference = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Textures/UI/InsuranceBar.prefab");
-            GameObjectReference.transform.SetParent(HUDRoot);
-
             orig(self);
+
+            var prefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Textures/UI/InsuranceBar.prefab");
+            InsuranceBar = GameObject.Instantiate(prefab, self.mainContainer.transform);
+            if (InsuranceBar)
+            {
+                var cachedSavingsComponent = self.gameObject.AddComponent<InsuranceSavingsTracker>();
+
+                foreach (Range range in InsuranceDictionary.Values)
+                {
+                    if (cachedSavingsComponent.insuranceSavings >= range.Lower && cachedSavingsComponent.insuranceSavings < range.Upper)
+                    {
+                        InsuranceBar.GetComponentInChildren<Slider>().maxValue = Convert.ToSingle(range.Upper);
+                    }
+                }
+                InsuranceBar.GetComponentInChildren<Slider>().value = 15;
+
+                InsuranceBar.AddComponent<InsuranceBarController>();
+            }
         }
     }
 }
