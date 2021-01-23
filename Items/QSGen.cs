@@ -237,20 +237,22 @@ namespace SupplyDrop.Items
             {
                 if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
                 {
-                    var beetleHealthShield = sender.maxHealth + sender.maxShield;
-                    args.baseShieldAdd += ((beetleHealthShield * baseStackHPPercent));
+                    args.baseShieldAdd += ((sender.levelMaxHealth * baseStackHPPercent));
                 }
-                args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent));
+                else
+                {
+                    args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent));
+                }
             }
         }
-
         private void CalculateDamageReduction(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             var inventoryCount = GetCount(self.body);
             if (inventoryCount > 0 && self.body.GetBuffCount(ShieldGateCooldown) <= 0)
             {
                 float currentShield = self.body.healthComponent.shield;
-                float dmgTaken = damageInfo.damage;
+                float dmgTaken = damageInfo.damage * (100 / (100 + self.body.armor));
+
                 if (currentShield > 0 && dmgTaken > currentShield)
                 {
                     damageInfo.damage = currentShield;

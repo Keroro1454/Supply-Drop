@@ -226,13 +226,14 @@ namespace SupplyDrop.Items
             {
                 if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
                 {
-                    var beetleHealthShield = sender.maxHealth + sender.maxShield;
-                    args.baseShieldAdd += ((beetleHealthShield * baseStackHPPercent) + ((beetleHealthShield * addStackHPPercent) * (inventoryCount - 1)));
+                    args.baseShieldAdd += ((sender.levelMaxHealth * baseStackHPPercent) + ((sender.levelMaxHealth * addStackHPPercent) * (inventoryCount - 1)));
                 }
-                args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
+                else
+                {
+                    args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
+                }
             }
         }
-
         private void AttackSpeedBonus(CharacterBody sender, StatHookEventArgs args)
         {
             var inventoryCount = GetCount(sender);

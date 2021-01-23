@@ -272,8 +272,7 @@ namespace SupplyDrop.Items
             {
                 if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
                 {
-                    var beetleHealthShield = sender.maxHealth + sender.maxShield;
-                    args.baseShieldAdd += ((beetleHealthShield * baseStackHPPercent) + ((beetleHealthShield * addStackHPPercent) * (inventoryCount - 1)));
+                    args.baseShieldAdd += ((sender.levelMaxHealth * baseStackHPPercent) + ((sender.levelMaxHealth * addStackHPPercent) * (inventoryCount - 1)));
                 }
                 else
                 {

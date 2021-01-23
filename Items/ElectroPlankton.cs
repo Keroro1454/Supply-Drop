@@ -222,13 +222,14 @@ namespace SupplyDrop.Items
             {
                 if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
                 {
-                    var beetleHealthShield = sender.maxHealth + sender.maxShield;
-                    args.baseShieldAdd += ((beetleHealthShield * baseStackHPPercent));
+                    args.baseShieldAdd += ((sender.levelMaxHealth * baseStackHPPercent));
                 }
-                args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent));
+                else
+                {
+                    args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent));
+                }
             }
         }
-
         private void ShieldOnHit(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             orig(self, damageInfo);
