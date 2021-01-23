@@ -115,9 +115,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, -0.7f, 0.25f),
+                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
                     localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = generalScale
+                    localScale = generalScale * 0.9f
                 }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
@@ -127,7 +127,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(-0.1f, -0.6f, 0.18f),
+                    localPos = new Vector3(-0.1f, 0.25f, 0.17f),
                     localAngles = new Vector3(0f, -20f, 0f),
                     localScale = generalScale * 0.9f
                 }
@@ -139,7 +139,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, -6.5f, 3.3f),
+                    localPos = new Vector3(0f, 0.9f, 3.3f),
                     localAngles = new Vector3(0f, 0f, 0f),
                     localScale = new Vector3(1.5f, 1.5f, 1.5f)
         }
@@ -151,7 +151,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, -0.7f, 0.31f),
+                    localPos = new Vector3(-0.05f, 0.25f, 0.27f),
                     localAngles = new Vector3(0f, 0f, 0f),
                     localScale = generalScale
                 }
@@ -163,9 +163,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, -0.65f, 0.3f),
-                    localAngles = new Vector3(-10f, 0f, 0f),
-                    localScale = generalScale * 0.9f
+                    localPos = new Vector3(-0.05f, 0.12f, 0.16f),
+                    localAngles = new Vector3(0f, 0f, 0f),
+                    localScale = new Vector3(0.15f, 0.15f, 0.15f)
                 }
             });
             rules.Add("mdlMerc", new ItemDisplayRule[]
@@ -175,8 +175,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, -0.65f, 0.35f),
-                    localAngles = new Vector3(-10f, 0f, 0f),
+                    localPos = new Vector3(-0.05f, 0.25f, 0.20f),
+                    localAngles = new Vector3(0f, 0f, 0f),
                     localScale = generalScale * 0.9f
                 }
             });
@@ -187,8 +187,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(0.35f, 1.2f, 1.2f),
-                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localPos = new Vector3(0.2f, 0.9f, 0f),
+                    localAngles = new Vector3(270f, 0f, 0f),
                     localScale = generalScale * 1.5f
                 }
             });
@@ -199,7 +199,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, -0.72f, 0.3f),
+                    localPos = new Vector3(-0.05f, 0.25f, 0.29f),
                     localAngles = new Vector3(0f, 0f, 0f),
                     localScale = generalScale
                 }
@@ -211,7 +211,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, -5f, -2.5f),
+                    localPos = new Vector3(0.3f, 2f, -2.5f),
                     localAngles = new Vector3(0f, 180f, 0f),
                     localScale = new Vector3(1.5f, 1.5f, 1.5f)
                 }
@@ -223,7 +223,7 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0.05f, -0.65f, 0.21f),
+                    localPos = new Vector3(-0.05f, 0.25f, 0.2f),
                     localAngles = new Vector3(0f, 0f, 0f),
                     localScale = generalScale
                 }
@@ -235,8 +235,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0.05f, -0.65f, 0.26f),
-                    localAngles = new Vector3(-5f, 0f, 0f),
+                    localPos = new Vector3(-0.05f, 0.25f, 0.18f),
+                    localAngles = new Vector3(0f, 0f, 0f),
                     localScale = generalScale
                 }
 });
@@ -246,6 +246,8 @@ namespace SupplyDrop.Items
         {
             base.Install();
 
+            //For some reason if this isn't here the game absolutely freaks out and throws a ton of errors stating the object is null.
+            //I seriously have no idea why the hell this is the case. DO NOT TOUCH!
             itemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
 
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
@@ -273,7 +275,10 @@ namespace SupplyDrop.Items
                     var beetleHealthShield = sender.maxHealth + sender.maxShield;
                     args.baseShieldAdd += ((beetleHealthShield * baseStackHPPercent) + ((beetleHealthShield * addStackHPPercent) * (inventoryCount - 1)));
                 }
-                args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
+                else
+                {
+                    args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
+                }
             }
         }
         private void AddWindedDebuff(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
