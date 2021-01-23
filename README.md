@@ -54,9 +54,10 @@ That'll teach 'em to question science!
 ## Changelog:
 - 1.4.4
 	- Actually fixed Vintage Plague Mask not properly granting heal bonus. Thanks SyfleNov for the follow-up!
+	- Fixed Quantum Shield Stabilizer determining if OSP needed to trigger off pre-armor damage calculations. Thanks gaforb for the report!
 	- Nerfed Vintage Plague Mask and Vintage Plague Hat initial stack bonuses, from 4% to 2%
 	- Publicized Vintage Plague Mask and Vintage Plague Hat for access by other mod creators
-	- Implemented a new physics technique to calculate Unassuming Tie movement. Now with over 100% more wiggly formalwear!
+	- Implemented a new physics technique to calculate Unassuming Tie movement (also allows character creators to implement it for their displays). Now with over 100% more wiggly formalwear!
 
 - 1.4.3
 	- Fixed Vintage Plague Mask not properly granting heal bonus. Thanks SyfleNov for the report!
