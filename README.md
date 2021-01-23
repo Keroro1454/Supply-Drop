@@ -52,6 +52,9 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.4.5
+	- Fixed issue in the Transcendence fix from 1.4.2 that was causing unending shield gains if you stacked 49+ Salvaged Wires/Unassuming Ties. Thanks Omnishade for the report!
+
 - 1.4.4
 	- Actually fixed Vintage Plague Mask not properly granting heal bonus. Thanks SyfleNov for the follow-up!
 	- Fixed Quantum Shield Stabilizer determining if OSP needed to trigger off pre-armor damage calculations. Thanks gaforb for the report!
