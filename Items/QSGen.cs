@@ -24,14 +24,10 @@ namespace SupplyDrop.Items
         [AutoConfig("In seconds, amount of shield gate cooldown reduced by additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float shieldGateCooldownReduction { get; private set; } = .5f;
         public override string displayName => "Quantum Shield Generator";
-
         public override ItemTier itemTier => ItemTier.Tier3;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "If shields are active, any damage that exceeds the active shield amount is negated.";
-
         protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style> " +
             $"of your maximum health. If an attack exceeds your active shields, the excess damage is <style=cIsUtility>negated</style>. " +
             $"This ability has a cooldown of {shieldGateCooldownAmount}s <style=cStack>(-{shieldGateCooldownReduction}s per stack)</style>.";
@@ -52,7 +48,6 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public BuffIndex ShieldGateCooldown { get; private set; }
-
         public QSGen()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/QSGen.prefab";
@@ -208,7 +203,6 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-
         public override void Install()
         {
             base.Install();
@@ -221,7 +215,6 @@ namespace SupplyDrop.Items
             On.RoR2.HealthComponent.TakeDamage += CalculateDamageReduction;
             GetStatCoefficients += AddMaxShield;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();
@@ -229,7 +222,6 @@ namespace SupplyDrop.Items
             On.RoR2.HealthComponent.TakeDamage -= CalculateDamageReduction;
             GetStatCoefficients -= AddMaxShield;
         }
-
         private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
             var inventoryCount = GetCount(sender);
@@ -247,18 +239,21 @@ namespace SupplyDrop.Items
         }
         private void CalculateDamageReduction(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            var inventoryCount = GetCount(self.body);
-            if (inventoryCount > 0 && self.body.GetBuffCount(ShieldGateCooldown) <= 0)
+            if (damageInfo.attacker)
             {
-                float currentShield = self.body.healthComponent.shield;
-                float dmgTaken = damageInfo.damage * (100 / (100 + self.body.armor));
-
-                if (currentShield > 0 && dmgTaken > currentShield)
+                var inventoryCount = GetCount(self.body);
+                if (inventoryCount > 0 && self.body.GetBuffCount(ShieldGateCooldown) <= 0)
                 {
-                    damageInfo.damage = currentShield;
+                    float currentShield = self.body.healthComponent.shield;
+                    float dmgTaken = damageInfo.damage * (100 / (100 + self.body.armor));
 
-                    float timerReduction = Mathf.Min(((inventoryCount - 1) * shieldGateCooldownReduction), shieldGateCooldownAmount);
-                    self.body.AddTimedBuff(ShieldGateCooldown, (shieldGateCooldownAmount - timerReduction));
+                    if (currentShield > 0 && dmgTaken > currentShield)
+                    {
+                        damageInfo.damage = currentShield * (100 / (100 + self.body.armor));
+
+                        float timerReduction = Mathf.Min(((inventoryCount - 1) * shieldGateCooldownReduction), shieldGateCooldownAmount);
+                        self.body.AddTimedBuff(ShieldGateCooldown, (shieldGateCooldownAmount - timerReduction));
+                    }
                 }
             }
             orig(self, damageInfo);
