@@ -16,7 +16,7 @@ namespace SupplyDrop.Items
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("If true, the tome will be haunted with the spirit of a wise-cracking, explosives-loving cursed book.", AutoConfigFlags.PreventNetMismatch)]
-        public bool fearOfReading { get; private set; } = true;
+        public bool fearOfReading { get; private set; } = false;
 
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("In percentage, the chance the book will speak. Fear of Reading must be enabled. Default: 10 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -69,7 +69,6 @@ namespace SupplyDrop.Items
         public static BuffIndex StrongBloodBuff { get; private set; }
         public static BuffIndex InsaneBloodBuff { get; private set; }
         public static BuffIndex DevotedBloodBuff { get; private set; }
-
         public BloodBook()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/BloodBook.prefab";
@@ -83,7 +82,6 @@ namespace SupplyDrop.Items
                 ItemFollowerPrefab = Resources.Load<GameObject>(modelResourcePath);
                 displayRules = GenerateItemDisplayRules();
             }
-
             base.SetupAttributes();
 
             var patheticBloodBuff = new CustomBuff(
@@ -155,7 +153,6 @@ namespace SupplyDrop.Items
                 new Range(50, double.PositiveInfinity, DevotedBloodBuff, 14)
             };
         }
-
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {           
             var ItemFollower = ItemBodyModelPrefab.AddComponent<Utils.ItemFollower>();
@@ -333,7 +330,6 @@ namespace SupplyDrop.Items
                 Buff = buff;
                 Duration = duration;
             }
-
             public bool Contains(double value)
             {
                 return value >= Lower && value <= Upper;
