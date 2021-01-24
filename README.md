@@ -52,6 +52,11 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.4.6
+	- Fully fixed Quantum Shield Stabilizer determining if OSP needed to trigger off pre-armor damage calculations. Thanks gaforb for the follow-up!
+	- Fixed Quantum Shield Stabilizer activating as a result of fall damage, despite fall damage not actually damaging shield.
+	- Set 'Fear of Reading' config option for the Tome of Bloodletting to 'false' by default. You must now choose to be haunted by this timeshare-possessing spectre!
+
 - 1.4.5
 	- Fixed issue in the Transcendence fix from 1.4.2 that was causing unending shield gains if you stacked 49+ Salvaged Wires/Unassuming Ties. Thanks Omnishade for the report!
 
