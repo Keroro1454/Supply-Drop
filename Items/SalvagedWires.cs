@@ -28,19 +28,14 @@ namespace SupplyDrop.Items
         [AutoConfig("In percentage, amount of bonus attack speed gained for additional stacks of item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addAttackSpeedPercent { get; private set; } = .1f;
         public override string displayName => "Salvaged Wires";
-
         public override ItemTier itemTier => ItemTier.Tier1;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Gain some shield, and gain increased attack speed while your shield is active.";
-
         protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
             $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health." +
             $" While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>{Pct(baseAttackSpeedPercent)}</style>" +
             $" <style=cStack>(+{Pct(addAttackSpeedPercent)} per stack)</style>.";
-
         protected override string GetLoreString(string landID = null) => "\"Now remember y'all. There are three rules of Space Scrappin'. You squirts may be dumber than rocks, but I 'spect y'all to remember them.\"" +
             "\n\n." +
             "\n." +
@@ -58,7 +53,6 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-
         public SalvagedWires()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/WireBundle.prefab";
@@ -212,7 +206,6 @@ namespace SupplyDrop.Items
             GetStatCoefficients += AttackSpeedBonus;
             GetStatCoefficients += AddMaxShield;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();

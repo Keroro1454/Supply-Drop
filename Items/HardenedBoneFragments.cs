@@ -24,17 +24,12 @@ namespace SupplyDrop.Items
         [AutoConfig("The percentage of maximum HP needed to be lost to lose 1 additional bone fragment buff stack when taking damage. Default: 2 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float healthPercentBuffLoss { get; private set; } = 2f;
         public override string displayName => "Hardened Bone Fragments";
-
         public override ItemTier itemTier => ItemTier.Tier1;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Gain temporary armor on kill. Armor is lost when injured.";
-
         protected override string GetDescString(string langID = null) => $"Gain <style=cIsUtility>{baseBonusArmor}</style> <style=cStack>(+{addBonusArmor} per stack)</style> " +
             $"<style=cIsUtility>armor</style> on kill. Some <style=cIsUtility>armor</style> is lost upon taking damage; higher damage loses more armor.";
-
         protected override string GetLoreString(string landID = null) => "The last attacker hissed its final breath before falling silent next to its brethren.\n\nThe man holstered his weapon, " +
             "wisps of smoke curling around the barrel, before falling to his knees with a sigh. Taking his knife from its hilt, he stabbed through the purple scales of his defeated foes, " +
             "taking meat to eat but also the creatures' bones, which he began wittling to flat surfaces. \n\nA woman came over, shouldering her bow as she stopped and looked upon the gory scene before her." +
@@ -45,7 +40,6 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public BuffIndex BFBuff { get; private set; }
-
         public HardenedBoneFragments()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Bone.prefab";
@@ -71,7 +65,6 @@ namespace SupplyDrop.Items
                 });
             BFBuff = R2API.BuffAPI.Add(bFBuff);
         }      
-
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
@@ -201,7 +194,6 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-
         public override void Install()
         {
             base.Install();
@@ -213,7 +205,6 @@ namespace SupplyDrop.Items
 
             GetStatCoefficients += AddBFBuff;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();
@@ -222,7 +213,6 @@ namespace SupplyDrop.Items
 
             GetStatCoefficients -= AddBFBuff;
         }
-
         private void CalculateBFBuffGain(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
         {
             if(damageReport.attackerBody)
@@ -245,7 +235,6 @@ namespace SupplyDrop.Items
             }
             orig(self, damageInfo);
         }
-
         private void AddBFBuff(CharacterBody sender, StatHookEventArgs args)
         {
             var InventoryCount = GetCount(sender);

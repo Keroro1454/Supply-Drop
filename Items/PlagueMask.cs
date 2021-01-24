@@ -50,13 +50,11 @@ namespace SupplyDrop.Items
         public static GameObject ItemBodyModelPrefab;
         private ItemIndex[] indiciiToCheck;
         public static Dictionary<NetworkInstanceId, int> DamageItemCounts { get; private set; } = new Dictionary<NetworkInstanceId, int>();
-
         public PlagueMask()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueMask.prefab";
             iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlagueMaskIcon.png";
         }
-
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
@@ -67,7 +65,6 @@ namespace SupplyDrop.Items
 
             base.SetupAttributes();
         }
-
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
 
@@ -209,7 +206,6 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-
         public override void Install()
         {
             base.Install();
@@ -218,7 +214,6 @@ namespace SupplyDrop.Items
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal += IL_AddBonusHeal;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();
@@ -227,9 +222,8 @@ namespace SupplyDrop.Items
             On.RoR2.CharacterBody.OnInventoryChanged -= GetTotalDamageItems;
             IL.RoR2.HealthComponent.Heal -= IL_AddBonusHeal;
         }
-
         private void DamageItemListCreator(On.RoR2.Run.orig_Start orig, Run self)
-        //This creates a list of all damage items. May need to be moved to a separate class if multiple items need to access this list
+        //May need to be moved to a separate class if multiple items need to access this list
         {
             orig(self);
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
@@ -237,7 +231,6 @@ namespace SupplyDrop.Items
             Debug.Log("Item List Method has been run and a Damage Item List has been created");
             Debug.Log(indiciiToCheck.Length);
         }
-
         private void GetTotalDamageItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         //This compares your inventory to the damage item list each time your inventory changes, and generates the appropriate value for damageItemCount
         {
@@ -249,7 +242,6 @@ namespace SupplyDrop.Items
             }
             DamageItemCounts[self.netId] = damageItemCount;
         }
-
         private void IL_AddBonusHeal(ILContext il)
         //This uses the calculated damageItemCount variable to determine how much bonus healing you get. IL is pain.
         {

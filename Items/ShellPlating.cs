@@ -23,18 +23,13 @@ namespace SupplyDrop.Items
         [AutoConfig("The maximum amount of armor obtainable from additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float addMaxArmorGain { get; private set; } = 10f;
         public override string displayName => "Shell Plating";
-
         public override ItemTier itemTier => ItemTier.Tier2;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Gain armor on kill.";
-
         protected override string GetDescString(string langID = null) => $"Killing an enemy increases your <style=cIsUtility>armor</style> permanently by " +
             $"<style=cIsUtility>{armorOnKillAmount}</style>, up to a maximum of <style=cIsUtility>{baseMaxArmorGain}</style> <style=cStack>(+{addMaxArmorGain} per stack)</style>" +
             $" <style=cIsUtility>armor</style>.";
-
         protected override string GetLoreString(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\n" +
             "Estimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan\nShipping Details:\n\n" +
             "I've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. " +
@@ -53,13 +48,11 @@ namespace SupplyDrop.Items
         public static GameObject ItemBodyModelPrefab;
         public BuffIndex ShellStackMax { get; private set; }
         public ItemIndex shellStack { get; private set; }
-
         public ShellPlating()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Shell.prefab";
             iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/ShellIcon.png";
         }
-
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
@@ -88,7 +81,6 @@ namespace SupplyDrop.Items
             }, new ItemDisplayRuleDict(null));
             shellStack = ItemAPI.Add(shellStackDef);
         }
-
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
 
@@ -218,7 +210,6 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-
         public override void Install()
         {
             base.Install();
@@ -227,7 +218,6 @@ namespace SupplyDrop.Items
 
             GetStatCoefficients += AddShellPlateStats;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();

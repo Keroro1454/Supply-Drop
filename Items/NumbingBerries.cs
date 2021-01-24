@@ -28,17 +28,12 @@ namespace SupplyDrop.Items
         public float addBerryBuffDuration { get; private set; } = .5f;
 
         public override string displayName => "Numbing Berries";
-
         public override ItemTier itemTier => ItemTier.Tier1;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Gain temporary armor upon taking damage.";
-
         protected override string GetDescString(string langID = null) => $"Gain <style=cIsUtility>{baseBonusArmor}</style> <style=cStack>(+{addBonusArmor} per stack)</style> " +
             $"<style=cIsUtility>armor</style> for {baseBerryBuffDuration} seconds <style=cStack>(+{addBerryBuffDuration} seconds per stack)</style> upon taking damage.";
-
         protected override string GetLoreString(string landID = null) => "<style=cMono>> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION..." +
             "\n> VERIFICATION SUCCESS. ACCESSING YOUR QUERY...\n> OUTPUT:</style>\n\nSpecies Genus: Vaccinum\nSpecies Section: Achilococcus" +
             "\n\nSpecies is native to the Andromeda system, though the exact planetary origin is currently unknown. Species is a flowering bush. Both the branches and leaves display dark green coloration, " +
@@ -56,7 +51,6 @@ namespace SupplyDrop.Items
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
         public BuffIndex NumbBerryBuff { get; private set; }
-
         public NumbingBerries()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Berry.prefab";
@@ -210,7 +204,6 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-
         public override void Install()
         {
             base.Install();
@@ -220,7 +213,6 @@ namespace SupplyDrop.Items
             On.RoR2.HealthComponent.TakeDamage += CalculateBerryBuff;
             GetStatCoefficients += AddBerryBuff;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();
@@ -228,7 +220,6 @@ namespace SupplyDrop.Items
 
             GetStatCoefficients -= AddBerryBuff;
         }
-
         private void CalculateBerryBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
 
@@ -239,7 +230,6 @@ namespace SupplyDrop.Items
                 }
             orig(self, damageInfo);
         }
-
         private void AddBerryBuff(CharacterBody sender, StatHookEventArgs args)
         {
             var InventoryCount = GetCount(sender);

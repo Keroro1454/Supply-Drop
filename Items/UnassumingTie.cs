@@ -40,19 +40,14 @@ namespace SupplyDrop.Items
         [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for additional stacks of the item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float secondWindAddSpeedPercent { get; private set; } = .1f;
         public override string displayName => "Unassuming Tie";
-
         public override ItemTier itemTier => ItemTier.Tier1;
-
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
         protected override string GetNameString(string langid = null) => displayName;
-
         protected override string GetPickupString(string langID = null) => "Gain some shield, and receive a speed boost when your shield is broken.";
-
         protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
             $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health. Breaking your <style=cIsUtility>shield</style> gives you a" +
             $" <style=cIsUtility>Second Wind</style> for {secondWindBaseDuration}s, plus a bonus amount based on your <style=cIsUtility>maximum shield</style>. " +
             $"Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{Pct(secondWindBaseSpeedPercent)}</style> <style=cStack>(+{Pct(secondWindAddSpeedPercent)} per stack)</style>.";
-
         protected override string GetLoreString(string landID = null) => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters " +
             "which were active during the early 21st century. The gang was wildly successful while active, breaking into, looting, " +
             "and escaping from some of the most secure sites on Earth at the time. Even when authorities attempted to apprehend the criminals, " +
@@ -63,10 +58,8 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-
         public BuffIndex SecondWindBuff { get; private set; }
         public BuffIndex WindedDebuff { get; private set; }
-
         public UnassumingTie()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Tie.prefab";
@@ -101,7 +94,6 @@ namespace SupplyDrop.Items
                     });
                 WindedDebuff = BuffAPI.Add(windedDebuff);
         }
-
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
@@ -255,7 +247,6 @@ namespace SupplyDrop.Items
             GetStatCoefficients += AddSecondWindBuff;
             On.RoR2.CharacterBody.RemoveBuff += AddWindedDebuff;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();

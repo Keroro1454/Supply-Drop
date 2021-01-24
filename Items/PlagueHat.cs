@@ -20,7 +20,6 @@ namespace SupplyDrop.Items
         protected override string GetPickupString(string langID = null) => "Gain HP the more utility items you have.";
         protected override string GetDescString(string langID = null) => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>2%</style> " +
             "<style=cStack>(+2% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
-
         protected override string GetLoreString(string landID = null) => "Order: \"NR-G Sports Soda (49)\"\nTracking Number: 49******\n" +
             "Estimated Delivery: 3/01/2056\nShipping Method: Priority\nShipping Address: P.O. Box 749, Sector A, Moon\nShipping Details:" +
             "You are cordially invited to the Order's 49th Annual Induction Gala.\n\n" +
@@ -39,13 +38,11 @@ namespace SupplyDrop.Items
         public static GameObject ItemBodyModelPrefab;
         private ItemIndex[] indiciiToCheck;
         Dictionary<NetworkInstanceId, int> UtilityItemCounts = new Dictionary<NetworkInstanceId, int>();
-
         public PlagueHat()
         {
             modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueHat.prefab";
             iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlagueHatIcon.png";
         }
-
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
@@ -56,7 +53,6 @@ namespace SupplyDrop.Items
 
             base.SetupAttributes();
         }
-
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
@@ -72,7 +68,6 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(0f, 0.385f, 0f),
                     localAngles = new Vector3(0f, 180f, 0f),
                     localScale = new Vector3(.2f, .2f, .2f)
-
         }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
@@ -197,7 +192,6 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-
         public override void Install()
         {
             base.Install();
@@ -206,7 +200,6 @@ namespace SupplyDrop.Items
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalUtilityItems;
             GetStatCoefficients += GainBonusHP;
         }
-
         public override void Uninstall()
         {
             base.Uninstall();
@@ -215,9 +208,8 @@ namespace SupplyDrop.Items
             On.RoR2.CharacterBody.OnInventoryChanged -= GetTotalUtilityItems;
             GetStatCoefficients -= GainBonusHP;
         }
-
         private void UtilityItemListCreator(On.RoR2.Run.orig_Start orig, Run self)
-        //This creates a list of all utility items. May need to be moved to a separate class if multiple items need to access this list
+        //May need to be moved to a separate class if multiple items need to access this list
         {
             orig(self);
             indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Utility)).ToArray();
@@ -225,9 +217,8 @@ namespace SupplyDrop.Items
             Debug.Log("Item List Method has been run and a Utility Item List has been created");
             Debug.Log(indiciiToCheck.Length);
         }
-
         private void GetTotalUtilityItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
-        //This compares your inventory to the utilitye item list each time your inventory changes, and generates the appropriate value for damageItemCount
+        //This compares your inventory to the utility item list each time your inventory changes, and generates the appropriate value for damageItemCount
         {
             orig(self);
             var utilityItemCount = 0;
@@ -238,7 +229,6 @@ namespace SupplyDrop.Items
             UtilityItemCounts[self.netId] = utilityItemCount;
         }
         private void GainBonusHP(CharacterBody sender, StatHookEventArgs args)
-        //This calculates the bonus HP
         {
             var inventoryCount = GetCount(sender);
             if (GetCount(sender) > 0 && UtilityItemCounts.ContainsKey(sender.netId))
