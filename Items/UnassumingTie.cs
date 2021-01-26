@@ -261,14 +261,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
-                {
-                    args.baseShieldAdd += ((sender.levelMaxHealth * baseStackHPPercent) + ((sender.levelMaxHealth * addStackHPPercent) * (inventoryCount - 1)));
-                }
-                else
-                {
-                    args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
-                }
+                ItemHelpers.AddMaxShieldHelper(sender, args, inventoryCount, baseStackHPPercent, addStackHPPercent);
             }
         }
         private void AddWindedDebuff(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)

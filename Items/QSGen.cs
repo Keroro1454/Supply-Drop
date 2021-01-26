@@ -227,14 +227,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
-                {
-                    args.baseShieldAdd += ((sender.levelMaxHealth * baseStackHPPercent));
-                }
-                else
-                {
-                    args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent));
-                }
+                ItemHelpers.AddMaxShieldHelper(sender, args, inventoryCount, baseStackHPPercent, 0);
             }
         }
         private void CalculateDamageReduction(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
