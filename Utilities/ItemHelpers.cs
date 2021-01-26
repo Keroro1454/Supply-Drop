@@ -35,7 +35,7 @@ namespace SupplyDrop.Utils
             //{
             //    if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0)
             //    {
-            //        args.baseShieldAdd += ((sender.maxShield * baseStackHPPercent) + ((sender.maxShield * addStackHPPercent * (inventoryCount - 1)));
+            //        args.baseShieldAdd += ((sender.maxShield * baseStackHPPercent) + ((sender.maxShield * addStackHPPercent * (inventoryCount - 1))));
             //    }
             //    else
             //    {
