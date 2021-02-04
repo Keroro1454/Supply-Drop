@@ -19,8 +19,8 @@ namespace SupplyDrop.Items
         protected override string GetPickupString(string langID = null) => "Some of the money you earn is invested into divine insurance (Coverage may vary).";
         protected override string GetDescString(string langID = null) => "Gain 25% <style=cStack>(+25% per stack)</style> less money from all sources. " +
             "100% <style=cStack>(+25% per stack)</style> of money lost is <style=cUtility>invested into upgrading your insurance</style> to cover more threats, " +
-            "up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cUtility>insured</style> for, you will return to life, " +
-            "and your <style=cUtility>insurance</style> level will be reset to zero.";
+            "up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will return to life, " +
+            "and your <style=cIsUtility>insurance</style> level will be reset to zero.";
         protected override string GetLoreString(string langID = null) => "Oops, no lore here. Try back later!";
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
@@ -44,8 +44,8 @@ namespace SupplyDrop.Items
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/HolyInsuranceTracker.prefab");
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/BloodBookTracker.prefab");
+                ItemFollowerPrefab = Resources.Load<GameObject>(modelResourcePath);
                 displayRules = GenerateItemDisplayRules();
             }
             base.SetupAttributes();
@@ -218,7 +218,8 @@ namespace SupplyDrop.Items
             On.RoR2.Run.RecalculateDifficultyCoefficentInternal += PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer += MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath += CoverageCheck;
-            On.RoR2.UI.HUD.Awake += InsuranceUpgradeBar;
+            On.RoR2.UI.HUD.Awake += InsuranceBarAwake;
+            On.RoR2.UI.HUD.Update += InsuranceBarUpdate;
         }
 
         public override void Uninstall()
@@ -228,7 +229,8 @@ namespace SupplyDrop.Items
             On.RoR2.Run.RecalculateDifficultyCoefficentInternal -= PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer -= MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath -= CoverageCheck;
-            On.RoR2.UI.HUD.Awake -= InsuranceUpgradeBar;
+            On.RoR2.UI.HUD.Awake += InsuranceBarAwake;
+            On.RoR2.UI.HUD.Update += InsuranceBarUpdate;
         }
         public struct Range
         {
@@ -264,21 +266,26 @@ namespace SupplyDrop.Items
         }
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
-            uint inventoryCount = Convert.ToUInt32(GetCount(rep.attackerBody));
-            if (inventoryCount > 0)
+            if (rep.attackerBody && self)
             {
-                uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((25 * inventoryCount) / 100 + (25 * (inventoryCount - 1)))));
-                uint investedGold = (uint)Mathf.FloorToInt(self.goldReward - reducedGold + ((self.goldReward - reducedGold) * ((inventoryCount - 1) / 4)));
-                self.goldReward = reducedGold;
-
-                var insuranceSavingsTrackerComponent = rep.attackerBody.master.gameObject.GetComponent<InsuranceSavingsTracker>();
-                if (!insuranceSavingsTrackerComponent)
+                var inventoryCount = GetCount(rep.attackerBody);
+                if (inventoryCount > 0)
                 {
-                    rep.attackerBody.master.gameObject.AddComponent<InsuranceSavingsTracker>();
-                }
+                    var insuranceSavingsTrackerComponent = rep.attackerBody.gameObject.GetComponent<InsuranceSavingsTracker>();
+                    if (!insuranceSavingsTrackerComponent)
+                    {
+                        rep.attackerBody.gameObject.AddComponent<InsuranceSavingsTracker>();
+                    }
 
-                //Could you theoretically go over uint.MaxValue here? idk
-                insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
+                    uint origGold = self.goldReward;
+                    uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((.5f * inventoryCount) / (inventoryCount + 1))));
+                    uint investedGold = origGold - reducedGold;
+                    self.goldReward = reducedGold;
+
+                    //Could you theoretically go over uint.MaxValue here? idk
+                    insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
+                    Debug.LogError("The money is actually being tracked. Rn you have " + insuranceSavingsTrackerComponent.insuranceSavings);
+                }
             }
 
             orig(self, rep);
@@ -316,7 +323,7 @@ namespace SupplyDrop.Items
             }
             orig(self, body);
         }
-        public void InsuranceUpgradeBar(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
+        public void InsuranceBarAwake(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
         {
             orig(self);
 
@@ -333,7 +340,24 @@ namespace SupplyDrop.Items
                         InsuranceBar.GetComponentInChildren<Slider>().maxValue = Convert.ToSingle(range.Upper);
                     }
                 }
-                InsuranceBar.GetComponentInChildren<Slider>().value = 15;
+                InsuranceBar.GetComponentInChildren<Slider>().value = cachedSavingsComponent.insuranceSavings;
+            }
+        }
+        public void InsuranceBarUpdate(On.RoR2.UI.HUD.orig_Update orig, RoR2.UI.HUD self)
+        {
+            orig(self);
+
+            if (InsuranceBar)
+            {
+                var cachedSavingsComponent = self.gameObject.AddComponent<InsuranceSavingsTracker>();
+
+                foreach (Range range in InsuranceDictionary.Values)
+                {
+                    if (cachedSavingsComponent.insuranceSavings >= range.Lower && cachedSavingsComponent.insuranceSavings < range.Upper)
+                    {
+                        InsuranceBar.GetComponentInChildren<Slider>().maxValue = Convert.ToSingle(range.Upper);
+                    }
+                }
 
                 InsuranceBar.AddComponent<InsuranceBarController>();
             }

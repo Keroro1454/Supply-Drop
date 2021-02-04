@@ -34,7 +34,7 @@ namespace SupplyDrop.Utils
                             insuranceBar.GetComponentInChildren<Slider>().maxValue = Convert.ToSingle(range.Upper);
                         }
                     }
-
+                    Debug.LogError(cachedSavingsComponent.insuranceSavings + "is the current amount of money saved!");
                     insuranceBar.GetComponentInChildren<Slider>().value = cachedSavingsComponent.insuranceSavings;
                 }
             }
