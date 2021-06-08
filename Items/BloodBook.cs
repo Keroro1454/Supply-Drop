@@ -9,10 +9,11 @@ using static TILER2.MiscUtil;
 using SupplyDrop.Utils;
 using System;
 using System.Linq;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class BloodBook : Item_V2<BloodBook>
+    public class BloodBook : Item<BloodBook>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("If true, the tome will be haunted with the spirit of a wise-cracking, explosives-loving cursed book.", AutoConfigFlags.PreventNetMismatch)]
@@ -63,94 +64,77 @@ namespace SupplyDrop.Items
         public static GameObject ItemFollowerPrefab;
 
         public static Range[] ranges;
-        public static BuffIndex PatheticBloodBuff { get; private set; }
-        public static BuffIndex WeakBloodBuff { get; private set; }
-        public static BuffIndex AverageBloodBuff { get; private set; }
-        public static BuffIndex StrongBloodBuff { get; private set; }
-        public static BuffIndex InsaneBloodBuff { get; private set; }
-        public static BuffIndex DevotedBloodBuff { get; private set; }
+        public static BuffDef PatheticBloodBuff { get; private set; }
+        public static BuffDef WeakBloodBuff { get; private set; }
+        public static BuffDef AverageBloodBuff { get; private set; }
+        public static BuffDef StrongBloodBuff { get; private set; }
+        public static BuffDef InsaneBloodBuff { get; private set; }
+        public static BuffDef DevotedBloodBuff { get; private set; }
         public BloodBook()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/BloodBook.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/BloodBook.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/BloodBookIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
                 ItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/BloodBookTracker.prefab");
-                ItemFollowerPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemFollowerPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
             base.SetupAttributes();
 
-            var patheticBloodBuff = new CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = "PatheticBloodBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon1.png"
-                    });
-            PatheticBloodBuff = BuffAPI.Add(patheticBloodBuff);
+            PatheticBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
+            PatheticBloodBuff.name = "SupplyDrop Blood Book Buff 1";
+            PatheticBloodBuff.canStack = false;
+            PatheticBloodBuff.isDebuff = false;
+            PatheticBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon1.png");
+            BuffAPI.Add(new CustomBuff(PatheticBloodBuff));
 
-            var weakBloodBuff = new CustomBuff(
-                new BuffDef
-                {
-                    canStack = false,
-                    isDebuff = false,
-                    name = "WeakBloodBuff",
-                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon2.png"
-                });
-            WeakBloodBuff = BuffAPI.Add(weakBloodBuff);
+            WeakBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
+            WeakBloodBuff.name = "SupplyDrop Blood Book Buff 2";
+            WeakBloodBuff.canStack = false;
+            WeakBloodBuff.isDebuff = false;
+            WeakBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon2.png");
+            BuffAPI.Add(new CustomBuff(WeakBloodBuff));
 
-            var averageBloodBuff = new R2API.CustomBuff(
-                new BuffDef
-                {
-                    canStack = false,
-                    isDebuff = false,
-                    name = "AverageBloodBuff",
-                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon3.png"
-                });
-            AverageBloodBuff = BuffAPI.Add(averageBloodBuff);
+            AverageBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
+            AverageBloodBuff.name = "SupplyDrop Blood Book Buff 3";
+            AverageBloodBuff.canStack = false;
+            AverageBloodBuff.isDebuff = false;
+            AverageBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon3.png");
+            BuffAPI.Add(new CustomBuff(AverageBloodBuff));
 
-            var strongBloodBuff = new CustomBuff(
-                new BuffDef
-                {
-                    canStack = false,
-                    isDebuff = false,
-                    name = "StrongBloodBuff",
-                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon4.png"
-                });
-            StrongBloodBuff = BuffAPI.Add(strongBloodBuff);
+            StrongBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
+            StrongBloodBuff.name = "SupplyDrop Blood Book Buff 4";
+            StrongBloodBuff.canStack = false;
+            StrongBloodBuff.isDebuff = false;
+            StrongBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon4.png");
+            BuffAPI.Add(new CustomBuff(StrongBloodBuff));
 
-            var insaneBloodBuff = new CustomBuff(
-                new BuffDef
-                {
-                    canStack = false,
-                    isDebuff = false,
-                    name = "InsaneBloodBuff",
-                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon5.png"                    
-                });
-            InsaneBloodBuff = BuffAPI.Add(insaneBloodBuff);
+            InsaneBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
+            InsaneBloodBuff.name = "SupplyDrop Blood Book Buff 5";
+            InsaneBloodBuff.canStack = false;
+            InsaneBloodBuff.isDebuff = false;
+            InsaneBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon5.png");
+            BuffAPI.Add(new CustomBuff(InsaneBloodBuff));
 
-            var devotedBloodBuff = new CustomBuff(
-                new BuffDef
-                {
-                    canStack = false,
-                    isDebuff = false,
-                    name = "DevotedBloodBuff",
-                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BloodBookBuffIcon6.png"                    
-                });
-            DevotedBloodBuff = BuffAPI.Add(devotedBloodBuff);
+            DevotedBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
+            DevotedBloodBuff.name = "SupplyDrop Blood Book Buff 6";
+            DevotedBloodBuff.canStack = false;
+            DevotedBloodBuff.isDebuff = false;
+            DevotedBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon6.png");
+            BuffAPI.Add(new CustomBuff(DevotedBloodBuff));
+
             ranges = new Range[]
             {
-                new Range(0, 10, PatheticBloodBuff, 4),
-                new Range(10, 20, WeakBloodBuff, 6),
-                new Range(20, 30, AverageBloodBuff, 8),
-                new Range(30, 40, StrongBloodBuff, 10),
-                new Range(40, 50, InsaneBloodBuff, 12),
-                new Range(50, double.PositiveInfinity, DevotedBloodBuff, 14)
+                new Range(0, 10, PatheticBloodBuff.buffIndex, 4),
+                new Range(10, 20, WeakBloodBuff.buffIndex, 6),
+                new Range(20, 30, AverageBloodBuff.buffIndex, 8),
+                new Range(30, 40, StrongBloodBuff.buffIndex, 10),
+                new Range(40, 50, InsaneBloodBuff.buffIndex, 12),
+                new Range(50, double.PositiveInfinity, DevotedBloodBuff.buffIndex, 14)
             };
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
@@ -386,7 +370,7 @@ namespace SupplyDrop.Items
         {
             orig(self, buffType);
 
-            if (buffType == PatheticBloodBuff || buffType == WeakBloodBuff || buffType == AverageBloodBuff || buffType == StrongBloodBuff || buffType == InsaneBloodBuff || buffType == DevotedBloodBuff)
+            if (buffType == PatheticBloodBuff.buffIndex || buffType == WeakBloodBuff.buffIndex || buffType == AverageBloodBuff.buffIndex || buffType == StrongBloodBuff.buffIndex || buffType == InsaneBloodBuff.buffIndex || buffType == DevotedBloodBuff.buffIndex)
             {
                 var cachedDamageComponent = self.gameObject.GetComponent<DamageComponent>();
                 cachedDamageComponent.cachedDamage = 0;

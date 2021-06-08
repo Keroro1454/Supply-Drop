@@ -52,6 +52,9 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.4.7
+	- Compatibility update for the Anniversary Update
+
 - 1.4.6
 	- Fully fixed Quantum Shield Stabilizer determining if OSP needed to trigger off pre-armor damage calculations. Thanks gaforb for the follow-up!
 	- Fixed Quantum Shield Stabilizer activating as a result of fall damage, despite fall damage not actually damaging shield.

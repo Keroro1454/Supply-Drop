@@ -6,10 +6,11 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class NumbingBerries : Item_V2<NumbingBerries>
+    public class NumbingBerries : Item<NumbingBerries>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("The amount of temporary armor gained after taking damage for the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -50,30 +51,28 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        public BuffIndex NumbBerryBuff { get; private set; }
+        public BuffDef NumbBerryBuff { get; private set; }
         public NumbingBerries()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Berry.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/BerryIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Berry.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/BerryIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
 
             base.SetupAttributes();
-            var numbBerryBuff = new R2API.CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = "NumbBerryBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BerryBuffIcon.png"
-                    });
-                NumbBerryBuff = R2API.BuffAPI.Add(numbBerryBuff);
+
+            NumbBerryBuff = ScriptableObject.CreateInstance<BuffDef>();
+            NumbBerryBuff.name = "SupplyDrop Berry Buff";
+            NumbBerryBuff.canStack = false;
+            NumbBerryBuff.isDebuff = false;
+            NumbBerryBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BerryBuffIcon.png");
+            BuffAPI.Add(new CustomBuff(NumbBerryBuff));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -226,7 +225,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(self.body);
             if (InventoryCount > 0)
                 {
-                self.body.AddTimedBuffAuthority(NumbBerryBuff, baseBerryBuffDuration + (addBerryBuffDuration * (InventoryCount - 1)));
+                self.body.AddTimedBuffAuthority(NumbBerryBuff.buffIndex, baseBerryBuffDuration + (addBerryBuffDuration * (InventoryCount - 1)));
                 }
             orig(self, damageInfo);
         }

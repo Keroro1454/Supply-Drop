@@ -7,10 +7,11 @@ using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
 using static TILER2.MiscUtil;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class UnassumingTie : Item_V2<UnassumingTie>
+    public class UnassumingTie : Item<UnassumingTie>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .04 = 4%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -58,41 +59,37 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        public BuffIndex SecondWindBuff { get; private set; }
-        public BuffIndex WindedDebuff { get; private set; }
+        public BuffDef SecondWindBuff { get; private set; }
+        public BuffDef WindedDebuff { get; private set; }
         public UnassumingTie()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Tie.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/TieIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Tie.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/TieIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
 
             base.SetupAttributes();
-            var secondWindBuff = new R2API.CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = "SecondWindBuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/SecondWindBuffIcon.png"
-                    });
-                SecondWindBuff = BuffAPI.Add(secondWindBuff);
 
-                var windedDebuff = new R2API.CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = true,
-                        name = "WindedDebuff",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/WindedDebuffIcon.png"
-                    });
-                WindedDebuff = BuffAPI.Add(windedDebuff);
+            SecondWindBuff = ScriptableObject.CreateInstance<BuffDef>();
+            SecondWindBuff.name = "SupplyDrop Tie Speed Buff";
+            SecondWindBuff.canStack = false;
+            SecondWindBuff.isDebuff = false;
+            SecondWindBuff.iconSprite = MainAssets.LoadAsset<Sprite>("SecondWindBuffIcon.png");
+            BuffAPI.Add(new CustomBuff(SecondWindBuff));
+
+            WindedDebuff = ScriptableObject.CreateInstance<BuffDef>();
+            WindedDebuff.name = "SupplyDrop Tie Cooldown Debuff";
+            WindedDebuff.canStack = false;
+            WindedDebuff.isDebuff = true;
+            WindedDebuff.iconSprite = MainAssets.LoadAsset<Sprite>("WindedDebuffIcon.png");
+            BuffAPI.Add(new CustomBuff(WindedDebuff));
+
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -267,9 +264,9 @@ namespace SupplyDrop.Items
         private void AddWindedDebuff(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
         {
             orig(self, buffType);
-            if (buffType == SecondWindBuff)
+            if (buffType == SecondWindBuff.buffIndex)
             {
-                self.AddTimedBuffAuthority(WindedDebuff, windedDebuffDuration);
+                self.AddTimedBuffAuthority(WindedDebuff.buffIndex, windedDebuffDuration);
             }             
         }
         private void CalculateBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
@@ -284,7 +281,7 @@ namespace SupplyDrop.Items
                 {
                     if (self.body.GetBuffCount(SecondWindBuff) == 0 && self.body.GetBuffCount(WindedDebuff) == 0)
                     {
-                        self.body.AddTimedBuffAuthority(SecondWindBuff, secondWindBaseDuration + (secondWindBonusMultiplier * (self.body.maxShield / self.body.maxHealth)));
+                        self.body.AddTimedBuffAuthority(SecondWindBuff.buffIndex, secondWindBaseDuration + (secondWindBonusMultiplier * (self.body.maxShield / self.body.maxHealth)));
                     }
                 }
             }

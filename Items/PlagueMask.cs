@@ -10,10 +10,11 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Linq;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class PlagueMask : Item_V2<PlagueMask>
+    public class PlagueMask : Item<PlagueMask>
     {
         public override string displayName => "Vintage Plague Mask";
         public override ItemTier itemTier => ItemTier.Tier2;
@@ -52,14 +53,14 @@ namespace SupplyDrop.Items
         public static Dictionary<NetworkInstanceId, int> DamageItemCounts { get; private set; } = new Dictionary<NetworkInstanceId, int>();
         public PlagueMask()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueMask.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlagueMaskIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/PlagueMask.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/PlagueMaskIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
 

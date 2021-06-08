@@ -7,10 +7,11 @@ using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
 using static TILER2.MiscUtil;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class SalvagedWires : Item_V2<SalvagedWires>
+    public class SalvagedWires : Item<SalvagedWires>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .04 = 4%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -55,14 +56,14 @@ namespace SupplyDrop.Items
         public static GameObject ItemBodyModelPrefab;
         public SalvagedWires()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/WireBundle.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/SalvagedWiresIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/WireBundle.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/SalvagedWiresIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
 

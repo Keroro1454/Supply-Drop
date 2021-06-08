@@ -6,11 +6,12 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
-//TO-DO: FIX/REMAKE MODEL. Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain.
+//TO-DO: Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain.
 namespace SupplyDrop.Items
 {
-    public class HardenedBoneFragments : Item_V2<HardenedBoneFragments>
+    public class HardenedBoneFragments : Item<HardenedBoneFragments>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("The amount of temporary armor gained from each kill for the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -39,31 +40,28 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        public BuffIndex BFBuff { get; private set; }
+        public BuffDef BFBuff { get; private set; }
         public HardenedBoneFragments()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Bone.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/BoneIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Bone.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/BoneIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
 
             base.SetupAttributes();
-            var bFBuff = new R2API.CustomBuff(
-            new BuffDef
-                {
-                    buffColor = Color.white,
-                    canStack = true,
-                    isDebuff = false,
-                    name = "BoneFragArmor",
-                    iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/BoneBuffIcon.png"
-                });
-            BFBuff = R2API.BuffAPI.Add(bFBuff);
+
+            BFBuff = ScriptableObject.CreateInstance<BuffDef>();
+            BFBuff.name = "SupplyDrop BF Buff";
+            BFBuff.canStack = true;
+            BFBuff.isDebuff = false;
+            BFBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BoneBuffIcon.png");
+            BuffAPI.Add(new CustomBuff(BFBuff));
         }      
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {

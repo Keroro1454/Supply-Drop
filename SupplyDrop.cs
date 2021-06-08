@@ -13,7 +13,7 @@ namespace K1454.SupplyDrop
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(SoundAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PrefabAPI), nameof(SoundAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
     {
         public const string ModVer = "1.4.6";
@@ -23,6 +23,9 @@ namespace K1454.SupplyDrop
         internal static FilingDictionary<CatalogBoilerplate> masterItemList = new FilingDictionary<CatalogBoilerplate>();
 
         internal static BepInEx.Logging.ManualLogSource _logger;
+
+
+        public static AssetBundle MainAssets;
         private static ConfigFile ConfigFile;
 
         private void Awake()
@@ -31,9 +34,7 @@ namespace K1454.SupplyDrop
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SupplyDrop.supplydrop_assets"))
             {
-                var bundle = AssetBundle.LoadFromStream(stream);
-                var provider = new AssetBundleResourcesProvider("@SupplyDrop", bundle);
-                ResourcesAPI.AddProvider(provider);
+                MainAssets = AssetBundle.LoadFromStream(stream);
             }
             ConfigFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
 

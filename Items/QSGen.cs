@@ -7,10 +7,11 @@ using TILER2;
 using static TILER2.StatHooks;
 using static TILER2.MiscUtil;
 using SupplyDrop.Utils;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class QSGen : Item_V2<QSGen>
+    public class QSGen : Item<QSGen>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .16 = 16%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -47,32 +48,30 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        public BuffIndex ShieldGateCooldown { get; private set; }
+        public BuffDef ShieldGateCooldown { get; private set; }
         public QSGen()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/QSGen.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/QSGenIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/QSGen.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/QSGenIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 var meshes = ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
                 meshes[1].gameObject.AddComponent<Spin>();
                 displayRules = GenerateItemDisplayRules();
             }
 
             base.SetupAttributes();
-                    var shieldGateCooldown = new CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = true,
-                        name = "ShieldGateCooldown",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ShieldGateCooldownIcon.png"
-                    });
-                ShieldGateCooldown = BuffAPI.Add(shieldGateCooldown);
+
+            ShieldGateCooldown = ScriptableObject.CreateInstance<BuffDef>();
+            ShieldGateCooldown.name = "SupplyDrop QSS Cooldown Debuff";
+            ShieldGateCooldown.canStack = false;
+            ShieldGateCooldown.isDebuff = true;
+            ShieldGateCooldown.iconSprite = MainAssets.LoadAsset<Sprite>("ShieldGateCooldownIcon.png");
+            BuffAPI.Add(new CustomBuff(ShieldGateCooldown));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -245,7 +244,7 @@ namespace SupplyDrop.Items
                         damageInfo.damage = currentShield * (100 / (100 + self.body.armor));
 
                         float timerReduction = Mathf.Min(((inventoryCount - 1) * shieldGateCooldownReduction), shieldGateCooldownAmount);
-                        self.body.AddTimedBuff(ShieldGateCooldown, (shieldGateCooldownAmount - timerReduction));
+                        self.body.AddTimedBuffAuthority(ShieldGateCooldown.buffIndex, (shieldGateCooldownAmount - timerReduction));
                     }
                 }
             }

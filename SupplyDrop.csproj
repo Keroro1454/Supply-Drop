@@ -12,7 +12,10 @@
 
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
+    <Compile Remove="Items\HolyInsurance.cs" />
     <Compile Remove="PlagueMask.cs" />
+    <Compile Remove="Utilities\InsuranceBarController.cs" />
+    <Compile Remove="Utilities\InsuranceSavingsTracker.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -130,7 +133,7 @@
       <HintPath>lib\R2API.dll</HintPath>
     </Reference>
     <Reference Include="TILER2">
-      <HintPath>lib\TILER2.dll</HintPath>
+      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\mods\profiles\Default\BepInEx\plugins\ThinkInvis-TILER2\TILER2.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
       <HintPath>lib\Unity.Postprocessing.Runtime.dll</HintPath>

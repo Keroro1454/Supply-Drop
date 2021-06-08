@@ -6,10 +6,11 @@ using UnityEngine;
 using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class ShellPlating : Item_V2<ShellPlating>
+    public class ShellPlating : Item<ShellPlating>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("The amount of armor granted on kill. Default: .2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -46,40 +47,28 @@ namespace SupplyDrop.Items
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
-        public BuffIndex ShellStackMax { get; private set; }
-        public ItemIndex shellStack { get; private set; }
+        public BuffDef ShellStackMax { get; private set; }
         public ShellPlating()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Shell.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/ShellIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Shell.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/ShellIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
 
             base.SetupAttributes();
-            var shellStackMax = new R2API.CustomBuff(
-                    new BuffDef
-                    {
-                        canStack = false,
-                        isDebuff = false,
-                        name = "ShellStackMax",
-                        iconPath = "@SupplyDrop:Assets/Main/Textures/Icons/ShellBuffIcon.png"
-                    });
-            ShellStackMax = R2API.BuffAPI.Add(shellStackMax);
 
-            var shellStackDef = new CustomItem(new ItemDef
-            {
-                hidden = true,
-                name = "INTERNALShell",
-                tier = ItemTier.NoTier,
-                canRemove = false
-            }, new ItemDisplayRuleDict(null));
-            shellStack = ItemAPI.Add(shellStackDef);
+            ShellStackMax = ScriptableObject.CreateInstance<BuffDef>();
+            ShellStackMax.name = "SupplyDrop Shell Stack Max";
+            ShellStackMax.canStack = false;
+            ShellStackMax.isDebuff = false;
+            ShellStackMax.iconSprite = MainAssets.LoadAsset<Sprite>("ShellBuffIcon.png");
+            BuffAPI.Add(new CustomBuff(ShellStackMax));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -228,14 +217,21 @@ namespace SupplyDrop.Items
         private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
         {
             orig(self, damageReport);
+
+            var shellStackTrackerComponent = damageReport.attackerBody.gameObject.GetComponent<ShellStackTracker>();
+            if (!shellStackTrackerComponent)
+            {
+                damageReport.attackerBody.gameObject.AddComponent<ShellStackTracker>();
+            }
+
             if (damageReport.attackerBody)
             {
                 var inventoryCount = GetCount(damageReport.attackerBody);
                 var currentShellStackMax = (baseMaxArmorGain / armorOnKillAmount + ((inventoryCount - 1) * addMaxArmorGain / armorOnKillAmount));
-                var currentShellStack = damageReport.attackerBody.inventory.GetItemCount(shellStack);
+                var currentShellStack = shellStackTrackerComponent.shellStacks;
                 if (inventoryCount > 0 && currentShellStack < currentShellStackMax)
                 {
-                    damageReport.attackerBody.inventory.GiveItem(shellStack);
+                    shellStackTrackerComponent.shellStacks++;
                 }
             }
         }
@@ -244,17 +240,24 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
+
+                var shellStackTrackerComponent = sender.gameObject.GetComponent<ShellStackTracker>();
+                if (!shellStackTrackerComponent)
+                {
+                    sender.gameObject.AddComponent<ShellStackTracker>();
+                }
+
                 var currentShellStackMax = (((inventoryCount - 1) * (addMaxArmorGain/armorOnKillAmount)) + (baseMaxArmorGain/armorOnKillAmount));
-                if (sender.inventory.GetItemCount(shellStack) >= currentShellStackMax && sender.GetBuffCount(ShellStackMax) <= 0)
+                if (shellStackTrackerComponent.shellStacks >= currentShellStackMax && sender.GetBuffCount(ShellStackMax) <= 0)
                 {
                     sender.AddBuff(ShellStackMax);
                 }
 
-                if (sender.inventory.GetItemCount(shellStack) < currentShellStackMax && sender.GetBuffCount(ShellStackMax) > 0)
+                if (shellStackTrackerComponent.shellStacks < currentShellStackMax && sender.GetBuffCount(ShellStackMax) > 0)
                 {
                     sender.RemoveBuff(ShellStackMax);
                 }
-                var currentShellStack = sender.inventory.GetItemCount(shellStack);
+                var currentShellStack = shellStackTrackerComponent.shellStacks;
                 args.armorAdd += (armorOnKillAmount * currentShellStack);
             }
         }

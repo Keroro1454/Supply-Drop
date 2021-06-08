@@ -268,13 +268,13 @@ namespace SupplyDrop.Items
         {
             if (rep.attackerBody && self)
             {
-                var inventoryCount = GetCount(rep.attackerBody);
+                var inventoryCount = GetCount(rep.attackerMaster);
                 if (inventoryCount > 0)
                 {
-                    var insuranceSavingsTrackerComponent = rep.attackerBody.gameObject.GetComponent<InsuranceSavingsTracker>();
+                    var insuranceSavingsTrackerComponent = rep.attackerMaster.gameObject.GetComponent<InsuranceSavingsTracker>();
                     if (!insuranceSavingsTrackerComponent)
                     {
-                        rep.attackerBody.gameObject.AddComponent<InsuranceSavingsTracker>();
+                        rep.attackerMaster.gameObject.AddComponent<InsuranceSavingsTracker>();
                     }
 
                     uint origGold = self.goldReward;
@@ -331,7 +331,11 @@ namespace SupplyDrop.Items
             InsuranceBar = GameObject.Instantiate(prefab, self.mainContainer.transform);
             if (InsuranceBar)
             {
-                var cachedSavingsComponent = self.gameObject.AddComponent<InsuranceSavingsTracker>();
+                var cachedSavingsComponent = self.targetMaster.gameObject.GetComponent<InsuranceSavingsTracker>();
+                if (!cachedSavingsComponent)
+                {
+                    self.targetMaster.gameObject.AddComponent<InsuranceSavingsTracker>();
+                }
 
                 foreach (Range range in InsuranceDictionary.Values)
                 {
@@ -349,7 +353,11 @@ namespace SupplyDrop.Items
 
             if (InsuranceBar)
             {
-                var cachedSavingsComponent = self.gameObject.AddComponent<InsuranceSavingsTracker>();
+                var cachedSavingsComponent = self.targetMaster.gameObject.GetComponent<InsuranceSavingsTracker>();
+                if (!cachedSavingsComponent)
+                {
+                    self.targetMaster.gameObject.AddComponent<InsuranceSavingsTracker>();
+                }
 
                 foreach (Range range in InsuranceDictionary.Values)
                 {

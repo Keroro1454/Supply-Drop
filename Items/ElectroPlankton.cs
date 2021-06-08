@@ -7,10 +7,11 @@ using TILER2;
 using static TILER2.StatHooks;
 using SupplyDrop.Utils;
 using static TILER2.MiscUtil;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class ElectroPlankton : Item_V2<ElectroPlankton>
+    public class ElectroPlankton : Item<ElectroPlankton>
     {
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .08 = 8%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -54,14 +55,14 @@ namespace SupplyDrop.Items
 
         public ElectroPlankton()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/Plankton.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlanktonIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Plankton.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/PlanktonIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 var meshes = ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
                 meshes[3].gameObject.AddComponent<Wobble>();
                 displayRules = GenerateItemDisplayRules();

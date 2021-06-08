@@ -8,10 +8,11 @@ using TILER2;
 using SupplyDrop.Utils;
 using System.Linq;
 using static TILER2.StatHooks;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
 {
-    public class PlagueHat : Item_V2<PlagueHat>
+    public class PlagueHat : Item<PlagueHat>
     {
         public override string displayName => "Vintage Plague Hat";
         public override ItemTier itemTier => ItemTier.Tier2;
@@ -40,14 +41,14 @@ namespace SupplyDrop.Items
         Dictionary<NetworkInstanceId, int> UtilityItemCounts = new Dictionary<NetworkInstanceId, int>();
         public PlagueHat()
         {
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/PlagueHat.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Textures/Icons/PlagueHatIcon.png";
+            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/PlagueHat.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/PlagueHatIcon.png");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
 
