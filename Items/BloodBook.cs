@@ -72,14 +72,14 @@ namespace SupplyDrop.Items
         public static BuffDef DevotedBloodBuff { get; private set; }
         public BloodBook()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/BloodBook.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/BloodBookIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("BloodBook.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("BloodBookIcon");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/BloodBookTracker.prefab");
+                ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("BloodBookTracker.prefab");
                 ItemFollowerPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
@@ -89,42 +89,42 @@ namespace SupplyDrop.Items
             PatheticBloodBuff.name = "SupplyDrop Blood Book Buff 1";
             PatheticBloodBuff.canStack = false;
             PatheticBloodBuff.isDebuff = false;
-            PatheticBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon1.png");
+            PatheticBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon1");
             BuffAPI.Add(new CustomBuff(PatheticBloodBuff));
 
             WeakBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             WeakBloodBuff.name = "SupplyDrop Blood Book Buff 2";
             WeakBloodBuff.canStack = false;
             WeakBloodBuff.isDebuff = false;
-            WeakBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon2.png");
+            WeakBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon2");
             BuffAPI.Add(new CustomBuff(WeakBloodBuff));
 
             AverageBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             AverageBloodBuff.name = "SupplyDrop Blood Book Buff 3";
             AverageBloodBuff.canStack = false;
             AverageBloodBuff.isDebuff = false;
-            AverageBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon3.png");
+            AverageBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon3");
             BuffAPI.Add(new CustomBuff(AverageBloodBuff));
 
             StrongBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             StrongBloodBuff.name = "SupplyDrop Blood Book Buff 4";
             StrongBloodBuff.canStack = false;
             StrongBloodBuff.isDebuff = false;
-            StrongBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon4.png");
+            StrongBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon4");
             BuffAPI.Add(new CustomBuff(StrongBloodBuff));
 
             InsaneBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             InsaneBloodBuff.name = "SupplyDrop Blood Book Buff 5";
             InsaneBloodBuff.canStack = false;
             InsaneBloodBuff.isDebuff = false;
-            InsaneBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon5.png");
+            InsaneBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon5");
             BuffAPI.Add(new CustomBuff(InsaneBloodBuff));
 
             DevotedBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             DevotedBloodBuff.name = "SupplyDrop Blood Book Buff 6";
             DevotedBloodBuff.canStack = false;
             DevotedBloodBuff.isDebuff = false;
-            DevotedBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon6.png");
+            DevotedBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon6");
             BuffAPI.Add(new CustomBuff(DevotedBloodBuff));
 
             ranges = new Range[]
@@ -291,14 +291,14 @@ namespace SupplyDrop.Items
             
             On.RoR2.HealthComponent.TakeDamage += ApplyBloodBookBuff;
             GetStatCoefficients += AddBloodBuffStats;
-            On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
+            On.RoR2.CharacterBody.RemoveBuff_BuffIndex -= DamageBoostReset;
         }
         public override void Uninstall()
         {
             base.Uninstall();
             On.RoR2.HealthComponent.TakeDamage -= ApplyBloodBookBuff;
             GetStatCoefficients -= AddBloodBuffStats;
-            On.RoR2.CharacterBody.RemoveBuff -= DamageBoostReset;
+            On.RoR2.CharacterBody.RemoveBuff_BuffIndex -= DamageBoostReset;
         }
         public struct Range
         {
@@ -365,7 +365,7 @@ namespace SupplyDrop.Items
             }
             orig(self, damageInfo);
         }
-        private void DamageBoostReset(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
+        private void DamageBoostReset(On.RoR2.CharacterBody.orig_RemoveBuff_BuffIndex orig, CharacterBody self, BuffIndex buffType)
         //Resets the cachedDamageComponent variable, preventing it from getting stuck on a value from a high-damage attack
         {
             orig(self, buffType);

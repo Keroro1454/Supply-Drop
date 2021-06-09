@@ -43,8 +43,8 @@ namespace SupplyDrop.Items
         public BuffDef BFBuff { get; private set; }
         public HardenedBoneFragments()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Bone.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/BoneIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("Bone.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("BoneIcon");
         }
         public override void SetupAttributes()
         {
@@ -60,7 +60,7 @@ namespace SupplyDrop.Items
             BFBuff.name = "SupplyDrop BF Buff";
             BFBuff.canStack = true;
             BFBuff.isDebuff = false;
-            BFBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BoneBuffIcon.png");
+            BFBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BoneBuffIcon");
             BuffAPI.Add(new CustomBuff(BFBuff));
         }      
         private static ItemDisplayRuleDict GenerateItemDisplayRules()

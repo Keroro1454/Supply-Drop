@@ -54,8 +54,8 @@ namespace SupplyDrop.Items
         public BuffDef NumbBerryBuff { get; private set; }
         public NumbingBerries()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Berry.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/BerryIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("Berry.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("BerryIcon");
         }
         public override void SetupAttributes()
         {
@@ -71,7 +71,7 @@ namespace SupplyDrop.Items
             NumbBerryBuff.name = "SupplyDrop Berry Buff";
             NumbBerryBuff.canStack = false;
             NumbBerryBuff.isDebuff = false;
-            NumbBerryBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BerryBuffIcon.png");
+            NumbBerryBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BerryBuffIcon");
             BuffAPI.Add(new CustomBuff(NumbBerryBuff));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()

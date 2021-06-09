@@ -55,8 +55,8 @@ namespace SupplyDrop.Items
 
         public ElectroPlankton()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Plankton.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/PlanktonIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("Plankton.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("PlanktonIcon");
         }
         public override void SetupAttributes()
         {

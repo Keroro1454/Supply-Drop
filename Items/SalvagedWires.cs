@@ -56,8 +56,8 @@ namespace SupplyDrop.Items
         public static GameObject ItemBodyModelPrefab;
         public SalvagedWires()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/WireBundle.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/SalvagedWiresIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("WireBundle.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("SalvagedWiresIcon");
         }
         public override void SetupAttributes()
         {

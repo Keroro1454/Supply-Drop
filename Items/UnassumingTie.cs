@@ -63,8 +63,8 @@ namespace SupplyDrop.Items
         public BuffDef WindedDebuff { get; private set; }
         public UnassumingTie()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Tie.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/TieIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("Tie.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("TieIcon");
         }
         public override void SetupAttributes()
         {
@@ -80,7 +80,7 @@ namespace SupplyDrop.Items
             SecondWindBuff.name = "SupplyDrop Tie Speed Buff";
             SecondWindBuff.canStack = false;
             SecondWindBuff.isDebuff = false;
-            SecondWindBuff.iconSprite = MainAssets.LoadAsset<Sprite>("SecondWindBuffIcon.png");
+            SecondWindBuff.iconSprite = MainAssets.LoadAsset<Sprite>("SecondWindBuffIcon");
             BuffAPI.Add(new CustomBuff(SecondWindBuff));
 
             WindedDebuff = ScriptableObject.CreateInstance<BuffDef>();
@@ -242,7 +242,7 @@ namespace SupplyDrop.Items
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
             GetStatCoefficients += AddMaxShield;
             GetStatCoefficients += AddSecondWindBuff;
-            On.RoR2.CharacterBody.RemoveBuff += AddWindedDebuff;
+            On.RoR2.CharacterBody.RemoveBuff_BuffIndex += AddWindedDebuff;
         }
         public override void Uninstall()
         {
@@ -251,7 +251,7 @@ namespace SupplyDrop.Items
             GetStatCoefficients -= AddMaxShield;
             On.RoR2.HealthComponent.TakeDamage -= CalculateBuff;
             GetStatCoefficients -= AddSecondWindBuff;
-            On.RoR2.CharacterBody.RemoveBuff -= AddWindedDebuff;
+            On.RoR2.CharacterBody.RemoveBuff_BuffIndex -= AddWindedDebuff;
         }
         private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
@@ -261,7 +261,7 @@ namespace SupplyDrop.Items
                 ItemHelpers.AddMaxShieldHelper(sender, args, inventoryCount, baseStackHPPercent, addStackHPPercent);
             }
         }
-        private void AddWindedDebuff(On.RoR2.CharacterBody.orig_RemoveBuff orig, CharacterBody self, BuffIndex buffType)
+        private void AddWindedDebuff(On.RoR2.CharacterBody.orig_RemoveBuff_BuffIndex orig, CharacterBody self, BuffIndex buffType)
         {
             orig(self, buffType);
             if (buffType == SecondWindBuff.buffIndex)

@@ -51,8 +51,8 @@ namespace SupplyDrop.Items
         public BuffDef ShieldGateCooldown { get; private set; }
         public QSGen()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/QSGen.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/QSGenIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("QSGen.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("QSGenIcon");
         }
         public override void SetupAttributes()
         {
@@ -70,7 +70,7 @@ namespace SupplyDrop.Items
             ShieldGateCooldown.name = "SupplyDrop QSS Cooldown Debuff";
             ShieldGateCooldown.canStack = false;
             ShieldGateCooldown.isDebuff = true;
-            ShieldGateCooldown.iconSprite = MainAssets.LoadAsset<Sprite>("ShieldGateCooldownIcon.png");
+            ShieldGateCooldown.iconSprite = MainAssets.LoadAsset<Sprite>("ShieldGateCooldownIcon");
             BuffAPI.Add(new CustomBuff(ShieldGateCooldown));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()

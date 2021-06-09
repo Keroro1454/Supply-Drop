@@ -50,8 +50,8 @@ namespace SupplyDrop.Items
         public BuffDef ShellStackMax { get; private set; }
         public ShellPlating()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/Shell.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/ShellIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("Shell.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("ShellIcon");
         }
         public override void SetupAttributes()
         {
@@ -67,7 +67,7 @@ namespace SupplyDrop.Items
             ShellStackMax.name = "SupplyDrop Shell Stack Max";
             ShellStackMax.canStack = false;
             ShellStackMax.isDebuff = false;
-            ShellStackMax.iconSprite = MainAssets.LoadAsset<Sprite>("ShellBuffIcon.png");
+            ShellStackMax.iconSprite = MainAssets.LoadAsset<Sprite>("ShellBuffIcon");
             BuffAPI.Add(new CustomBuff(ShellStackMax));
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
@@ -217,23 +217,27 @@ namespace SupplyDrop.Items
         private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
         {
             orig(self, damageReport);
+            var inventoryCount = GetCount(damageReport.attackerBody);
 
-            var shellStackTrackerComponent = damageReport.attackerBody.gameObject.GetComponent<ShellStackTracker>();
-            if (!shellStackTrackerComponent)
+            if (inventoryCount > 0)
             {
-                damageReport.attackerBody.gameObject.AddComponent<ShellStackTracker>();
-            }
-
-            if (damageReport.attackerBody)
-            {
-                var inventoryCount = GetCount(damageReport.attackerBody);
-                var currentShellStackMax = (baseMaxArmorGain / armorOnKillAmount + ((inventoryCount - 1) * addMaxArmorGain / armorOnKillAmount));
-                var currentShellStack = shellStackTrackerComponent.shellStacks;
-                if (inventoryCount > 0 && currentShellStack < currentShellStackMax)
+                var shellStackTrackerComponent = damageReport.attackerBody.gameObject.GetComponent<ShellStackTracker>();
+                if (!shellStackTrackerComponent)
                 {
-                    shellStackTrackerComponent.shellStacks++;
+                    damageReport.attackerBody.gameObject.AddComponent<ShellStackTracker>();
+                }
+
+                if (damageReport.attackerBody)
+                {
+                    var currentShellStackMax = (baseMaxArmorGain / armorOnKillAmount + ((inventoryCount - 1) * addMaxArmorGain / armorOnKillAmount));
+                    var currentShellStack = shellStackTrackerComponent.shellStacks;
+                    if (currentShellStack < currentShellStackMax)
+                    {
+                        shellStackTrackerComponent.shellStacks++;
+                    }
                 }
             }
+
         }
         private void AddShellPlateStats(CharacterBody sender, StatHookEventArgs args)
         {

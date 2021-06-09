@@ -53,8 +53,8 @@ namespace SupplyDrop.Items
         public static Dictionary<NetworkInstanceId, int> DamageItemCounts { get; private set; } = new Dictionary<NetworkInstanceId, int>();
         public PlagueMask()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/PlagueMask.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/PlagueMaskIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("PlagueMask.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("PlagueMaskIcon");
         }
         public override void SetupAttributes()
         {

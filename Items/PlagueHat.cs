@@ -41,8 +41,8 @@ namespace SupplyDrop.Items
         Dictionary<NetworkInstanceId, int> UtilityItemCounts = new Dictionary<NetworkInstanceId, int>();
         public PlagueHat()
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/PlagueHat.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("Main/Textures/Icons/PlagueHatIcon.png");
+            modelResource = MainAssets.LoadAsset<GameObject>("PlagueHat.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("PlagueHatIcon");
         }
         public override void SetupAttributes()
         {
