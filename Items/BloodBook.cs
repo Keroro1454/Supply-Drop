@@ -79,7 +79,7 @@ namespace SupplyDrop.Items
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/BloodBookTracker.prefab");
+                ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("Main/Models/Prefabs/BloodBookTracker.prefab");
                 ItemFollowerPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }

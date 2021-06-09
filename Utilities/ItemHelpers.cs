@@ -46,21 +46,21 @@ namespace SupplyDrop.Utils
 
             if (inventoryCount > 0) //Personal Shield Generator behavior.
             {
-                if (sender.inventory.GetItemCount(ItemIndex.ShieldOnly) > 0) //Retained the if-else statement to increase compatibility with mods that add HP in unexpected ways when the player does not have Transcendence.
+                if (sender.inventory.GetItemCount(RoR2Content.Items.ShieldOnly) > 0) //Retained the if-else statement to increase compatibility with mods that add HP in unexpected ways when the player does not have Transcendence.
                 {
                     //Max health before Transcendence transformation is not stored in any way. It must be recalculated manually. The following code was adapted from CharacterBody.RecalculateStats().
 
                     float calcHealthMultiplier = 1f //Base multiplier
-                        + (float)sender.inventory.GetItemCount(ItemIndex.BoostHp) * 0.1f //BoostHp
-                        + (float)(sender.inventory.GetItemCount(ItemIndex.Pearl) + sender.inventory.GetItemCount(ItemIndex.ShinyPearl)) * 0.1f; //Pearls;
+                        + (float)sender.inventory.GetItemCount(RoR2Content.Items.BoostHp) * 0.1f //BoostHp
+                        + (float)(sender.inventory.GetItemCount(RoR2Content.Items.Pearl) + sender.inventory.GetItemCount(RoR2Content.Items.ShinyPearl)) * 0.1f; //Pearls;
 
 
                     float calcMaxHealth = ((sender.baseMaxHealth + sender.levelMaxHealth * (sender.level - 1)) //Base max HP
-                        + (float)sender.inventory.GetItemCount(ItemIndex.Knurl) * 40f //Knurls
-                        + (sender.inventory.GetItemCount(ItemIndex.Infusion) > 0 ? sender.inventory.infusionBonus : 0)) //Infusion
+                        + (float)sender.inventory.GetItemCount(RoR2Content.Items.Knurl) * 40f //Knurls
+                        + (sender.inventory.GetItemCount(RoR2Content.Items.Infusion) > 0 ? sender.inventory.infusionBonus : 0)) //Infusion
                         * calcHealthMultiplier //Health multiplier - pearls and BoostHp
-                        / ((float)sender.inventory.GetItemCount(ItemIndex.CutHp) + 1) //Shaped Glass
-                        * (sender.inventory.GetItemCount(ItemIndex.InvadingDoppelganger) > 0 ? 10 : 1); //Check if you're a doppelganger.
+                        / ((float)sender.inventory.GetItemCount(RoR2Content.Items.CutHp) + 1) //Shaped Glass
+                        * (sender.inventory.GetItemCount(RoR2Content.Items.InvadingDoppelganger) > 0 ? 10 : 1); //Check if you're a doppelganger.
                     args.baseShieldAdd += (calcMaxHealth * baseStackHPPercent) + (calcMaxHealth * addStackHPPercent) * (inventoryCount - 1);
                 }
                 else
