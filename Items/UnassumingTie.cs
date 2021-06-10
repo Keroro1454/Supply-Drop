@@ -97,7 +97,8 @@ namespace SupplyDrop.Items
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(.2f, .2f, .2f);
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+            rules.Add("mdlCommando", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {

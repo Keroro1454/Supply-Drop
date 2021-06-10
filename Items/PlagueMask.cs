@@ -72,7 +72,8 @@ namespace SupplyDrop.Items
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+            rules.Add("mdlCommando", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {

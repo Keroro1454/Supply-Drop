@@ -76,7 +76,8 @@ namespace SupplyDrop.Items
             ItemBodyModelPrefab.AddComponent<ItemDisplay>();
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+            rules.Add("mdlCommando", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
@@ -86,7 +87,6 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(-0.025f, 0.05f, -.23f),
                     localAngles = new Vector3(-138f, 0f, 0f),
                     localScale = new Vector3(.2f, .2f, .2f)
-
         }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
