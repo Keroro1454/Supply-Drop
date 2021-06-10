@@ -17,7 +17,7 @@ namespace K1454.SupplyDrop
                               nameof(PrefabAPI), nameof(SoundAPI), nameof(OrbAPI), nameof(EffectAPI), nameof(DirectorAPI), nameof(ProjectileAPI), nameof(ArtifactAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
     {
-        public const string ModVer = "1.4.6";
+        public const string ModVer = "1.4.7";
         public const string ModName = "Supply Drop";
         public const string ModGuid = "com.K1454.SupplyDrop";
 

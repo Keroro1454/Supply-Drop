@@ -129,12 +129,12 @@ namespace SupplyDrop.Items
 
             ranges = new Range[]
             {
-                new Range(0, 10, PatheticBloodBuff.buffIndex, 4),
-                new Range(10, 20, WeakBloodBuff.buffIndex, 6),
-                new Range(20, 30, AverageBloodBuff.buffIndex, 8),
-                new Range(30, 40, StrongBloodBuff.buffIndex, 10),
-                new Range(40, 50, InsaneBloodBuff.buffIndex, 12),
-                new Range(50, double.PositiveInfinity, DevotedBloodBuff.buffIndex, 14)
+                new Range(0, 10, PatheticBloodBuff, 4),
+                new Range(10, 20, WeakBloodBuff, 6),
+                new Range(20, 30, AverageBloodBuff, 8),
+                new Range(30, 40, StrongBloodBuff, 10),
+                new Range(40, 50, InsaneBloodBuff, 12),
+                new Range(50, double.PositiveInfinity, DevotedBloodBuff, 14)
             };
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
@@ -150,7 +150,7 @@ namespace SupplyDrop.Items
 
             Vector3 generalScale = new Vector3(0.08f, 0.08f, 0.08f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
-            rules.Add("mdlCommando", new ItemDisplayRule[]
+            rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
@@ -305,10 +305,10 @@ namespace SupplyDrop.Items
         {
             public double Lower;
             public double Upper;
-            public BuffIndex Buff;
+            public BuffDef Buff;
             public int Duration;
 
-            public Range(double lower, double upper, BuffIndex buff, int duration)
+            public Range(double lower, double upper, BuffDef buff, int duration)
             {
                 Lower = lower;
                 Upper = upper;

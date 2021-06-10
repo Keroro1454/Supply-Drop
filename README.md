@@ -55,6 +55,7 @@ That'll teach 'em to question science!
 - 1.4.7
 	- Compatibility update for the Anniversary Update
 	- Theoretically fully fixed the QSS and funky shield interactions with Transcendence. Hopefully it decides to work for real now.
+	- Added item displays for all items for the new survivor, Bandit
 
 - 1.4.6
 	- Fully fixed Quantum Shield Stabilizer determining if OSP needed to trigger off pre-armor damage calculations. Thanks gaforb for the follow-up!

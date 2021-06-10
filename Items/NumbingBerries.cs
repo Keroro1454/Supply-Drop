@@ -81,7 +81,7 @@ namespace SupplyDrop.Items
 
             Vector3 generalScale = new Vector3(0f, 0f, 0f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
-            rules.Add("mdlCommando", new ItemDisplayRule[]
+            rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
@@ -201,7 +201,7 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-            rules.Add("mdlBandit2", new RoR2.ItemDisplayRule[]
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {

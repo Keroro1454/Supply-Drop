@@ -98,7 +98,7 @@ namespace SupplyDrop.Items
 
             Vector3 generalScale = new Vector3(.2f, .2f, .2f);
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
-            rules.Add("mdlCommando", new ItemDisplayRule[]
+            rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
