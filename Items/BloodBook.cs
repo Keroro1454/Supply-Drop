@@ -270,7 +270,7 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-            rules.Add("mdlBandit", new ItemDisplayRule[]
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {

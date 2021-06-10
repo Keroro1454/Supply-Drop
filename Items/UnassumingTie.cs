@@ -218,18 +218,18 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-            rules.Add("mdlBandit", new ItemDisplayRule[]
-{
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
+            {
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(-0.05f, 0.25f, 0.18f),
+                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
                     localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = generalScale
+                    localScale = generalScale * 0.9f
                 }
-});
+            });
             return rules;
         }
         public override void Install()

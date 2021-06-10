@@ -70,7 +70,7 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(0f, 0.385f, 0f),
                     localAngles = new Vector3(0f, 180f, 0f),
                     localScale = new Vector3(.2f, .2f, .2f)
-        }
+                }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
             {
@@ -180,7 +180,7 @@ namespace SupplyDrop.Items
                     localScale = new Vector3(0.15f, 0.15f, 0.15f)
                 }
             });
-            rules.Add("mdlBandit", new ItemDisplayRule[]
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {

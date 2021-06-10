@@ -90,7 +90,6 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(0.05f, 0.2f, 0f),
                     localAngles = new Vector3(0f, 0f, 90f),
                     localScale = generalScale
-
                 }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
@@ -198,6 +197,18 @@ namespace SupplyDrop.Items
                     childName = "UpperArmR",
                     localPos = new Vector3(0.065f, 0.2f, 0f),
                     localAngles = new Vector3(-0f, 0f, 90f),
+                    localScale = generalScale
+                }
+            });
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "UpperArmR",
+                    localPos = new Vector3(0.05f, 0.2f, 0f),
+                    localAngles = new Vector3(0f, 0f, 90f),
                     localScale = generalScale
                 }
             });

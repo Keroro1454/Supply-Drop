@@ -87,7 +87,7 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(-0.025f, 0.05f, -.23f),
                     localAngles = new Vector3(-138f, 0f, 0f),
                     localScale = new Vector3(.2f, .2f, .2f)
-        }
+                }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
             {
@@ -195,6 +195,18 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(0f, -0.1f, -0.28f),
                     localAngles = new Vector3(-138f, 0f, 0f),
                     localScale = new Vector3(0.15f, 0.15f, 0.15f)
+                }
+            });
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.025f, 0.05f, -.23f),
+                    localAngles = new Vector3(-138f, 0f, 0f),
+                    localScale = new Vector3(.2f, .2f, .2f)
                 }
             });
             return rules;

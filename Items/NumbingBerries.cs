@@ -91,7 +91,6 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(0f, 0.1f, 0f),
                     localAngles = new Vector3(-85f, 0f, 0f),
                     localScale = generalScale
-
                 }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
@@ -188,7 +187,7 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(-0.7f, 5f, -1.3f),
                     localAngles = new Vector3(115f, 0f, 0f),
                     localScale = new Vector3(.5f, .5f, .5f)
-        }
+                }
             });
             rules.Add("mdlCaptain", new ItemDisplayRule[]
             {
@@ -199,6 +198,18 @@ namespace SupplyDrop.Items
                     childName = "Stomach",
                     localPos = new Vector3(0f, 0.2f, 0f),
                     localAngles = new Vector3(-25f, 0f, 0f),
+                    localScale = generalScale
+                }
+            });
+            rules.Add("mdlBandit2", new RoR2.ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Stomach",
+                    localPos = new Vector3(0f, 0.1f, 0f),
+                    localAngles = new Vector3(-85f, 0f, 0f),
                     localScale = generalScale
                 }
             });
