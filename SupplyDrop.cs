@@ -14,7 +14,7 @@ namespace K1454.SupplyDrop
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(BuffAPI), nameof(LanguageAPI), nameof(ResourcesAPI),
-                              nameof(PrefabAPI), nameof(SoundAPI), nameof(OrbAPI), nameof(EffectAPI), nameof(DirectorAPI), nameof(ProjectileAPI), nameof(ArtifactAPI))]
+                              nameof(PrefabAPI), nameof(SoundAPI), nameof(OrbAPI), nameof(EffectAPI), nameof(DirectorAPI), nameof(ProjectileAPI), nameof(ArtifactAPI), nameof(RecalculateStatsAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
     {
         public const string ModVer = "1.4.7";

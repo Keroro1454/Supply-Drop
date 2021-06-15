@@ -4,10 +4,10 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using TILER2;
-using static TILER2.StatHooks;
 using SupplyDrop.Utils;
 using static TILER2.MiscUtil;
 using static K1454.SupplyDrop.SupplyDropPlugin;
+using static R2API.RecalculateStatsAPI;
 
 namespace SupplyDrop.Items
 {

@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 using TILER2;
 using SupplyDrop.Utils;
 using System.Linq;
-using static TILER2.StatHooks;
+using static R2API.RecalculateStatsAPI;
 using static K1454.SupplyDrop.SupplyDropPlugin;
 
 namespace SupplyDrop.Items
@@ -19,8 +19,8 @@ namespace SupplyDrop.Items
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
         protected override string GetNameString(string langid = null) => displayName;
         protected override string GetPickupString(string langID = null) => "Gain HP the more utility items you have.";
-        protected override string GetDescString(string langID = null) => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>2%</style> " +
-            "<style=cStack>(+2% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
+        protected override string GetDescString(string langID = null) => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>1%</style> " +
+            "<style=cStack>(+1% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
         protected override string GetLoreString(string landID = null) => "Order: \"NR-G Sports Soda (49)\"\nTracking Number: 49******\n" +
             "Estimated Delivery: 3/01/2056\nShipping Method: Priority\nShipping Address: P.O. Box 749, Sector A, Moon\nShipping Details:" +
             "You are cordially invited to the Order's 49th Annual Induction Gala.\n\n" +
@@ -235,7 +235,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (GetCount(sender) > 0 && UtilityItemCounts.ContainsKey(sender.netId))
             {
-                args.healthMultAdd += (UtilityItemCounts[sender.netId] * (0.02f + ((inventoryCount - 1) * .02f)));
+                args.healthMultAdd += (UtilityItemCounts[sender.netId] * (0.01f + ((inventoryCount - 1) * .01f)));
             }
         }
     }

@@ -1,9 +1,6 @@
 ﻿using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using static TILER2.StatHooks;
+using static R2API.RecalculateStatsAPI;
 
 namespace SupplyDrop.Utils
 {
