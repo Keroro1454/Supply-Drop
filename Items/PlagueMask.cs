@@ -242,6 +242,7 @@ namespace SupplyDrop.Items
                 damageItemCount += self.inventory.GetItemCount(x);
             }
             DamageItemCounts[self.netId] = damageItemCount;
+            Debug.LogError("You have " + damageItemCount + " damage items!");
         }
         private void IL_AddBonusHeal(ILContext il)
         //This uses the calculated damageItemCount variable to determine how much bonus healing you get. IL is pain.
@@ -295,7 +296,8 @@ namespace SupplyDrop.Items
                 {
                     return 0;
                 }
-                return healAmount * (0.02f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount);
+                return healAmount * (0.02f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount) * -1;
+                //I have no idea why but the Anniversary Update made this start reducing the healing rather than increasing it. Multiplying it by -1 fixes it. IDEK
             });
             c.Emit(OpCodes.Ldarg_1);
             c.Emit(OpCodes.Add);

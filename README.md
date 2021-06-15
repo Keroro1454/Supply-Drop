@@ -52,6 +52,11 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.4.8
+	- Shifted ReCalculateStats hook over from using the defunct TILER2 version to the new R2API version
+	- Nerfed Vintage Plague Hat bonus to maximum HP per Utility item from +2% to +1%. Will keep my eye on this change to see if it's too severe
+	- Fixed Vintage Plague Mask reducing healing per Damage item instead of increasing it
+
 - 1.4.7
 	- Compatibility update for the Anniversary Update
 	- Theoretically fully fixed the QSS and funky shield interactions with Transcendence. Hopefully it decides to work for real now.
