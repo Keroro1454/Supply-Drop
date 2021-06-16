@@ -6,11 +6,12 @@ using RoR2;
 using UnityEngine;
 using TILER2;
 using SupplyDrop.Utils;
+using static K1454.SupplyDrop.SupplyDropPlugin;
 using UnityEngine.UI;
 
 namespace SupplyDrop.Items
 {
-    public class HolyInsurance : Item_V2<HolyInsurance>
+    public class HolyInsurance : Item<HolyInsurance>
     {
         public override string displayName => "Afterlife Insurance";
         public override ItemTier itemTier => ItemTier.Lunar;
@@ -37,15 +38,15 @@ namespace SupplyDrop.Items
         public HolyInsurance()
         {
             //Don't forget to change these, currently using test model/icon
-            modelResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/TestModel.prefab";
-            iconResourcePath = "@SupplyDrop:Assets/Main/Models/Prefabs/TestIcon.prefab";
+            modelResource = MainAssets.LoadAsset<GameObject>("TestModel.prefab");
+            iconResource = MainAssets.LoadAsset<Sprite>("TestIcon");
         }
         public override void SetupAttributes()
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Models/Prefabs/BloodBookTracker.prefab");
-                ItemFollowerPrefab = Resources.Load<GameObject>(modelResourcePath);
+                ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("HolyInsuranceTracker.prefab");
+                ItemFollowerPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
             base.SetupAttributes();
@@ -76,8 +77,10 @@ namespace SupplyDrop.Items
             ItemFollower.distanceDampTime = 0.15f;
             ItemFollower.distanceMaxSpeed = 100;
             ItemFollower.SmoothingNumber = 0.25f;
+
             Vector3 generalScale = new Vector3(0.08f, 0.08f, 0.08f);
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+            rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
@@ -197,7 +200,7 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-            rules.Add("mdlBandit", new ItemDisplayRule[]
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
