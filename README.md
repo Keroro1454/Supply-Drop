@@ -35,7 +35,7 @@ That'll teach 'em to question science!
 	- All healing is increased by 2% (+2% per stack) for every damage item you possess.
 
 - **Vintage Plague Hat**
-	- Increase maximum HP by 2% (+2% per stack) for every utility item you possess.
+	- Increase maximum HP by 1% (+1% per stack) for every utility item you possess.
 	
 ## Legendary Items:
 - **Quantum Shield Stabilizer**
@@ -45,13 +45,18 @@ That'll teach 'em to question science!
 	- Convert 10% (+5% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s.
 	
 ## Lunar Items:
-- **UNKNOWN ITEM**
-	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
+- **Holy Insurance**
+	- Gain 25% (+25% per stack) less gold from kills. 100% (+50% per stack) of this gold is used to help 'level up' your insurance coverage to protect against various threats. Dying to an enemy you are insured for resets your coverage but revives you!
 	
 - **UNKNOWN EQUIPMENT**
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.5.0: By the Light of the Moon!
+	- Added 5 new items: Holy Insurance, Dcyvvc Jbcbpnjaknb, 2-Fiupx Qiv, Lleoxlhg Crynvnx, and Oyfpvcuge Xlgoik!
+	- Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
+	- Fixed Bandit's item displays being a bit wonky
+
 - 1.4.9
 	- Removed a debugging measure that was spamming the console
 
