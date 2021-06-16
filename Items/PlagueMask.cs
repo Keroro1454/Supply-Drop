@@ -16,6 +16,14 @@ namespace SupplyDrop.Items
 {
     public class PlagueMask : Item<PlagueMask>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of bonus healing granted per Damage item you possess, for first stack of the item. Default: .02 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseStackHealPercent { get; private set; } = .02f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of bonus healing granted per Damage item you possess, for additional stacks of item. Default: .02 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addStackHealPercent { get; private set; } = .02f;
+
         public override string displayName => "Vintage Plague Mask";
         public override ItemTier itemTier => ItemTier.Tier2;
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
@@ -295,7 +303,7 @@ namespace SupplyDrop.Items
                 {
                     return 0;
                 }
-                return healAmount * (0.02f + (0.02f * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount) * -1;
+                return healAmount * (baseStackHealPercent + (addStackHealPercent * ((float)healthComponent.body.inventory.GetItemCount(maskIndex) - 1)) * damageItemCount) * -1;
                 //I have no idea why but the Anniversary Update made this start reducing the healing rather than increasing it. Multiplying it by -1 fixes it. IDEK
             });
             c.Emit(OpCodes.Ldarg_1);

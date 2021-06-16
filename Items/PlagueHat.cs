@@ -14,6 +14,14 @@ namespace SupplyDrop.Items
 {
     public class PlagueHat : Item<PlagueHat>
     {
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted per Utility item you possess, for first stack of the item. Default: .01 = 1%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float baseStackHPPercent { get; private set; } = .01f;
+
+        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
+        [AutoConfig("In percentage, amount of maximum HP granted per Utility item you possess, for additional stacks of item. Default: .01 = 1%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float addStackHPPercent { get; private set; } = .01f;
+
         public override string displayName => "Vintage Plague Hat";
         public override ItemTier itemTier => ItemTier.Tier2;
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
@@ -235,7 +243,7 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (GetCount(sender) > 0 && UtilityItemCounts.ContainsKey(sender.netId))
             {
-                args.healthMultAdd += (UtilityItemCounts[sender.netId] * (0.01f + ((inventoryCount - 1) * .01f)));
+                args.healthMultAdd += (UtilityItemCounts[sender.netId] * (baseStackHPPercent + ((inventoryCount - 1) * addStackHPPercent)));
             }
         }
     }
