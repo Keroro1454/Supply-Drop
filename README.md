@@ -52,6 +52,9 @@ That'll teach 'em to question science!
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
+- 1.4.9
+	- Removed a debugging measure that was spamming the console
+
 - 1.4.8
 	- Shifted ReCalculateStats hook over from using the defunct TILER2 version to the new R2API version
 	- Nerfed Vintage Plague Hat bonus to maximum HP per Utility item from +2% to +1%. Will keep my eye on this change to see if it's too severe
