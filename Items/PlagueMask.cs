@@ -242,7 +242,6 @@ namespace SupplyDrop.Items
                 damageItemCount += self.inventory.GetItemCount(x);
             }
             DamageItemCounts[self.netId] = damageItemCount;
-            Debug.LogError("You have " + damageItemCount + " damage items!");
         }
         private void IL_AddBonusHeal(ILContext il)
         //This uses the calculated damageItemCount variable to determine how much bonus healing you get. IL is pain.
