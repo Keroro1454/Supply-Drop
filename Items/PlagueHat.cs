@@ -1,35 +1,41 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 using R2API;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
-using TILER2;
-using SupplyDrop.Utils;
-using System.Linq;
 using static R2API.RecalculateStatsAPI;
+
+using SupplyDrop.Utils;
+using static SupplyDrop.Utils.ItemHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
+
+using BepInEx.Configuration;
+
 
 namespace SupplyDrop.Items
 {
-    public class PlagueHat : Item<PlagueHat>
+    public class PlagueHat : ItemBase<PlagueHat>
     {
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted per Utility item you possess, for first stack of the item. Default: .01 = 1%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float baseStackHPPercent { get; private set; } = .01f;
+        //Config Stuff
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted per Utility item you possess, for additional stacks of item. Default: .01 = 1%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float addStackHPPercent { get; private set; } = .01f;
+        public static ConfigOption<float> baseStackHPPercent;
+        public static ConfigOption<float> addStackHPPercent;
 
-        public override string displayName => "Vintage Plague Hat";
-        public override ItemTier itemTier => ItemTier.Tier2;
-        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Healing });
-        protected override string GetNameString(string langid = null) => displayName;
-        protected override string GetPickupString(string langID = null) => "Gain HP the more utility items you have.";
-        protected override string GetDescString(string langID = null) => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>1%</style> " +
+        //Item Data
+
+        public override string ItemName => "Vintage Plague Hat";
+
+        public override string ItemLangTokenName => "PLAGUE_HAT";
+
+        public override string ItemPickupDesc => "Gain <style=cIsHealing>HP</style> the more <style=cIsUtility>utility items</style> you have.";
+
+        public override string ItemFullDescription => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>1%</style> " +
             "<style=cStack>(+1% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
-        protected override string GetLoreString(string landID = null) => "Order: \"NR-G Sports Soda (49)\"\nTracking Number: 49******\n" +
+
+        public override string ItemLore => "Order: \"NR-G Sports Soda (49)\"\nTracking Number: 49******\n" +
             "Estimated Delivery: 3/01/2056\nShipping Method: Priority\nShipping Address: P.O. Box 749, Sector A, Moon\nShipping Details:" +
             "You are cordially invited to the Order's 49th Annual Induction Gala.\n\n" +
             "Enclosed with this invitation is your unique sigil, encoded coordinates for 'Party' cipher decryption, " +
@@ -43,31 +49,51 @@ namespace SupplyDrop.Items
             "For on the day we achieve True Knowledge\n" +
             "We shall reveal our faces and rule in the light</i>";
 
-        private static List<CharacterBody> Playername = new List<CharacterBody>();
+        public override ItemTier Tier => ItemTier.Tier2;
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Healing, ItemTag.AIBlacklist };
+
+
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("PlagueHat.prefab");
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("PlagueHatIcon");
+
+
         public static GameObject ItemBodyModelPrefab;
+
         private ItemIndex[] indiciiToCheck;
         Dictionary<NetworkInstanceId, int> UtilityItemCounts = new Dictionary<NetworkInstanceId, int>();
-        public PlagueHat()
+
+        public override void Init(ConfigFile config)
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("PlagueHat.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("PlagueHatIcon");
+            CreateConfig(config);
+            CreateLang();
+            CreateItem();
+            Hooks();
         }
-        public override void SetupAttributes()
+
+        private void CreateConfig(ConfigFile config)
         {
-            if (ItemBodyModelPrefab == null)
+            baseStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Base HP Gained for Each Utility Item with 1 Vintage Plague Hat", .01f, "How much HP, as a % of max HP, should you gain with a single vintage plague hat? (.01 = 1%)");
+            addStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional HP Gained for Each Utility Item per Vintage Plague Hat", .01f, "How much additional HP, as a % of max HP, should each vintage plague hat after the first give?");
+        }
+
+        public override ItemDisplayRuleDict CreateItemDisplayRules()
+        {
+            ItemBodyModelPrefab = ItemModel;
+            var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
+
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new RoR2.ItemDisplayRule[]
             {
-                ItemBodyModelPrefab = modelResource;
-                displayRules = GenerateItemDisplayRules();
-            }
-
-            base.SetupAttributes();
-        }
-        private static ItemDisplayRuleDict GenerateItemDisplayRules()
-        {
-            ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
-
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0, 0, 0),
+                    localAngles = new Vector3(0, 0, 0),
+                    localScale = new Vector3(1, 1, 1)
+                }
+            });
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -202,22 +228,13 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-        public override void Install()
+        public override void Hooks()
         {
-            base.Install();
-
             On.RoR2.Run.Start += UtilityItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalUtilityItems;
             GetStatCoefficients += GainBonusHP;
         }
-        public override void Uninstall()
-        {
-            base.Uninstall();
 
-            On.RoR2.Run.Start -= UtilityItemListCreator;
-            On.RoR2.CharacterBody.OnInventoryChanged -= GetTotalUtilityItems;
-            GetStatCoefficients -= GainBonusHP;
-        }
         private void UtilityItemListCreator(On.RoR2.Run.orig_Start orig, Run self)
         //May need to be moved to a separate class if multiple items need to access this list
         {

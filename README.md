@@ -19,7 +19,7 @@ That'll teach 'em to question science!
 	- Gain 5 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds.
 
 - **Unassuming Tie**
-	- Gain shield equal to 4% (+4% per stack) of your max HP. Breaking your shield gives you a Second Wind for 4 seconds, plus an additional amount based on max shield. Second Wind increases movement speed by 15% (+15% per stack).
+	- Gain shield equal to 4% (+4% per stack) of your max HP. Breaking your shield gives you a Second Wind for 5 seconds, plus an additional amount based on max shield. Second Wind increases movement speed by 15% (+15% per stack).
 
 - **Salvaged Wires**
 	- Gain shield equal to 4% (+4% per stack) of your max HP. While shields are active, gain 10% (+10% per stack) increased attack speed.
@@ -39,10 +39,10 @@ That'll teach 'em to question science!
 	
 ## Legendary Items:
 - **Quantum Shield Stabilizer**
-	- Gain shield equal to 16% of your max HP. If an attack exceeds your active shields, the excess damage is negated. This ability has a cooldown of 5s (-0.5s per stack).
+	- Gain shield equal to 16% of your max HP. If an attack exceeds your active shields, the excess damage is negated. This ability has a cooldown of 5s (-1s per stack).
 
 - **Tome of Bloodletting**
-	- Convert 10% (+5% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s.
+	- Convert 10% (+10% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s.
 	
 ## Lunar Items:
 - **UNKNOWN ITEM**
@@ -56,6 +56,10 @@ That'll teach 'em to question science!
 	- Updated for Survivors of the Void
 	- Disabled Vintage Plague Mask for the moment being while I work on getting it functional again
 	- Added configuration options to the Vintage Plague Mask (oops) and Vintage Plague Hat items
+	- Made configs a bit more clear
+	- Increased base duration of Second Wind from 4 to 5 seconds
+	- Increased cooldown reduction from stacking QSS from 0.5 to 1 second
+	- Increased damage conversion percentage from stacking Tome of Bloodletting from 5% to 10%
 	- Added item displays for Railgunner and Void Fiend
 	- Fixed Bandit's item displays being a bit wonky
 

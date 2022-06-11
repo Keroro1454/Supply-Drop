@@ -14,7 +14,7 @@ namespace SupplyDrop.Utils
         /// <param name="obj">The GameObject/Prefab that you wish to set up RendererInfos for.</param>
         /// <param name="debugmode">Do we attempt to attach a material shader controller instance to meshes in this?</param>
         /// <returns>Returns an array full of RendererInfos for GameObject.</returns>
-        public static CharacterModel.RendererInfo[] ItemDisplaySetup(GameObject obj, bool debugmode = false)
+        public static CharacterModel.RendererInfo[] ItemDisplaySetup(GameObject obj)
         {
 
             List<Renderer> AllRenderers = new List<Renderer>();
@@ -29,12 +29,6 @@ namespace SupplyDrop.Utils
 
             for (int i = 0; i < AllRenderers.Count; i++)
             {
-                if (debugmode)
-                {
-                    var controller = AllRenderers[i].gameObject.AddComponent<MaterialControllerComponents.HGControllerFinder>();
-                    controller.Renderer = AllRenderers[i];
-                }
-
                 renderInfos[i] = new CharacterModel.RendererInfo
                 {
                     defaultMaterial = AllRenderers[i] is SkinnedMeshRenderer ? AllRenderers[i].sharedMaterial : AllRenderers[i].material,

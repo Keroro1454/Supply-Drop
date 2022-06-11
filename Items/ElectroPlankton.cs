@@ -1,38 +1,36 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using R2API;
+﻿using R2API;
 using RoR2;
 using UnityEngine;
-using TILER2;
 using static R2API.RecalculateStatsAPI;
+
 using SupplyDrop.Utils;
-using static TILER2.MiscUtil;
+using static SupplyDrop.Utils.ItemHelpers;
+using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
+
+using BepInEx.Configuration;
 
 namespace SupplyDrop.Items
 {
-    public class ElectroPlankton : Item<ElectroPlankton>
+    public class ElectroPlankton : ItemBase<ElectroPlankton>
     {
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .08 = 8%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float baseStackHPPercent { get; private set; } = .08f;
+        //Config Stuff
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("Amount of shield gained on hit. Is multiplied by the number of stacks of the item you have.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float shieldAmountOnHit { get; private set; } = 1f;
-        public override string displayName => "Echo-Voltaic Plankton";
+        public static ConfigOption<float> baseStackHPPercent;
+        public static ConfigOption<float> shieldAmountOnHit;
 
-        public override ItemTier itemTier => ItemTier.Tier2;
+        //Item Data
 
-        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string GetNameString(string langid = null) => displayName;
+        public override string ItemName => "Echo-Voltaic Plankton";
 
-        protected override string GetPickupString(string langID = null) => "Recharge shield upon dealing damage.";
+        public override string ItemLangTokenName => "PLANKTON";
 
-        protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style> of your maximum health. " +
+        public override string ItemPickupDesc => "Recharge <style=cIsUtility>shield</style> upon dealing damage.";
+
+        public override string ItemFullDescription => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{FloatToPercentageString(baseStackHPPercent)}</style> of your maximum health. " +
             $"Dealing damage recharges <style=cIsUtility>{shieldAmountOnHit}</style> <style=cStack>(+{shieldAmountOnHit} per stack)</style> <style=cIsUtility>shield</style>.";
 
-        protected override string GetLoreString(string landID = null) => "<style=cMono>ACCESSING EXPERIMENT DATA FOR PROJECT B:O:M:37543</style>" +
+        public override string ItemLore => "<style=cMono>ACCESSING EXPERIMENT DATA FOR PROJECT B:O:M:37543</style>" +
             "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:1</style>\nNewly-minted Senior Researcher Thomas here! This is my first time as project lead, pretty exciting.\n\nThese micro-organisms were recovered under the ice around Titan's equator region. " +
             "They appear to be identical in every way to Earth zooplankton, though substantially larger. I intend to run a full dissection of several tomorrow." +
             "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:2</style>\nDissection proved to be...valuable. Upon dissecting the specimens, we found that every single one of them possess a small cellular 'sac' of sorts, " +
@@ -50,33 +48,52 @@ namespace SupplyDrop.Items
             "\n\n<style=cMono>ERROR: FILE CANNOT BE REMOVED. S.R. THOMAS ENCRYPTION KEY REQUIRED.\n\n> SEND MESSAGE TO |||||||||||</style>" +
             "\n\nJ-\nI want those logs off the server now. The test generator has already been shipped off to M.\n\nOh, and I want that idiot dealt with.\n- S";
 
-        private static List<CharacterBody> Playername = new List<CharacterBody>();
+        public override ItemTier Tier => ItemTier.Tier2;
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
+
+
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("Plankton.prefab");
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("PlanktonIcon");
+
+
         public static GameObject ItemBodyModelPrefab;
 
-        public ElectroPlankton()
+        public override void Init(ConfigFile config)
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Plankton.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("PlanktonIcon");
+            CreateConfig(config);
+            CreateLang();
+            CreateItem();
+            Hooks();
         }
-        public override void SetupAttributes()
-        {
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = modelResource;
-                var meshes = ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
-                meshes[3].gameObject.AddComponent<Wobble>();
-                displayRules = GenerateItemDisplayRules();
-            }
 
-            base.SetupAttributes();
-        }
-        private static ItemDisplayRuleDict GenerateItemDisplayRules()
+        private void CreateConfig(ConfigFile config)
         {
-            ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
+            baseStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Shield Gained with First Stack of Echo-Voltaic Plankton", .08f, "How much shield as a % of max HP should you gain with the first echo-voltaic plankton? (.08 = 8%)");
+            shieldAmountOnHit = config.ActiveBind<float>("Item: " + ItemName, "Amount of Shield Gained on Hit", 1f, "How much shield should you gain when you hit an enemy?");
+        }
+
+        public override ItemDisplayRuleDict CreateItemDisplayRules()
+        {
+            ItemBodyModelPrefab = ItemModel;
+            var meshes = ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
+            meshes[3].gameObject.AddComponent<Wobble>();
+            var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(.125f, .125f, .125f);
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0, 0, 0),
+                    localAngles = new Vector3(0, 0, 0),
+                    localScale = new Vector3(1, 1, 1)
+                }
+            });
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -211,22 +228,15 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-        public override void Install()
+        public override void Hooks()
         {
-            base.Install();
+            //var meshes = itemDef.pickupModelPrefab.GetComponentsInChildren<MeshRenderer>();
+            //meshes[3].gameObject.AddComponent<Wobble>();
 
-            var meshes = itemDef.pickupModelPrefab.GetComponentsInChildren<MeshRenderer>();
-            meshes[3].gameObject.AddComponent<Wobble>();
             On.RoR2.HealthComponent.TakeDamage += ShieldOnHit;
             GetStatCoefficients += AddMaxShield;
         }
-        public override void Uninstall()
-        {
-            base.Uninstall();
 
-            GetStatCoefficients -= AddMaxShield;
-            On.RoR2.HealthComponent.TakeDamage -= ShieldOnHit;
-        }
         private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
             var inventoryCount = GetCount(sender);

@@ -5,14 +5,13 @@ using System.Reflection;
 using UnityEngine;
 using BepInEx.Configuration;
 using Path = System.IO.Path;
-using TILER2;
-using static TILER2.MiscUtil;
+using System.Collections.Generic;
 
 namespace K1454.SupplyDrop
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
-    [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
+    [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(PrefabAPI), nameof(RecalculateStatsAPI), nameof(DirectorAPI), nameof(DeployableAPI), nameof(DamageAPI), nameof(SoundAPI), nameof(OrbAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
     {
@@ -20,13 +19,20 @@ namespace K1454.SupplyDrop
         public const string ModName = "Supply Drop";
         public const string ModGuid = "com.K1454.SupplyDrop";
 
-        internal static FilingDictionary<CatalogBoilerplate> masterItemList = new FilingDictionary<CatalogBoilerplate>();
-
         internal static BepInEx.Logging.ManualLogSource ModLogger;
-
 
         public static AssetBundle MainAssets;
         private static ConfigFile ConfigFile;
+
+        public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
+        {
+            {"fake ror/hopoo games/deferred/hgstandard", "shaders/deferred/hgstandard"},
+            {"fake ror/hopoo games/fx/hgcloud intersection remap", "shaders/fx/hgintersectioncloudremap" },
+            {"fake ror/hopoo games/fx/hgcloud remap", "shaders/fx/hgcloudremap" },
+            {"fake ror/hopoo games/fx/hgdistortion", "shaders/fx/hgdistortion" },
+            {"fake ror/hopoo games/deferred/hgsnow topped", "shaders/deferred/hgsnowtopped" },
+            {"fake ror/hopoo games/fx/hgsolid parallax", "shaders/fx/hgsolidparallax" }
+        };
 
         private void Awake()
         {
@@ -36,30 +42,16 @@ namespace K1454.SupplyDrop
             {
                 MainAssets = AssetBundle.LoadFromStream(stream);
             }
+
+
             ConfigFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
 
-            masterItemList = T2Module.InitAll<CatalogBoilerplate>(new T2Module.ModInfo
-            {
-                displayName = "Supply Drop",
-                longIdentifier = "SUPPLYDROP",
-                shortIdentifier = "SUPPDRP",
-                mainConfigFile = ConfigFile
-            });
-
-            using (var bankStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SupplyDrop.SupplyDropSounds.bnk"))
-            {
-                var bytes = new byte[bankStream.Length];
-                bankStream.Read(bytes, 0, bytes.Length);
-                SoundAPI.SoundBanks.Add(bytes);
-            }
-
-            T2Module.SetupAll_PluginAwake(masterItemList);
-            T2Module.SetupAll_PluginStart(masterItemList);
-        }
-        private void Start()
-        {
-            
-            CatalogBoilerplate.ConsoleDump(Logger, masterItemList);
+            //using (var bankStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SupplyDrop.SupplyDropSounds.bnk"))
+            //{
+            //    var bytes = new byte[bankStream.Length];
+            //    bankStream.Read(bytes, 0, bytes.Length);
+            //    SoundAPI.SoundBanks.Add(bytes);
+            //}
         }
     }
 }

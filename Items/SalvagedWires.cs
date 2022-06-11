@@ -1,43 +1,39 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using R2API;
+﻿using R2API;
 using RoR2;
 using UnityEngine;
-using TILER2;
 using static R2API.RecalculateStatsAPI;
+
 using SupplyDrop.Utils;
-using static TILER2.MiscUtil;
+using static SupplyDrop.Utils.ItemHelpers;
+using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
+
+using BepInEx.Configuration;
 
 namespace SupplyDrop.Items
 {
-    public class SalvagedWires : Item<SalvagedWires>
+    public class SalvagedWires : ItemBase<SalvagedWires>
     {
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .04 = 4%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float baseStackHPPercent { get; private set; } = .04f;
+        //Config Stuff
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for additional stacks of item. Default: .02 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float addStackHPPercent { get; private set; } = .02f;
+        public static ConfigOption<float> baseStackHPPercent;
+        public static ConfigOption<float> addStackHPPercent;
+        public static ConfigOption<float> baseAttackSpeedPercent;
+        public static ConfigOption<float> addAttackSpeedPercent;
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of bonus attack speed gained for the first stack of item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float baseAttackSpeedPercent { get; private set; } = .1f;
+        //Item Data
+        public override string ItemName => "Salvaged Wires";
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of bonus attack speed gained for additional stacks of item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float addAttackSpeedPercent { get; private set; } = .1f;
-        public override string displayName => "Salvaged Wires";
-        public override ItemTier itemTier => ItemTier.Tier1;
-        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string GetNameString(string langid = null) => displayName;
-        protected override string GetPickupString(string langID = null) => "Gain some shield, and gain increased attack speed while your shield is active.";
-        protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
-            $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health." +
-            $" While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>{Pct(baseAttackSpeedPercent)}</style>" +
-            $" <style=cStack>(+{Pct(addAttackSpeedPercent)} per stack)</style>.";
-        protected override string GetLoreString(string landID = null) => "\"Now remember y'all. There are three rules of Space Scrappin'. You squirts may be dumber than rocks, but I 'spect y'all to remember them.\"" +
+        public override string ItemLangTokenName => "WIRES";
+
+        public override string ItemPickupDesc => "Gain some <style=cIsUtility>shield</style>, and gain increased <style=cIsDamage>attack speed</style> while your <style=cIsUtility>shield</style> is active.";
+
+        public override string ItemFullDescription => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{FloatToPercentageString(baseStackHPPercent)}</style>" +
+            $" <style=cStack>(+{FloatToPercentageString(addStackHPPercent)} per stack)</style> of your maximum health." +
+            $" While <style=cIsUtility>shield</style> is active, increases <style=cIsDamage>attack speed</style> by <style=cIsUtility>{FloatToPercentageString(baseAttackSpeedPercent)}</style>" +
+            $" <style=cStack>(+{FloatToPercentageString(addAttackSpeedPercent)} per stack)</style>.";
+
+        public override string ItemLore => "\"Now remember y'all. There are three rules of Space Scrappin'. You squirts may be dumber than rocks, but I 'spect y'all to remember them.\"" +
             "\n\n." +
             "\n." +
             "\n." +
@@ -52,30 +48,49 @@ namespace SupplyDrop.Items
             "\n\nThe thought of smiles on his family's faces pushed the young boy forward. He stuffed the wires he had already claimed from the metal husk, and turned to face the dark tunnel before him. " +
             "Alyk took a deep breath, clenched his small hands into tight fists, then clamored down further into the silent wreck.";
 
-        private static List<CharacterBody> Playername = new List<CharacterBody>();
-        public static GameObject ItemBodyModelPrefab;
-        public SalvagedWires()
-        {
-            modelResource = MainAssets.LoadAsset<GameObject>("WireBundle.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("SalvagedWiresIcon");
-        }
-        public override void SetupAttributes()
-        {
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = modelResource;
-                displayRules = GenerateItemDisplayRules();
-            }
+        public override ItemTier Tier => ItemTier.Tier1;
 
-            base.SetupAttributes();
-        }
-        private static ItemDisplayRuleDict GenerateItemDisplayRules()
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
+
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("WireBundle.prefab");
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("SalvagedWiresIcon");
+
+        public static GameObject ItemBodyModelPrefab;
+        public override void Init(ConfigFile config)
         {
-            ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
+            CreateConfig(config);
+            CreateLang();
+            CreateItem();
+            Hooks();
+        }
+
+        private void CreateConfig(ConfigFile config)
+        {
+            baseStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Shield Gained with 1 Salvaged Wires", .04f, "How much shield as a % of max HP should you gain with a single salvaged wires? (.04 = 4%)");
+            addStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Shield Gained per Salvaged Wires", .02f, "How much additional shield as a % of max HP should each salvaged wires after the first give?");
+            baseAttackSpeedPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Attack Speed Gained with 1 Salvaged Wires", .1f, "How much attack speed should you gain with a single salvaged wires? (.1 = 10%)");
+            addAttackSpeedPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Attack Speed Gained per Salvaged Wires", .1f, "How much additional attack speed should each salvaged wires after the first give?");
+        }
+        public override ItemDisplayRuleDict CreateItemDisplayRules()
+        {
+            ItemBodyModelPrefab = ItemModel;
+            var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(0.5f, 0.5f, 0.5f);
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new RoR2.ItemDisplayRule[]
+                        {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0, 0, 0),
+                    localAngles = new Vector3(0, 0, 0),
+                    localScale = new Vector3(1, 1, 1)
+                }
+                        });
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -210,21 +225,14 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-        public override void Install()
+        public override void Hooks()
         {
-            base.Install();
-
-            itemDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f) * 6f;
+            //pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f) * 6f;
 
             GetStatCoefficients += AttackSpeedBonus;
             GetStatCoefficients += AddMaxShield;
         }
-        public override void Uninstall()
-        {
-            base.Uninstall();
-            GetStatCoefficients -= AttackSpeedBonus;
-            GetStatCoefficients -= AddMaxShield;
-        }
+
         private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
             var inventoryCount = GetCount(sender);

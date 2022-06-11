@@ -1,37 +1,37 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using R2API;
+﻿using R2API;
 using RoR2;
 using UnityEngine;
-using TILER2;
 using static R2API.RecalculateStatsAPI;
+
 using SupplyDrop.Utils;
+using static SupplyDrop.Utils.ItemHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
+
+using BepInEx.Configuration;
 
 namespace SupplyDrop.Items
 {
-    public class ShellPlating : Item<ShellPlating>
+    public class ShellPlating : ItemBase<ShellPlating>
     {
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The amount of armor granted on kill. Default: .2", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float armorOnKillAmount { get; private set; } = .2f;
+        //Config Stuff
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The maximum amount of armor obtainable from the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float baseMaxArmorGain { get; private set; } = 10f;
+        public static ConfigOption<float> armorOnKillAmount;
+        public static ConfigOption<float> baseMaxArmorGain;
+        public static ConfigOption<float> addMaxArmorGain;
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("The maximum amount of armor obtainable from additional stacks of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float addMaxArmorGain { get; private set; } = 10f;
-        public override string displayName => "Shell Plating";
-        public override ItemTier itemTier => ItemTier.Tier2;
-        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string GetNameString(string langid = null) => displayName;
-        protected override string GetPickupString(string langID = null) => "Gain armor on kill.";
-        protected override string GetDescString(string langID = null) => $"Killing an enemy increases your <style=cIsUtility>armor</style> permanently by " +
+        //Item Data
+
+        public override string ItemName => "Shell Plating";
+
+        public override string ItemLangTokenName => "SHELL_PLATING";
+
+        public override string ItemPickupDesc => "Gain permanent <style=cIsUtility>armor</style> on kill.";
+
+        public override string ItemFullDescription => $"Killing an enemy increases your <style=cIsUtility>armor</style> permanently by " +
             $"<style=cIsUtility>{armorOnKillAmount}</style>, up to a maximum of <style=cIsUtility>{baseMaxArmorGain}</style> <style=cStack>(+{addMaxArmorGain} per stack)</style>" +
             $" <style=cIsUtility>armor</style>.";
-        protected override string GetLoreString(string landID = null) => "Order: \"Shell Plating\"\nTracking Number: 02******\n" +
+
+        public override string ItemLore => "Order: \"Shell Plating\"\nTracking Number: 02******\n" +
             "Estimated Delivery: 2/02/2056\nShipping Method: Priority\nShipping Address: Titan Museum of History and Culture, Titan\nShipping Details:\n\n" +
             "I've enclosed your payment, as well as a token of my goodwill, in hopes of a continued relationship. " +
             "The story behind this piece should be especially interesting to you, given your fascination with sea-faring cultures.\n\n" +
@@ -45,39 +45,60 @@ namespace SupplyDrop.Items
             "\n\nThere's still a few shells floating out there today, including this one here. " +
             "Of course, no one has found them to be quite as...effective as those old reports claimed them to be. But it's still a neat little trinket, eh?";
 
-        private static List<CharacterBody> Playername = new List<CharacterBody>();
+        public override ItemTier Tier => ItemTier.Tier2;
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
+
+
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("Shell.prefab");
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("ShellIcon");
+
+
         public static GameObject ItemBodyModelPrefab;
         public BuffDef ShellStackMax { get; private set; }
-        public ShellPlating()
+
+        public override void Init(ConfigFile config)
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Shell.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("ShellIcon");
+            CreateConfig(config);
+            CreateLang();
+            CreateBuff();
+            CreateItem();
+            Hooks();
         }
-        public override void SetupAttributes()
+
+        private void CreateConfig(ConfigFile config)
         {
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = modelResource;
-                displayRules = GenerateItemDisplayRules();
-            }
-
-            base.SetupAttributes();
-
+            armorOnKillAmount = config.ActiveBind<float>("Item: " + ItemName, "Armor Gained on Kill", .2f, "How much armor should you gain on kill? (Multiplies by # of stacks of Shell Plating you have)");
+            baseMaxArmorGain = config.ActiveBind<float>("Item: " + ItemName, "Base Max Armor Obtainable with 1 Shell Plating", 10f, "What should be the max armor obtainable with a single shell plating?");
+            addMaxArmorGain = config.ActiveBind<float>("Item: " + ItemName, "Additional Max Armor Obtainable per Shell Plating", 10f, "How much should the max armor obtainable increase by for each shell plating after the first?");
+        }
+        private void CreateBuff()
+        {
             ShellStackMax = ScriptableObject.CreateInstance<BuffDef>();
             ShellStackMax.name = "SupplyDrop Shell Stack Max";
             ShellStackMax.canStack = false;
             ShellStackMax.isDebuff = false;
             ShellStackMax.iconSprite = MainAssets.LoadAsset<Sprite>("ShellBuffIcon");
+
             ContentAddition.AddBuffDef(ShellStackMax);
         }
-        private static ItemDisplayRuleDict GenerateItemDisplayRules()
+        public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
+            ItemBodyModelPrefab = ItemModel;
+            var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
-            ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
-
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
-
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0, 0, 0),
+                    localAngles = new Vector3(0, 0, 0),
+                    localScale = new Vector3(1, 1, 1)
+                }
+            });
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -212,21 +233,13 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-        public override void Install()
+        public override void Hooks()
         {
-            base.Install();
-
             On.RoR2.GlobalEventManager.OnCharacterDeath += CalculateShellBuffApplications;
 
             GetStatCoefficients += AddShellPlateStats;
         }
-        public override void Uninstall()
-        {
-            base.Uninstall();
-            On.RoR2.GlobalEventManager.OnCharacterDeath -= CalculateShellBuffApplications;
 
-            GetStatCoefficients -= AddShellPlateStats;
-        }
         private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
         {
             orig(self, damageReport);

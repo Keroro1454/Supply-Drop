@@ -1,55 +1,43 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using R2API;
+﻿using R2API;
 using RoR2;
 using UnityEngine;
-using TILER2;
-using SupplyDrop.Utils;
-using static TILER2.MiscUtil;
-using static K1454.SupplyDrop.SupplyDropPlugin;
 using static R2API.RecalculateStatsAPI;
+
+using SupplyDrop.Utils;
+using static SupplyDrop.Utils.ItemHelpers;
+using static SupplyDrop.Utils.MathHelpers;
+using static K1454.SupplyDrop.SupplyDropPlugin;
+
+using BepInEx.Configuration;
 
 namespace SupplyDrop.Items
 {
-    public class UnassumingTie : Item<UnassumingTie>
+    public class UnassumingTie : ItemBase<UnassumingTie>
     {
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for first stack of the item. Default: .04 = 4%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float baseStackHPPercent { get; private set; } = .04f;
+        //Config Stuff
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, amount of maximum HP granted as bonus shield for additional stacks of item. Default: .02 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float addStackHPPercent { get; private set; } = .02f;
+        public static ConfigOption<float> baseStackHPPercent;
+        public static ConfigOption<float> addStackHPPercent;
+        public static ConfigOption<float> windedDebuffDuration;
+        public static ConfigOption<float> secondWindBaseDuration;
+        public static ConfigOption<float> secondWindBonusMultiplier;
+        public static ConfigOption<float> secondWindBaseSpeedPercent;
+        public static ConfigOption<float> secondWindAddSpeedPercent;
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the duration of the 'Winded' debuff.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float windedDebuffDuration { get; private set; } = 10f;
+        //Item Data
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the base duration of the 'Second Wind' buff.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float secondWindBaseDuration { get; private set; } = 4f;
+        public override string ItemName => "Unassuming Tie";
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In seconds, the multiplier applied to the shield/HP ratio, used to calculate the bonus duration of the 'Second Wind' buff.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float secondWindBonusMultiplier { get; private set; } = 5f;
+        public override string ItemLangTokenName => "UNASSUMING_TIE";
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for the first stack of the item. Default: .15 = 15%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float secondWindBaseSpeedPercent { get; private set; } = .15f;
+        public override string ItemPickupDesc => "Gain some <style=cIsUtility>shield</style>, and receive a <style=cIsUtility>speed boost</style> when your <style=cIsUtility>shield</style> is broken.";
 
-        [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
-        [AutoConfig("In percentage, the speed boost granted by the 'Second Wind' buff for additional stacks of the item. Default: .1 = 10%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float secondWindAddSpeedPercent { get; private set; } = .1f;
-        public override string displayName => "Unassuming Tie";
-        public override ItemTier itemTier => ItemTier.Tier1;
-        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string GetNameString(string langid = null) => displayName;
-        protected override string GetPickupString(string langID = null) => "Gain some shield, and receive a speed boost when your shield is broken.";
-        protected override string GetDescString(string langID = null) => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{Pct(baseStackHPPercent)}</style>" +
-            $" <style=cStack>(+{Pct(addStackHPPercent)} per stack)</style> of your maximum health. Breaking your <style=cIsUtility>shield</style> gives you a" +
+        public override string ItemFullDescription => $"Gain a <style=cIsUtility>shield</style> equal to <style=cIsUtility>{FloatToPercentageString(baseStackHPPercent)}</style>" +
+            $" <style=cStack>(+{FloatToPercentageString(addStackHPPercent)} per stack)</style> of your maximum health. Breaking your <style=cIsUtility>shield</style> gives you a" +
             $" <style=cIsUtility>Second Wind</style> for {secondWindBaseDuration}s, plus a bonus amount based on your <style=cIsUtility>maximum shield</style>. " +
-            $"Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{Pct(secondWindBaseSpeedPercent)}</style> <style=cStack>(+{Pct(secondWindAddSpeedPercent)} per stack)</style>.";
-        protected override string GetLoreString(string landID = null) => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters " +
+            $"Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{FloatToPercentageString(secondWindBaseSpeedPercent)}</style> <style=cStack>(+{FloatToPercentageString(secondWindAddSpeedPercent)} per stack)</style>.";
+
+        public override string ItemLore => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters " +
             "which were active during the early 21st century. The gang was wildly successful while active, breaking into, looting, " +
             "and escaping from some of the most secure sites on Earth at the time. Even when authorities attempted to apprehend the criminals, " +
             "reports state that shooting at them 'only seem to make [the heisters] move faster, however the hell that works.'\n" +
@@ -57,30 +45,46 @@ namespace SupplyDrop.Items
             "This piece serves as a testament to their dedication to style, no matter the situation.\"\n\n" +
             "- <i>Placard description for \"Striped Tie\" at the Galactic Museum of Law Enforcement and Criminality</i>";
 
-        private static List<CharacterBody> Playername = new List<CharacterBody>();
+        public override ItemTier Tier => ItemTier.Tier1;
+
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
+
+
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("Tie.prefab");
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("TieIcon");
+
+
         public static GameObject ItemBodyModelPrefab;
+
         public BuffDef SecondWindBuff { get; private set; }
         public BuffDef WindedDebuff { get; private set; }
-        public UnassumingTie()
+
+        public override void Init(ConfigFile config)
         {
-            modelResource = MainAssets.LoadAsset<GameObject>("Tie.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("TieIcon");
+            CreateConfig(config);
+            CreateLang();
+            CreateBuff();
+            CreateItem();
+            Hooks();
         }
-        public override void SetupAttributes()
+        private void CreateConfig(ConfigFile config)
         {
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = modelResource;
-                displayRules = GenerateItemDisplayRules();
-            }
-
-            base.SetupAttributes();
-
+            baseStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Shield Gained with 1 Unassuming Tie", .04f, "How much shield as a % of max HP should you gain with a single unassuming tie? (.04 = 4%)");
+            addStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Shield Gained per Unassuming Tie", .02f, "How much additional shield as a % of max HP should each unassuming tie after the first give?");
+            windedDebuffDuration = config.ActiveBind<float>("Item: " + ItemName, "Duration of the Winded Debuff", 10f, "How long should the Winded debuff last for, in seconds?");
+            secondWindBaseDuration = config.ActiveBind<float>("Item: " + ItemName, "Base duration of the Second Wind Buff", 5f, "How long should the Second Wind Buff last for at base, in seconds?");
+            secondWindBonusMultiplier = config.ActiveBind<float>("Item: " + ItemName, "Value for bonus duration of the Second Wind Buff", 5f, "What should the value that is multiplied by your shield/HP ratio to find the bonus duration of the Second Wind buff be, in seconds?");
+            secondWindBaseSpeedPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Movement Speed Gained with 1 Unassuming Tie", .15f, "How much movement speed should you gain with a single unassuming tie? (.1 = 15%)");
+            secondWindAddSpeedPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Movement Speed Gained per 1 Unassuming Tie", .1f, "How much additional movement speed should each unassuming tie after the first give?");
+        }
+        private void CreateBuff()
+        {
             SecondWindBuff = ScriptableObject.CreateInstance<BuffDef>();
             SecondWindBuff.name = "SupplyDrop Tie Speed Buff";
             SecondWindBuff.canStack = false;
             SecondWindBuff.isDebuff = false;
             SecondWindBuff.iconSprite = MainAssets.LoadAsset<Sprite>("SecondWindBuffIcon");
+
             ContentAddition.AddBuffDef(SecondWindBuff);
 
             WindedDebuff = ScriptableObject.CreateInstance<BuffDef>();
@@ -88,16 +92,30 @@ namespace SupplyDrop.Items
             WindedDebuff.canStack = false;
             WindedDebuff.isDebuff = true;
             WindedDebuff.iconSprite = MainAssets.LoadAsset<Sprite>("WindedDebuffIcon.png");
-            ContentAddition.AddBuffDef(WindedDebuff);
 
+            ContentAddition.AddBuffDef(WindedDebuff);
         }
-        private static ItemDisplayRuleDict GenerateItemDisplayRules()
+
+        public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
-            ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemBodyModelPrefab = ItemModel;
+            var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(.2f, .2f, .2f);
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new RoR2.ItemDisplayRule[]
+                        {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0, 0, 0),
+                    localAngles = new Vector3(0, 0, 0),
+                    localScale = new Vector3(1, 1, 1)
+                }
+                        });
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -232,28 +250,19 @@ namespace SupplyDrop.Items
             });
             return rules;
         }
-        public override void Install()
+        public override void Hooks()
         {
-            base.Install();
 
             //For some reason if this isn't here the game absolutely freaks out and throws a ton of errors stating the object is null.
             //I seriously have no idea why the hell this is the case. DO NOT TOUCH!
-            itemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
+            //itemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
 
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
             GetStatCoefficients += AddMaxShield;
             GetStatCoefficients += AddSecondWindBuff;
             On.RoR2.CharacterBody.RemoveBuff_BuffIndex += AddWindedDebuff;
         }
-        public override void Uninstall()
-        {
-            base.Uninstall();
 
-            GetStatCoefficients -= AddMaxShield;
-            On.RoR2.HealthComponent.TakeDamage -= CalculateBuff;
-            GetStatCoefficients -= AddSecondWindBuff;
-            On.RoR2.CharacterBody.RemoveBuff_BuffIndex -= AddWindedDebuff;
-        }
         private void AddMaxShield(CharacterBody sender, StatHookEventArgs args)
         {
             var inventoryCount = GetCount(sender);
