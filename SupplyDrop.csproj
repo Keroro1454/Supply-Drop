@@ -12,7 +12,11 @@
 
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
+    <Compile Remove="Items\HolyInsurance.cs" />
+    <Compile Remove="Items\PlagueMask.cs" />
     <Compile Remove="PlagueMask.cs" />
+    <Compile Remove="Utilities\InsuranceBarController.cs" />
+    <Compile Remove="Utilities\InsuranceSavingsTracker.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -105,60 +109,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>lib\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp.R2API.mm">
-      <HintPath>lib\Assembly-CSharp.R2API.mm.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>lib\BepInEx.dll</HintPath>
-    </Reference>
-    <Reference Include="MMHOOK_Assembly-CSharp">
-      <HintPath>lib\MMHOOK_Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>lib\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>lib\MonoMod.RuntimeDetour.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.Utils">
-      <HintPath>lib\MonoMod.Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="R2API">
-      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\mods\profiles\Default\BepInEx\plugins\tristanmcpherson-R2API\R2API\R2API.dll</HintPath>
-    </Reference>
+	  <PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="BepInEx.Core" Version="5.4.19" />
+	  <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.4-r.0" />
+	  <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
+	  <PackageReference Include="MMHOOK.RoR2" Version="2022.4.19">
+		  <NoWarn>NU1701</NoWarn>
+	  </PackageReference>
+	  <PackageReference Include="R2API" Version="4.3.5" />
+
     <Reference Include="TILER2">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\r2modman\BepInEx\plugins\ThinkInvis-TILER2\TILER2.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>lib\Unity.Postprocessing.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>lib\Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>lib\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>lib\UnityEngine.AssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>lib\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>lib\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>lib\UnityEngine.ParticleSystemModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>lib\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>lib\UnityEngine.UI.dll</HintPath>
-    </Reference>
+
     <Reference Include="Wwise">
       <HintPath>lib\Wwise.dll</HintPath>
     </Reference>

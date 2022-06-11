@@ -68,7 +68,7 @@ namespace SupplyDrop.Items
             ShellStackMax.canStack = false;
             ShellStackMax.isDebuff = false;
             ShellStackMax.iconSprite = MainAssets.LoadAsset<Sprite>("ShellBuffIcon");
-            BuffAPI.Add(new CustomBuff(ShellStackMax));
+            ContentAddition.AddBuffDef(ShellStackMax);
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
@@ -77,6 +77,7 @@ namespace SupplyDrop.Items
             ItemBodyModelPrefab.GetComponent<ItemDisplay>().rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
 
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule

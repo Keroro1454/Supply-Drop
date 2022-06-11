@@ -90,42 +90,42 @@ namespace SupplyDrop.Items
             PatheticBloodBuff.canStack = false;
             PatheticBloodBuff.isDebuff = false;
             PatheticBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon1");
-            BuffAPI.Add(new CustomBuff(PatheticBloodBuff));
+            ContentAddition.AddBuffDef(PatheticBloodBuff);
 
             WeakBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             WeakBloodBuff.name = "SupplyDrop Blood Book Buff 2";
             WeakBloodBuff.canStack = false;
             WeakBloodBuff.isDebuff = false;
             WeakBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon2");
-            BuffAPI.Add(new CustomBuff(WeakBloodBuff));
+            ContentAddition.AddBuffDef(WeakBloodBuff);
 
             AverageBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             AverageBloodBuff.name = "SupplyDrop Blood Book Buff 3";
             AverageBloodBuff.canStack = false;
             AverageBloodBuff.isDebuff = false;
             AverageBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon3");
-            BuffAPI.Add(new CustomBuff(AverageBloodBuff));
+            ContentAddition.AddBuffDef(AverageBloodBuff);
 
             StrongBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             StrongBloodBuff.name = "SupplyDrop Blood Book Buff 4";
             StrongBloodBuff.canStack = false;
             StrongBloodBuff.isDebuff = false;
             StrongBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon4");
-            BuffAPI.Add(new CustomBuff(StrongBloodBuff));
+            ContentAddition.AddBuffDef(StrongBloodBuff);
 
             InsaneBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             InsaneBloodBuff.name = "SupplyDrop Blood Book Buff 5";
             InsaneBloodBuff.canStack = false;
             InsaneBloodBuff.isDebuff = false;
             InsaneBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon5");
-            BuffAPI.Add(new CustomBuff(InsaneBloodBuff));
+            ContentAddition.AddBuffDef(InsaneBloodBuff);
 
             DevotedBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
             DevotedBloodBuff.name = "SupplyDrop Blood Book Buff 6";
             DevotedBloodBuff.canStack = false;
             DevotedBloodBuff.isDebuff = false;
             DevotedBloodBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BloodBookBuffIcon6");
-            BuffAPI.Add(new CustomBuff(DevotedBloodBuff));
+            ContentAddition.AddBuffDef(DevotedBloodBuff);
 
             ranges = new Range[]
             {

@@ -45,7 +45,7 @@ namespace SupplyDrop.Items
         {
             if (ItemBodyModelPrefab == null)
             {
-                ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("HolyInsuranceTracker.prefab");
+                ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("BloodBookTracker.prefab");
                 ItemFollowerPrefab = modelResource;
                 displayRules = GenerateItemDisplayRules();
             }
@@ -269,26 +269,23 @@ namespace SupplyDrop.Items
         }
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
-            if (rep.attackerBody && self)
+            var inventoryCount = GetCount(rep.attackerMaster);
+            if (inventoryCount > 0)
             {
-                var inventoryCount = GetCount(rep.attackerMaster);
-                if (inventoryCount > 0)
+                var insuranceSavingsTrackerComponent = rep.attackerMaster.gameObject.GetComponent<InsuranceSavingsTracker>();
+                if (!insuranceSavingsTrackerComponent)
                 {
-                    var insuranceSavingsTrackerComponent = rep.attackerMaster.gameObject.GetComponent<InsuranceSavingsTracker>();
-                    if (!insuranceSavingsTrackerComponent)
-                    {
-                        rep.attackerMaster.gameObject.AddComponent<InsuranceSavingsTracker>();
-                    }
-
-                    uint origGold = self.goldReward;
-                    uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((.5f * inventoryCount) / (inventoryCount + 1))));
-                    uint investedGold = origGold - reducedGold;
-                    self.goldReward = reducedGold;
-
-                    //Could you theoretically go over uint.MaxValue here? idk
-                    insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
-                    Debug.LogError("The money is actually being tracked. Rn you have " + insuranceSavingsTrackerComponent.insuranceSavings);
+                    rep.attackerMaster.gameObject.AddComponent<InsuranceSavingsTracker>();
                 }
+
+                uint origGold = self.goldReward;
+                uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((.5f * inventoryCount) / (inventoryCount + 1))));
+                uint investedGold = origGold - reducedGold;
+                self.goldReward = reducedGold;
+
+                //Could you theoretically go over uint.MaxValue here? idk
+                insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
+                Debug.LogError("The money is actually being tracked. Rn you have " + insuranceSavingsTrackerComponent.insuranceSavings);
             }
 
             orig(self, rep);
@@ -330,8 +327,8 @@ namespace SupplyDrop.Items
         {
             orig(self);
 
-            var prefab = Resources.Load<GameObject>("@SupplyDrop:Assets/Main/Textures/UI/InsuranceBar.prefab");
-            InsuranceBar = GameObject.Instantiate(prefab, self.mainContainer.transform);
+            var prefab = MainAssets.LoadAsset<GameObject>("InsuranceBar");
+            InsuranceBar = UnityEngine.Object.Instantiate(prefab, self.mainContainer.transform);
             if (InsuranceBar)
             {
                 var cachedSavingsComponent = self.targetMaster.gameObject.GetComponent<InsuranceSavingsTracker>();

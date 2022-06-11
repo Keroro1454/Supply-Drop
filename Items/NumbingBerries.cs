@@ -72,7 +72,7 @@ namespace SupplyDrop.Items
             NumbBerryBuff.canStack = false;
             NumbBerryBuff.isDebuff = false;
             NumbBerryBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BerryBuffIcon");
-            BuffAPI.Add(new CustomBuff(NumbBerryBuff));
+            ContentAddition.AddBuffDef(NumbBerryBuff);
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {

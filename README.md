@@ -45,16 +45,18 @@ That'll teach 'em to question science!
 	- Convert 10% (+5% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s.
 	
 ## Lunar Items:
-- **Holy Insurance**
-	- Gain 25% (+25% per stack) less gold from kills. 100% (+50% per stack) of this gold is used to help 'level up' your insurance coverage to protect against various threats. Dying to an enemy you are insured for resets your coverage but revives you!
+- **UNKNOWN ITEM**
+	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
 	
 - **UNKNOWN EQUIPMENT**
 	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
 
 ## Changelog:
-- 1.5.0: By the Light of the Moon!
-	- Added 5 new items: Holy Insurance, Dcyvvc Jbcbpnjaknb, 2-Fiupx Qiv, Lleoxlhg Crynvnx, and Oyfpvcuge Xlgoik!
-	- Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
+- 1.4.10: Finally Back!
+	- Updated for Survivors of the Void
+	- Disabled Vintage Plague Mask for the moment being while I work on getting it functional again
+	- Added configuration options to the Vintage Plague Mask (oops) and Vintage Plague Hat items
+	- Added item displays for Railgunner and Void Fiend
 	- Fixed Bandit's item displays being a bit wonky
 
 - 1.4.9

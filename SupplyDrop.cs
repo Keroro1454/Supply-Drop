@@ -13,17 +13,16 @@ namespace K1454.SupplyDrop
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(BuffAPI), nameof(LanguageAPI), nameof(ResourcesAPI),
-                              nameof(PrefabAPI), nameof(SoundAPI), nameof(OrbAPI), nameof(EffectAPI), nameof(DirectorAPI), nameof(ProjectileAPI), nameof(ArtifactAPI), nameof(RecalculateStatsAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(PrefabAPI), nameof(RecalculateStatsAPI), nameof(DirectorAPI), nameof(DeployableAPI), nameof(DamageAPI), nameof(SoundAPI), nameof(OrbAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
     {
-        public const string ModVer = "1.5.0";
+        public const string ModVer = "1.4.10";
         public const string ModName = "Supply Drop";
         public const string ModGuid = "com.K1454.SupplyDrop";
 
         internal static FilingDictionary<CatalogBoilerplate> masterItemList = new FilingDictionary<CatalogBoilerplate>();
 
-        internal static BepInEx.Logging.ManualLogSource _logger;
+        internal static BepInEx.Logging.ManualLogSource ModLogger;
 
 
         public static AssetBundle MainAssets;
@@ -31,7 +30,7 @@ namespace K1454.SupplyDrop
 
         private void Awake()
         {
-            _logger = Logger;
+            ModLogger = Logger;
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SupplyDrop.supplydrop_assets"))
             {

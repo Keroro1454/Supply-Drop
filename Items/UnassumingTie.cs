@@ -81,14 +81,14 @@ namespace SupplyDrop.Items
             SecondWindBuff.canStack = false;
             SecondWindBuff.isDebuff = false;
             SecondWindBuff.iconSprite = MainAssets.LoadAsset<Sprite>("SecondWindBuffIcon");
-            BuffAPI.Add(new CustomBuff(SecondWindBuff));
+            ContentAddition.AddBuffDef(SecondWindBuff);
 
             WindedDebuff = ScriptableObject.CreateInstance<BuffDef>();
             WindedDebuff.name = "SupplyDrop Tie Cooldown Debuff";
             WindedDebuff.canStack = false;
             WindedDebuff.isDebuff = true;
             WindedDebuff.iconSprite = MainAssets.LoadAsset<Sprite>("WindedDebuffIcon.png");
-            BuffAPI.Add(new CustomBuff(WindedDebuff));
+            ContentAddition.AddBuffDef(WindedDebuff);
 
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()

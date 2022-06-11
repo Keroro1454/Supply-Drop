@@ -71,7 +71,7 @@ namespace SupplyDrop.Items
             ShieldGateCooldown.canStack = false;
             ShieldGateCooldown.isDebuff = true;
             ShieldGateCooldown.iconSprite = MainAssets.LoadAsset<Sprite>("ShieldGateCooldownIcon");
-            BuffAPI.Add(new CustomBuff(ShieldGateCooldown));
+            ContentAddition.AddBuffDef(ShieldGateCooldown);
         }
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {

@@ -13,6 +13,7 @@ namespace SupplyDrop.Items
 {
     public class HardenedBoneFragments : Item<HardenedBoneFragments>
     {
+        //Config Stuff
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("The amount of temporary armor gained from each kill for the first stack of the item.", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float baseBonusArmor { get; private set; } = 2f;
@@ -24,6 +25,8 @@ namespace SupplyDrop.Items
         [AutoConfigUpdateActions(AutoConfigUpdateActionTypes.InvalidateLanguage)]
         [AutoConfig("The percentage of maximum HP needed to be lost to lose 1 additional bone fragment buff stack when taking damage. Default: 2 = 2%", AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float healthPercentBuffLoss { get; private set; } = 2f;
+
+        //Item Data
         public override string displayName => "Hardened Bone Fragments";
         public override ItemTier itemTier => ItemTier.Tier1;
         public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
@@ -61,7 +64,7 @@ namespace SupplyDrop.Items
             BFBuff.canStack = true;
             BFBuff.isDebuff = false;
             BFBuff.iconSprite = MainAssets.LoadAsset<Sprite>("BoneBuffIcon");
-            BuffAPI.Add(new CustomBuff(BFBuff));
+            ContentAddition.AddBuffDef(BFBuff);
         }      
         private static ItemDisplayRuleDict GenerateItemDisplayRules()
         {
