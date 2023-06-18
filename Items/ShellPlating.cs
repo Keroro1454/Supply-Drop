@@ -237,7 +237,7 @@ namespace SupplyDrop.Items
         {
             On.RoR2.GlobalEventManager.OnCharacterDeath += CalculateShellBuffApplications;
 
-            GetStatCoefficients += AddShellPlateStats;
+            On.RoR2.CharacterBody.RecalculateStats += AddShellPlateStats;
         }
 
         private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
@@ -265,7 +265,7 @@ namespace SupplyDrop.Items
             }
 
         }
-        private void AddShellPlateStats(CharacterBody sender, StatHookEventArgs args)
+        private void AddShellPlateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody sender)
         {
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
@@ -288,8 +288,9 @@ namespace SupplyDrop.Items
                     sender.RemoveBuff(ShellStackMax);
                 }
                 var currentShellStack = shellStackTrackerComponent.shellStacks;
-                args.armorAdd += (armorOnKillAmount * currentShellStack);
+                sender.baseArmor += (armorOnKillAmount * currentShellStack);
             }
+            orig(sender);
         }
     }
 }

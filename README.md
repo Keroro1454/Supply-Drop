@@ -3,12 +3,8 @@ Supply Drop is a mod for Risk of Rain 2 designed to add a number of items.
 Items are designed with not just variety in mind, but with the goal of staying true to the game's design aesthetic, as well as balance.
 More items are coming soon--over a dozen are planned as of now!
 
-# What's New with Update 1.4: The Doctor is Back!
-It's definitely been a few! But Supply Drop is back, and with it, bug fixes, improvements, rebalances, and two new items to help you pretend you're qualified to be handling any medical emergency. Admittedly, some people are probably going to panic when they see a person clad in a horrifying bird-like mask striding towards them when they call for a doctor. Thankfully, they'll be quickly calmed by your outlandish yet stylish headwear. And then even more quickly panicked again when you start beating the poor chap choking on their sandwich with your self-proclaimed 'medicine stick'. But hey, give those science-hating jerks a taste of their own medicine. 
-
-From the stick. 
-
-That'll teach 'em to question science!
+# What's New with Update 1.4.10: Finally Back!
+Kept ya waiting huh?
 
 # Included Items:
 ## Common Items:
@@ -54,14 +50,12 @@ That'll teach 'em to question science!
 ## Changelog:
 - 1.4.10: Finally Back!
 	- Updated for Survivors of the Void
-	- Disabled Vintage Plague Mask for the moment being while I work on getting it functional again
-	- Added configuration options to the Vintage Plague Mask (oops) and Vintage Plague Hat items
+	- Code has been completely re-worked to remove dependency on TILER2
+	- Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
 	- Made configs a bit more clear
 	- Increased base duration of Second Wind from 4 to 5 seconds
 	- Increased cooldown reduction from stacking QSS from 0.5 to 1 second
 	- Increased damage conversion percentage from stacking Tome of Bloodletting from 5% to 10%
-	- Added item displays for Railgunner and Void Fiend
-	- Fixed Bandit's item displays being a bit wonky
 
 - 1.4.9
 	- Removed a debugging measure that was spamming the console

@@ -73,9 +73,11 @@ namespace SupplyDrop.Items
         {
             CreateConfig(config);
             CreateLang();
+            CreateAdditionalAssets();
             CreateBuff();
             CreateItem();
             Hooks();
+            SetupAttributes();
         }
 
         private void CreateConfig(ConfigFile config)
@@ -87,6 +89,12 @@ namespace SupplyDrop.Items
             baseDamageConversionPercent = config.ActiveBind<float>("Item: " + ItemName, "Percent of Damage Taken Converted Into Damage Boost", .1f, "What percentage of the damage you take should be converted into the damage boost with a single tome of bloodletting? (.1 = 10%)");
             addDamageConversionPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Armor Gained on Kill per Hardened Bone Fragments", .1f, "What additional percentage of the damage you take should each tome of bloodletting, after the first, convert into the damage boost?");
         }
+
+        private void CreateAdditionalAssets()
+        {
+
+        }
+
         private void CreateBuff()
         {
             PatheticBloodBuff = ScriptableObject.CreateInstance<BuffDef>();
@@ -155,8 +163,8 @@ namespace SupplyDrop.Items
             ItemFollowerPrefab = ItemModel;
 
             var ItemFollower = ItemBodyModelPrefab.AddComponent<Utils.ItemFollower>();
-            ItemFollower.itemDisplay = ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemFollower.itemDisplay.rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemFollower.itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            ItemFollower.itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
             ItemFollower.followerPrefab = ItemFollowerPrefab;
             ItemFollower.targetObject = ItemBodyModelPrefab;
             ItemFollower.distanceDampTime = 0.15f;
