@@ -149,9 +149,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(0f, 0.1f, -0.38f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = new Vector3(0.1f, 0.125f, 0.1f)
+                    localPos = new Vector3(0F, 0.1F, -0.38F),
+                    localAngles = new Vector3(9.86298F, 0.05314F, 357.6569F),
+                    localScale = new Vector3(0.1F, 0.125F, 0.1F)
                 }
             });
             rules.Add("mdlMerc", new ItemDisplayRule[]

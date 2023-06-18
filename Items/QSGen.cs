@@ -88,7 +88,7 @@ namespace SupplyDrop.Items
             var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
             itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
-            Vector3 generalScale = new Vector3(1.5f, 1.5f, 1.5f);
+            Vector3 generalScale = new Vector3(.5f, .5f, .5f);
 
             ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new RoR2.ItemDisplayRule[]
             {

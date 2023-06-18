@@ -205,10 +205,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Head",
-                    localPos = new Vector3(-0.7f, 5f, -1.3f),
-                    localAngles = new Vector3(115f, 0f, 0f),
-                    localScale = new Vector3(.5f, .5f, .5f)
+                    childName = "MouthMuzzle",
+                    localPos = new Vector3(-1.80733F, 2.78646F, 2.18605F),
+                    localAngles = new Vector3(8.76867F, 166.0483F, 119.149F),
+                    localScale = new Vector3(0.32626F, 0.32626F, 0.32626F)
                 }
             });
             rules.Add("mdlCaptain", new ItemDisplayRule[]
