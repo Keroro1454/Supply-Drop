@@ -2,7 +2,7 @@
 using System.Collections;
 
 // Makes objects float up & down while gently spinning.
-namespace K1454.Utils
+namespace SupplyDrop.Utils
 {
     public class Bobbing : MonoBehaviour
     {

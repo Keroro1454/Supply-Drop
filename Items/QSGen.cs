@@ -85,6 +85,7 @@ namespace SupplyDrop.Items
             ItemBodyModelPrefab = ItemModel;
             var meshes = ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
             meshes[1].gameObject.AddComponent<Spin>();
+            meshes[2].gameObject.AddComponent<Bobbing>();
             var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
             itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
@@ -274,11 +275,6 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            //var meshes = itemDef.pickupModelPrefab.GetComponentsInChildren<MeshRenderer>();
-            //meshes[1].gameObject.AddComponent<Spin>();
-            //meshes[2].gameObject.AddComponent<Bobbing>();
-            //itemDef.pickupModelPrefab.transform.localScale = new Vector3(1f, 1f, 1f);
-
             On.RoR2.HealthComponent.TakeDamage += CalculateDamageReduction;
             GetStatCoefficients += AddMaxShield;
         }
