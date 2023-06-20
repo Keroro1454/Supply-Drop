@@ -209,6 +209,18 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.71034F, -0.63998F, 0.00227F),
+                    localAngles = new Vector3(344.1754F, 269.9999F, 90.00006F),
+                    localScale = generalScale
+                }
+            });
             rules.Add("mdlToolbot", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -305,7 +317,32 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-            rules.Add("mdlBandit2", new ItemDisplayRule[]
+/*            rules.Add("mdlHeretic", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(-0.61626F, 0.44617F, 0.28767F),
+                    localAngles = new Vector3(290.9346F, 282.3023F, 169.8304F),
+                    localScale = generalScale
+                }
+            });*/
+//Scaling is all sorts of borked here, gonna pull a Hopoo and skip displays for bird
+            rules.Add("mdlRailGunner", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.4f, -0.45f, -0.2f),
+                    localAngles = new Vector3(-90f, 0f, 0f),
+                    localScale = generalScale
+                }
+            });
+            rules.Add("mdlVoidSurvivor", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
