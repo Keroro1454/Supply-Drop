@@ -228,9 +228,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-4f, -4f, 8f),
-                    localAngles = new Vector3(-90f, 180f, 0f),
-                    localScale = generalScale * 1.5f
+                    localPos = new Vector3(-4F, -5.6233F, 2.49766F),
+                    localAngles = new Vector3(270F, 180F, 0F),
+                    localScale = new Vector3(0.12F, 0.12F, 0.12F)
                 }
             });
             rules.Add("mdlEngi", new ItemDisplayRule[]
@@ -317,19 +317,6 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-/*            rules.Add("mdlHeretic", new ItemDisplayRule[]
-            {
-                new ItemDisplayRule
-                {
-                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
-                    childName = "Chest",
-                    localPos = new Vector3(-0.61626F, 0.44617F, 0.28767F),
-                    localAngles = new Vector3(290.9346F, 282.3023F, 169.8304F),
-                    localScale = generalScale
-                }
-            });*/
-//Scaling is all sorts of borked here, gonna pull a Hopoo and skip displays for bird
             rules.Add("mdlRailGunner", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -349,9 +336,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(0.4f, -0.45f, -0.2f),
-                    localAngles = new Vector3(-90f, 0f, 0f),
-                    localScale = generalScale
+                    localPos = new Vector3(0.4F, 1.25452F, -0.2507F),
+                    localAngles = new Vector3(73.45808F, 0F, 0F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
                 }
             });
             return rules;

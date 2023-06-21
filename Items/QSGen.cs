@@ -85,7 +85,8 @@ namespace SupplyDrop.Items
             ItemBodyModelPrefab = ItemModel;
             var meshes = ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
             meshes[1].gameObject.AddComponent<Spin>();
-            meshes[2].gameObject.AddComponent<Bobbing>();
+            //Still unsure why the orb freaks out. Disabled until further notice.
+            //meshes[2].gameObject.AddComponent<Bobbing>();
             var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
             itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
@@ -233,18 +234,6 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(0.03058F, 0.21142F, 0.01927F),
                     localAngles = new Vector3(341.8543F, 356.4473F, 82.38717F),
                     localScale = new Vector3(0.09366F, 0.09366F, 0.09366F)
-                }
-            });
-            rules.Add("mdlHeretic", new ItemDisplayRule[]
-            {
-                new ItemDisplayRule
-                {
-                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
-                    childName = "Chest",
-                    localPos = new Vector3(-0.38818F, -0.39725F, -0.78051F),
-                    localAngles = new Vector3(53.8433F, 44.24327F, 192.8633F),
-                    localScale = new Vector3(0.11617F, 0.11617F, 0.11617F)
                 }
             });
             rules.Add("mdlRailGunner", new ItemDisplayRule[]

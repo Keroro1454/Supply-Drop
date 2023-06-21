@@ -235,18 +235,6 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-            rules.Add("mdlHeretic", new ItemDisplayRule[]
-            {
-                new ItemDisplayRule
-                {
-                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
-                    childName = "Chest",
-                    localPos = new Vector3(0.11305F, 0.09848F, 0.00809F),
-                    localAngles = new Vector3(0F, 0F, 0F),
-                    localScale = generalScale
-                }
-            });
             rules.Add("mdlRailGunner", new ItemDisplayRule[]
             {
                 new ItemDisplayRule

@@ -200,9 +200,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(-0.23006F, 0.09333F, 0.21804F),
-                    localAngles = new Vector3(85.5148F, 186.49F, 268.3089F),
-                    localScale = new Vector3(0.14248F, 0.14248F, 0.14248F)
+                    localPos = new Vector3(-0.23525F, 0.33845F, 0.02544F),
+                    localAngles = new Vector3(8.5323F, 359.0821F, 81.38415F),
+                    localScale = new Vector3(0.3613F, 0.3613F, 0.3613F)
                 }
             });
             rules.Add("mdlCroco", new ItemDisplayRule[]
@@ -227,18 +227,6 @@ namespace SupplyDrop.Items
                     localPos = new Vector3(-0.01282F, 0.62907F, 0.02253F),
                     localAngles = new Vector3(293.617F, 339.6562F, 181.0212F),
                     localScale = new Vector3(0.84632F, 0.84632F, 0.84632F)
-                }
-            });
-            rules.Add("mdlHeretic", new ItemDisplayRule[]
-            {
-                new ItemDisplayRule
-                {
-                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
-                    childName = "Chest",
-                    localPos = new Vector3(-0.61626F, 0.44617F, 0.28767F),
-                    localAngles = new Vector3(290.9346F, 282.3023F, 169.8304F),
-                    localScale = new Vector3(0.3398F, 0.3398F, 0.3398F)
                 }
             });
             rules.Add("mdlRailGunner", new ItemDisplayRule[]
