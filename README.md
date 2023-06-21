@@ -9,7 +9,7 @@ Kept ya waiting huh?
 # Included Items:
 ## Common Items:
 - **Hardened Bone Fragments**
-	- Killing an enemy temporarily grants 2 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor.
+	- Killing an enemy temporarily grants 5 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor.
 
 - **Numbing Berries**
 	- Gain 5 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds.
@@ -51,11 +51,23 @@ Kept ya waiting huh?
 - 1.4.10: Finally Back!
 	- Updated for Survivors of the Void
 	- Code has been completely re-worked to remove dependency on TILER2
-	- Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
-	- Made configs a bit more clear
-	- Increased base duration of Second Wind from 4 to 5 seconds
-	- Increased cooldown reduction from stacking QSS from 0.5 to 1 second
-	- Increased damage conversion percentage from stacking Tome of Bloodletting from 5% to 10%
+	- Additions:
+		> Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
+		> Added item displays for Railgunner, Void Fiend, and Heretic (plus finished the missing ones for Bandit)
+		> Added item displays to all characters for Hardened Bone Fragments
+		> Re-added dynamic movement of the orb and shielding in QSS
+	- Improvements:
+		> Fixed or improved item displays for numerous items on all characters
+		> Made configs of all items more clear
+	- Balance Changes:
+		> BUFF: Increased Hardened Bone Fragment's base armor granted per buff stack, from 2 to 5
+		> BUFF: Increased Shell Plating's armor granted per kill, from .2 to .5
+		> BUFF: Increased Shell Plating's base max armor, from 10 to 25
+		> BUFF: Increased Unassuming Tie's base duration of Second Wind, from 4 to 5 seconds
+		> BUFF: Increased QSS's cooldown reduction from additional stacks, from 0.5 to 1 seconds
+		> BUFF: Increased Tome of Bloodletting's damage conversion percentage from additional stacks, from 5% to 10%
+	- Bug Fixes:
+		> Fixed Hardened Bone Fragments not adjusting its values to the config values
 
 - 1.4.9
 	- Removed a debugging measure that was spamming the console

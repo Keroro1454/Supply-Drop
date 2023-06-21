@@ -67,8 +67,8 @@ namespace SupplyDrop.Items
 
         private void CreateConfig(ConfigFile config)
         {
-            armorOnKillAmount = config.ActiveBind<float>("Item: " + ItemName, "Armor Gained on Kill", .2f, "How much armor should you gain on kill? (Multiplies by # of stacks of Shell Plating you have)");
-            baseMaxArmorGain = config.ActiveBind<float>("Item: " + ItemName, "Base Max Armor Obtainable with 1 Shell Plating", 10f, "What should be the max armor obtainable with a single shell plating?");
+            armorOnKillAmount = config.ActiveBind<float>("Item: " + ItemName, "Armor Gained on Kill", .5f, "How much armor should you gain on kill? (Multiplies by # of stacks of Shell Plating you have)");
+            baseMaxArmorGain = config.ActiveBind<float>("Item: " + ItemName, "Base Max Armor Obtainable with 1 Shell Plating", 25f, "What should be the max armor obtainable with a single shell plating?");
             addMaxArmorGain = config.ActiveBind<float>("Item: " + ItemName, "Additional Max Armor Obtainable per Shell Plating", 10f, "How much should the max armor obtainable increase by for each shell plating after the first?");
         }
         private void CreateBuff()
