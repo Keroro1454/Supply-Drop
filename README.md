@@ -53,9 +53,8 @@ Kept ya waiting huh?
 	- Code has been completely re-worked to remove dependency on TILER2
 	- Additions:
 		> Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
-		> Added item displays for Railgunner, Void Fiend, and Heretic (plus finished the missing ones for Bandit)
+		> Added item displays for Railgunner and Void Fiend (plus finished the missing ones for Bandit)
 		> Added item displays to all characters for Hardened Bone Fragments
-		> Re-added dynamic movement of the orb and shielding in QSS
 	- Improvements:
 		> Fixed or improved item displays for numerous items on all characters
 		> Made configs of all items more clear
