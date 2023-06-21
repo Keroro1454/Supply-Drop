@@ -304,7 +304,7 @@ namespace SupplyDrop.Items
             var InventoryCount = GetCount(sender);
             if (sender.HasBuff(BFBuff))
             {
-                args.armorAdd += (2f * sender.GetBuffCount(BFBuff)) + (1f * sender.GetBuffCount(BFBuff) * (InventoryCount - 1));
+                args.armorAdd += (baseBonusArmor * sender.GetBuffCount(BFBuff)) + (addBonusArmor * sender.GetBuffCount(BFBuff) * (InventoryCount - 1));
             }
         }
     }
