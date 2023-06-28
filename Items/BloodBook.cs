@@ -69,6 +69,7 @@ namespace SupplyDrop.Items
         public static BuffDef InsaneBloodBuff { get; private set; }
         public static BuffDef DevotedBloodBuff { get; private set; }
 
+        public static NetworkSoundEventDef BombBookSound;
         public override void Init(ConfigFile config)
         {
             CreateConfig(config);
@@ -156,6 +157,10 @@ namespace SupplyDrop.Items
                 new Range(40, 50, InsaneBloodBuff, 12),
                 new Range(50, double.PositiveInfinity, DevotedBloodBuff, 14)
             };
+
+           //BombBookSound = ScriptableObject.CreateInstance<NetworkSoundEventDef>();
+           // BombBookSound.eventName = "SupplyDrop_BombBook_Talk";
+           // R2API.ContentAddition.AddNetworkSoundEventDef(BombBookSound);
         }
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -516,7 +521,7 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            //itemDef.pickupModelPrefab.transform.localScale = new Vector3(.85f, .85f, .85f);
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(.85f, .85f, .85f);
             
             On.RoR2.HealthComponent.TakeDamage += ApplyBloodBookBuff;
             GetStatCoefficients += AddBloodBuffStats;

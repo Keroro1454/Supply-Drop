@@ -255,6 +255,177 @@ namespace SupplyDrop.Items
                     localScale = new Vector3(0.13743F, 0.13675F, 0.13675F)
                 }
             });
+
+            //MODDED CHARACTER IDRs START HERE
+
+            rules.Add("mdlNemCommando", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.04318F, 0.45183F, -0.89502F),
+                    localAngles = new Vector3(335.4941F, 172.1023F, 172.4776F),
+                    localScale = new Vector3(0.62959F, 0.62959F, 0.62959F)
+                }
+            });
+            rules.Add("mdlHANDOverclocked", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.10916F, 0.46026F, -1.33403F),
+                    localAngles = new Vector3(321.3182F, 180F, 180F),
+                    localScale = new Vector3(1F, 1F, 1F)
+                }
+            });
+            rules.Add("mdlEnforcer", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.30648F, 0.26187F, 0.01832F),
+                    localAngles = new Vector3(302.0476F, 73.70911F, 174.2691F),
+                    localScale = new Vector3(0.16795F, 0.16795F, 0.16795F)
+                }
+            });
+            //            rules.Add("mdlNemforcer(Clone)", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Chest",
+            //                    localPos = new Vector3(-0.25983F, 0.30917F, -0.02484F),
+            //                    localAngles = new Vector3(343.1456F, 273.5997F, 0.5956F),
+            //                    localScale = new Vector3(0.20149F, 0.20149F, 0.20149F)
+            //                }
+            //            });
+            rules.Add("mdlPaladin", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.01057F, 0.07219F, 0.34583F),
+                    localAngles = new Vector3(20.93496F, 357.0578F, 355.5038F),
+                    localScale = new Vector3(0.20177F, 0.20177F, 0.20177F)
+                }
+            });
+            //            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Chest",
+            //                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
+            //                    localAngles = new Vector3(0f, 0f, 0f),
+            //                    localScale = generalScale * 0.9f
+            //                }
+            //            });
+            rules.Add("mdlPathfinder", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.00886F, 0.20273F, -0.09857F),
+                    localAngles = new Vector3(286.2325F, 197.1443F, 171.7968F),
+                    localScale = new Vector3(0.1212F, 0.1212F, 0.1212F)
+                }
+            });
+            rules.Add("mdlExecutioner2", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.0064F, -0.02565F, -0.18458F),
+                    localAngles = new Vector3(322.4555F, 180.0001F, 180F),
+                    localScale = new Vector3(0.09483F, 0.09483F, 0.09483F)
+                }
+            });
+            rules.Add("mdlHouse(Clone)", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Stomach",
+                    localPos = new Vector3(0.05503F, -0.05966F, 0.26159F),
+                    localAngles = new Vector3(24.60182F, 18.0207F, 0.87431F),
+                    localScale = new Vector3(0.13055F, 0.13055F, 0.13055F)
+                }
+            });
+            rules.Add("mdlTeslaTrooper", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.00908F, 0.09981F, -0.24737F),
+                    localAngles = new Vector3(313.2094F, 180.2613F, 182.2743F),
+                    localScale = new Vector3(0.12853F, 0.12853F, 0.12853F)
+                }
+            });
+            rules.Add("mdlDesolator", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Stomach",
+                    localPos = new Vector3(0.01223F, -0.0845F, 0.31709F),
+                    localAngles = new Vector3(28.98084F, 359.7079F, 356.8602F),
+                    localScale = new Vector3(0.03931F, 0.03931F, 0.03931F)
+                }
+            });
+            //            rules.Add("CHEF", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Head",
+            //                    localPos = new Vector3(0F, 0.01245F, -0.00126F),
+            //                    localAngles = new Vector3(0F, 0F, 0F),
+            //                    localScale = new Vector3(0.00339F, 0.00339F, 0.00339F)
+            //                }
+            //            });
+            rules.Add("mdlArsonist", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Waist",
+                    localPos = new Vector3(0.0247F, -0.02863F, -0.21954F),
+                    localAngles = new Vector3(330.3502F, 171.8538F, 179.4864F),
+                    localScale = new Vector3(0.13531F, 0.13531F, 0.13531F)
+                }
+            });
+            rules.Add("mdlRocket", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.28102F, 0.0792F, 0.01916F),
+                    localAngles = new Vector3(22.48225F, 93.05926F, 357.2301F),
+                    localScale = new Vector3(0.17273F, 0.17273F, 0.17273F)
+                }
+            });
             return rules;
         }
         public override void Hooks()

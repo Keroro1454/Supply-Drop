@@ -263,7 +263,7 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            //itemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
 
             On.RoR2.HealthComponent.TakeDamage += CalculateBerryBuff;
             GetStatCoefficients += AddBerryBuff;

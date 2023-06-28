@@ -447,10 +447,7 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-
-            //For some reason if this isn't here the game absolutely freaks out and throws a ton of errors stating the object is null.
-            //I seriously have no idea why the hell this is the case. DO NOT TOUCH!
-            //itemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
 
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
             GetStatCoefficients += AddMaxShield;

@@ -9,7 +9,6 @@ using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
 
-//TO-DO: Need to add proper display to MUL-T, Arti, Merc, REX, Acrid, Loader, Captain.
 namespace SupplyDrop.Items
 {
     public class HardenedBoneFragments : ItemBase<HardenedBoneFragments>
@@ -257,7 +256,7 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            //pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
 
             On.RoR2.GlobalEventManager.OnCharacterDeath += CalculateBFBuffGain;
             On.RoR2.HealthComponent.TakeDamage += BFBuffLoss;
