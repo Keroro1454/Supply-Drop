@@ -585,7 +585,7 @@ namespace SupplyDrop.Items
 
                         if (willBookRead <= (chanceBookReads * 100))
                         {
-                           // AkSoundEngine.PostEvent(4030648726u, self.body.gameObject);
+                           AkSoundEngine.PostEvent(4030648726u, self.body.gameObject);
                         }
                     }
                 }               
