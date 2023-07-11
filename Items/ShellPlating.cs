@@ -20,7 +20,6 @@ namespace SupplyDrop.Items
         public static ConfigOption<float> addMaxArmorGain;
 
         //Item Data
-
         public override string ItemName => "Shell Plating";
 
         public override string ItemLangTokenName => "SHELL_PLATING";
@@ -39,7 +38,7 @@ namespace SupplyDrop.Items
             "though it's not clear if this was in appeasement, celebration; in fact, it's unknown to what they were even paying tribute to.\n\n" +
             "Either way, legend goes that one day, invaders appeared on the horizon in mighty vessels. The people, sensing the impending danger, " +
             "sacrificed all they had in a terrified frenzy. Texts of theirs mention blood, possibly human, staining the foam red. " +
-            "In return...something...gave them shells to adorn their bodies with." +
+            "In return...<i>something</i>...gave them shells to adorn their bodies with." +
             "\n\nGovernment reports state casualities were in the hundreds. The few that survived described those clad with shells as literally invincible, " +
             "grinning like madmen and shouting praises as armaments hit them without effect." +
             "\n\nThere's still a few shells floating out there today, including this one here. " +
@@ -48,12 +47,10 @@ namespace SupplyDrop.Items
         public override ItemTier Tier => ItemTier.Tier2;
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
 
-
         public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("Shell.prefab");
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("ShellIcon");
-
-
         public static GameObject ItemBodyModelPrefab;
+
         public BuffDef ShellStackMax { get; private set; }
 
         public override void Init(ConfigFile config)
@@ -71,6 +68,7 @@ namespace SupplyDrop.Items
             baseMaxArmorGain = config.ActiveBind<float>("Item: " + ItemName, "Base Max Armor Obtainable with 1 Shell Plating", 25f, "What should be the max armor obtainable with a single shell plating?");
             addMaxArmorGain = config.ActiveBind<float>("Item: " + ItemName, "Additional Max Armor Obtainable per Shell Plating", 10f, "How much should the max armor obtainable increase by for each shell plating after the first?");
         }
+
         private void CreateBuff()
         {
             ShellStackMax = ScriptableObject.CreateInstance<BuffDef>();

@@ -39,10 +39,10 @@ namespace SupplyDrop.Items
             "Estimated Delivery: 3/01/2056\nShipping Method: Priority\nShipping Address: P.O. Box 749, Sector A, Moon\nShipping Details:" +
             "You are cordially invited to the Order's 49th Annual Induction Gala.\n\n" +
             "Enclosed with this invitation is your unique sigil, encoded coordinates for 'Party' cipher decryption, " +
-            "and your mask and headwear selected for your pre-destined role within the Order.\n\n" +
+            "and your mask and headwear, selected for your pre-destined role within the Order.\n\n" +
             "Please note that attendance is mandatory. Missing the Sigil Ceremony will be noted, " +
-            "and absenteeism will result in you being deemed Unreasonable.\n\n" +
-            "Please also note the mask and hat are mandatory attire. Deviation of any kind will result in you being deemed Unreasonable.\n\n" +
+            "and absenteeism will result in you being deemed <b>Unreasonable</b>.\n\n" +
+            "Please also note the mask and hat are mandatory attire. Deviation of any kind will result in you being deemed <b>Unreasonable</b>.\n\n" +
             "Cordially,\n" +
             "The Administrator's Right Hand\n\n" +
             "<i>We seek truth and knowledge in the darkness\n" +

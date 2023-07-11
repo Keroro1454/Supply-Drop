@@ -33,10 +33,10 @@ namespace SupplyDrop.Items
         public override string ItemLore => "<style=cMono>ACCESSING EXPERIMENT DATA FOR PROJECT B:O:M:37543</style>" +
             "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:1</style>\nNewly-minted Senior Researcher Thomas here! This is my first time as project lead, pretty exciting.\n\nThese micro-organisms were recovered under the ice around Titan's equator region. " +
             "They appear to be identical in every way to Earth zooplankton, though substantially larger. I intend to run a full dissection of several tomorrow." +
-            "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:2</style>\nDissection proved to be...valuable. Upon dissecting the specimens, we found that every single one of them possess a small cellular 'sac' of sorts, " +
-            "though its purpose is unclear. It was unresponsive to almost all stimuli except damaging it, which caused it to immediately disintegrate into dead...bone cells?" +
+            "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:2</style>\nDissection proved to be...valuable? Upon dissecting the specimens, we found that every single one of them possess a small cellular 'sac' of sorts, " +
+            "though its purpose is unclear. It was unresponsive to almost all stimuli. If pierced, however, it immediately disintegrated into dead...bone cells?" +
             "\n\nI hope we find something of interest, sac or otherwise, because otherwise this project is a bust..." +
-            "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:3</style>\nShit. That was a [REDACTED]." +
+            "\n\n<style=cMono>EXPERIMENT LOG B:O:M:37543:3</style>\nI don't know what happened." +
             "\n\nJR John was putting away his tools when he accidentally cut himself with a scalpel. Nothing major, but he didn't sound happy.\n\nOut of nowhere, " +
             "JR Dave...well he was scooping a fresh sample container out of the tank when he suddenly started screaming. Thrashing all over the place. " +
             "John ran over and pulled Dave's arm out of the tank.\n\nI'm outside their room now. Med-bot said their condition is critical. " +
@@ -44,18 +44,19 @@ namespace SupplyDrop.Items
             "but it's true. I've tested my suspicions...these things are even more disturbing than I thought.\n\nThe plankton respond to sound by seemingly converting it to energy, and in massive amounts too. " +
             "But the only sound they react to is vocalizations of pain. The worse, the more energy they release. And you can't trick them either. It has to be genuine. It can't be a recording. They know. Somehow." +
             "\n\n<style=cMono>END OF EXPERIMENT DATA</style>" +
-            "\n\n<style=cMono>> DELETE FILE\n\n> DO YOU WANT TO PROCEED AND DELETE THIS FILE? [Y/N]\n> Y</style>" +
+            "\n<style=cMono>.</style>" +
+            "\n<style=cMono>.</style>" +
+            "\n<style=cMono>.</style>" +
+            "\n<style=cMono>> DELETE FILE\n\n> DO YOU WANT TO PROCEED AND DELETE THIS FILE? [Y/N]\n> Y</style>" +
             "\n\n<style=cMono>ERROR: FILE CANNOT BE REMOVED. S.R. THOMAS ENCRYPTION KEY REQUIRED.\n\n> SEND MESSAGE TO |||||||||||</style>" +
-            "\n\nJ-\nI want those logs off the server now. The test generator has already been shipped off to M.\n\nOh, and I want that idiot dealt with.\n- S";
+            "\n\nJ-\nI want those logs off the server now. The test generator has already been shipped off to M.\n\nAnd I want that idiot dealt with.\n- S";
 
         public override ItemTier Tier => ItemTier.Tier2;
-        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
 
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
 
         public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("Plankton.prefab");
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("PlanktonIcon");
-
-
         public static GameObject ItemBodyModelPrefab;
 
         public override void Init(ConfigFile config)

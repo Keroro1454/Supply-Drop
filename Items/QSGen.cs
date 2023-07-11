@@ -33,15 +33,15 @@ namespace SupplyDrop.Items
 
         public override string ItemLore => "Order: \"Quantum Shield Stabilizer\"\nTracking Number: 06******\nEstimated Delivery: 12/21/2055\nShipping Method: High Priority/Fragile" +
             "\nShipping Address: 6900 West, Advanced Warfare, Mars\nShipping Details:\n\nAfter months of development, we finally have a functioning prototype for your approval." +
-            "\n\nThe stabilizer functions mostly, but not entirely, off of uncertainty. Basing the design entirely off uncertainty would make the functionality too limited; as a result some shield is guaranteed, " +
-            "to serve as the foundation. In addition to this foundation, the stabilizer is also providing, yet not providing, additional shield. This shield both exists and doesn't until the stabilizer is activated, " +
+            "\n\nThe stabilizer functions mostly off of uncertainty. Basing the design entirely off uncertainty would make the functionality too limited; as a result, some shield is guaranteed, " +
+            "to serve as the foundation. In addition to this foundation, the stabilizer is also providing, yet not providing, additional shield. This shield both exists, and doesn't, until the stabilizer is activated, " +
             "at which point it observes itself based upon the damage it is stabilizing. This observation by the stabilizer causes the amount of additional shield to be 'locked down'." +
             "\n\nThe benefit of this design is the fact traditional shield storage and generation is nearly completely omitted. Additional generation/storage would guarantee the existence of more shield, " +
-            "and thus is actively excluded of favor of a small, lightweight uncertainty drive. \n\nA Class-B Hyper-Condensed Star Engine is utilized to power the uncertainty drive. " +
+            "and thus is actively excluded of favor of a small, lightweight uncertainty drive. \n\nA Class-B Hyper-Condensed Star Engine (HCSE) is utilized to power the uncertainty drive. " +
             "It should be noted that the HCSE appears to exhibit unusual properties due to its constant exposure to uncertainty. " +
-            "Namely, the star is constantly expelling particulate created by it undergoing inexplicable micronization and regeneration. The particulate and effects on the star are completely benign, " +
-            "but further iterations could include dispersion/collection methods if desired.\n\nAn invoice is attached to this shipment. It details the cost of developing this prototype, " +
-            "and should be responded to within 3 solar months. Once the invoice has been paid please contact the usual representative with your thoughts on the prototype. " +
+            "Namely, the star is constantly expelling particulate, created by it undergoing inexplicable micronization and regeneration. The particulate and effects on the star are completely benign, " +
+            "but further iterations could include dispersion/collection methods, if desired.\n\nAn invoice is attached to this shipment, " +
+            "and should be responded to within 3 solar months. Once the invoice has been paid, please contact the usual representative with your thoughts on the prototype. " +
             "If it is satisfactory, we can begin moving forward releasing the blueprints, for the additional agreed-upon cost.\n\nThe Order thanks you for your patronage.";
 
         public override ItemTier Tier => ItemTier.Tier3;
