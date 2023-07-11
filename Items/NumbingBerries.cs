@@ -31,18 +31,18 @@ namespace SupplyDrop.Items
         public override string ItemFullDescription => $"Gain <style=cIsUtility>{baseBonusArmor}</style> <style=cStack>(+{addBonusArmor} per stack)</style> " +
             $"<style=cIsUtility>armor</style> for {baseBerryBuffDuration} seconds <style=cStack>(+{addBerryBuffDuration} seconds per stack)</style> upon taking damage.";
 
-        public override string ItemLore => "<style=cMono>> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION..." +
-            "\n> VERIFICATION SUCCESS. ACCESSING YOUR QUERY...\n> OUTPUT:</style>\n\nSpecies Genus: Vaccinum\nSpecies Section: Achilococcus" +
-            "\n\nSpecies is native to the Andromeda system, though the exact planetary origin is currently unknown. Species is a flowering bush. Both the branches and leaves display dark green coloration, " +
-            "and substantial hydrophobic tendencies.\n\nThe fruit of the flowering bush is officially called numbberries. It forms as small, round berries with a mint skin coloration, and a bright purple flesh. " +
+        public override string ItemLore => "<style=cMono>> ACCESSING JEFFERSON'S HORTICULTURE CATALOG...\n\n> ACCESSING RESTRICTED ORGANISMS SUB-CATALOG, PLEASE WAIT FOR VERIFICATION..." +
+            "\n\n> VERIFICATION SUCCESS. ACCESSING YOUR QUERY...\n\n> OUTPUT:</style>\n\nSpecies Genus: Vaccinum\nSpecies Section: Achilococcus" +
+            "\n\nSpecies is native to the Andromeda system, though exact planetary origin is currently unknown. Species is a flowering bush, and both its branches and leaves display dark green coloration " +
+            "and substantial hydrophobic tendencies.\n\nThe scientific name of the species' fruit is numbberries. It forms as small, round berries with a mint-green skin coloration, and a bright purple flesh. " +
             "Colloquially, the fruit is referred to as 'The Fruit of the Damned', 'Unstoppapples', or 'Madmen Mints'. " +
             "All of these names are in reference to the chief effect caused by ingesting the fruit.\n\nNumbberries possess an inordinate amount of unique nerve suppressants. " +
             "The effect of ingesting these is a complete absence of fatigue in the victim, as well as an effectively-unlimited increase to pain tolerance. " +
-            "Examples of this increase in tolerance to pain include victims maintaining complete functionality and reporting no symptoms of pain in spite of:" +
+            "Examples of this increase in tolerance to pain include victims maintaining complete functionality and reporting no symptoms of pain while suffering from:" +
             "\n\n- Over 30 puncture wounds in the abdominal and chest region\n\n- Severe burns over 75% of their body\n\n- Loss of 1 arm; victim reported not noticing it was missing until they were told" +
-            "\n\nOther symptoms caused by ingestion include severe recklessness, loss of fear, and a powerful desire to travel.\n\nAdditionally, numbberries have proven to be fatally addictive. " +
-            "If forced to go without ingesting more numbberries within a small window of time (usually between 2-3 days), addicts quickly begin developing extreme growths on their posterior. " +
-            "Soon after (usually between 1-2 days), regardless of if they acquire more numbberries at this point, they will succumb to a violent series of spasms before suddenly dying of unknown causes." +
+            "\n\nOther symptoms caused by ingestion include a loss of fear and a powerful desire to travel.\n\nAdditionally, numbberries have proven to be fatally addictive. " +
+            "If victim is prevented from ingesting more numbberries within a small window of time (usually between 2-3 days), addicts quickly begin developing tumerous growths. " +
+            "Soon after (usually between 1-2 days), regardless of if they acquire more numbberries at this point, they will suddenly <style=cMono>[REDACTED]</style>." +
             "\n\n<style=cMono>END OUTPUT</style>";
 
         public override ItemTier Tier => ItemTier.Tier1;
@@ -64,6 +64,8 @@ namespace SupplyDrop.Items
             CreateBuff();
             CreateItem();
             Hooks();
+
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
         }
 
         private void CreateConfig(ConfigFile config)
@@ -259,12 +261,181 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
+
+            //MODDED CHARACTER IDRs START HERE
+
+            rules.Add("mdlNemCommando", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Stomach",
+                    localPos = new Vector3(0F, 0F, 0F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = generalScale
+                }
+            });
+            rules.Add("mdlHANDOverclocked", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Head",
+                    localPos = new Vector3(-0.22344F, 0.98188F, 0.29238F),
+                    localAngles = new Vector3(0F, 0F, 17.40252F),
+                    localScale = new Vector3(0.15471F, 0.15471F, 0.15471F)
+                }
+            });
+            rules.Add("mdlEnforcer", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Stomach",
+                    localPos = new Vector3(0F, 0F, 0F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = generalScale
+                }
+            });
+            //            rules.Add("mdlNemforcer(Clone)", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Chest",
+            //                    localPos = new Vector3(-0.25983F, 0.30917F, -0.02484F),
+            //                    localAngles = new Vector3(343.1456F, 273.5997F, 0.5956F),
+            //                    localScale = new Vector3(0.20149F, 0.20149F, 0.20149F)
+            //                }
+            //            });
+            rules.Add("mdlPaladin", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Stomach",
+                    localPos = new Vector3(0F, 0F, 0F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = generalScale
+                }
+            });
+            //            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Chest",
+            //                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
+            //                    localAngles = new Vector3(0f, 0f, 0f),
+            //                    localScale = generalScale * 0.9f
+            //                }
+            //            });
+            rules.Add("mdlPathfinder", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "StomachBone",
+                    localPos = new Vector3(-0.1997F, 0.0149F, -0.03475F),
+                    localAngles = new Vector3(9.22841F, 289.2224F, 259.4585F),
+                    localScale = new Vector3(0.03166F, 0.03166F, 0.03166F)
+                }
+            });
+            rules.Add("mdlExecutioner2", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0F, 0F, 0F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = generalScale
+                }
+            });
+            rules.Add("mdlHouse(Clone)", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Hat",
+                    localPos = new Vector3(-0.15181F, 0.01268F, -0.13898F),
+                    localAngles = new Vector3(25.63814F, 95.42821F, 356.165F),
+                    localScale = new Vector3(0.03966F, 0.03966F, 0.03966F)
+                }
+            });
+            rules.Add("mdlTeslaTrooper", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Stomach",
+                    localPos = new Vector3(0F, 0F, 0F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = generalScale
+                }
+            });
+            rules.Add("mdlDesolator", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(-0.22255F, 0.02982F, -0.52345F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = new Vector3(0.03562F, 0.03562F, 0.03562F)
+                }
+            });
+            //            rules.Add("CHEF", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Head",
+            //                    localPos = new Vector3(0F, 0.01245F, -0.00126F),
+            //                    localAngles = new Vector3(0F, 0F, 0F),
+            //                    localScale = new Vector3(0.00339F, 0.00339F, 0.00339F)
+            //                }
+            //            });
+            rules.Add("mdlArsonist", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0F, 0F, 0F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = generalScale
+                }
+            });
+            rules.Add("mdlRocket", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0F, 0F, 0F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = generalScale
+                }
+            });
             return rules;
         }
         public override void Hooks()
         {
-            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
-
             On.RoR2.HealthComponent.TakeDamage += CalculateBerryBuff;
             GetStatCoefficients += AddBerryBuff;
         }

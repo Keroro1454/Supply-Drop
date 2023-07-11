@@ -37,12 +37,12 @@ namespace SupplyDrop.Items
             $" <style=cIsUtility>Second Wind</style> for {secondWindBaseDuration}s, plus a bonus amount based on your <style=cIsUtility>maximum shield</style>. " +
             $"Second Wind increases <style=cIsUtility>movement speed</style> by <style=cIsUtility>{FloatToPercentageString(secondWindBaseSpeedPercent)}</style> <style=cStack>(+{FloatToPercentageString(secondWindAddSpeedPercent)} per stack)</style>.";
 
-        public override string ItemLore => "\"This necktie was a staple accessory of one of a notorious group of well-dressed heisters " +
-            "which were active during the early 21st century. The gang was wildly successful while active, breaking into, looting, " +
+        public override string ItemLore => "\"This necktie was a staple accessory of a member of a notorious group of well-dressed heisters " +
+            "that operated during the early 21st century. The gang was wildly successful, breaking into, looting, " +
             "and escaping from some of the most secure sites on Earth at the time. Even when authorities attempted to apprehend the criminals, " +
             "reports state that shooting at them 'only seem to make [the heisters] move faster, however the hell that works.'\n" +
-            "While the identities of these criminals were never discovered, the gang ceased operations for unknown reasons after over a decade of activity. " +
-            "This piece serves as a testament to their dedication to style, no matter the situation.\"\n\n" +
+            "While the identities of these criminals were never discovered, the gang suddenly ceased operations for unknown reasons after over a decade of activity. " +
+            "\nThis piece serves as a testament to their dedication to style, no matter the situation.\"\n\n" +
             "- <i>Placard description for \"Striped Tie\" at the Galactic Museum of Law Enforcement and Criminality</i>";
 
         public override ItemTier Tier => ItemTier.Tier1;
@@ -66,6 +66,8 @@ namespace SupplyDrop.Items
             CreateBuff();
             CreateItem();
             Hooks();
+
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
         }
         private void CreateConfig(ConfigFile config)
         {
@@ -447,8 +449,6 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(3f, 3f, 3f);
-
             On.RoR2.HealthComponent.TakeDamage += CalculateBuff;
             GetStatCoefficients += AddMaxShield;
             GetStatCoefficients += AddSecondWindBuff;
