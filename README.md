@@ -51,22 +51,26 @@ Kept ya waiting huh?
 - 1.4.10: Finally Back!
 	- Updated for Survivors of the Void
 	- Code has been completely re-worked to remove dependency on TILER2
+	- Completely reworked how Plague Mask works unde the hood--it should actually work now! (Thanks to Phreel for showing me how to hook Healing without needing IL anymore!)
 	- Additions:
-		> Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
-		> Added item displays for Railgunner and Void Fiend (plus finished the missing ones for Bandit)
-		> Added item displays to all characters for Hardened Bone Fragments
+		- Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
+		- Added item displays for Railgunner and Void Fiend (plus finished the missing ones for Bandit)
+		- Added item displays to all characters for Hardened Bone Fragments
+		- Added item displays for a large number of modded characters (Nemmando, HAND, Enforcer, Nemforcer, Paladin, Miner, Pathfinder, Executioner, House, Tesla, Desolator, Arsonist, Rocket)
 	- Improvements:
-		> Fixed or improved item displays for numerous items on all characters
-		> Made configs of all items more clear
+		- Fixed or improved item displays for numerous items on all characters
+		- Made configs of all items more clear
+		- Tweaked lore entries for almost every item
 	- Balance Changes:
-		> BUFF: Increased Hardened Bone Fragment's base armor granted per buff stack, from 2 to 5
-		> BUFF: Increased Shell Plating's armor granted per kill, from .2 to .5
-		> BUFF: Increased Shell Plating's base max armor, from 10 to 25
-		> BUFF: Increased Unassuming Tie's base duration of Second Wind, from 4 to 5 seconds
-		> BUFF: Increased QSS's cooldown reduction from additional stacks, from 0.5 to 1 seconds
-		> BUFF: Increased Tome of Bloodletting's damage conversion percentage from additional stacks, from 5% to 10%
+		- BUFF: Increased Hardened Bone Fragment's base armor granted per buff stack, from 2 to 5
+		- BUFF: Increased Shell Plating's armor granted per kill, from .2 to .5
+		- BUFF: Increased Shell Plating's base max armor, from 10 to 25
+		- BUFF: Increased Unassuming Tie's base duration of Second Wind, from 4 to 5 seconds
+		- BUFF: Increased QSS's cooldown reduction from additional stacks, from 0.5 to 1 seconds
+		- BUFF: Increased Tome of Bloodletting's damage conversion percentage from additional stacks, from 5% to 10%
 	- Bug Fixes:
-		> Fixed Hardened Bone Fragments not adjusting its values to the config values
+		- Fixed Hardened Bone Fragments not adjusting its values to the config values
+		- Fixed many of the pickup displays being exceedingly big
 
 - 1.4.9
 	- Removed a debugging measure that was spamming the console
@@ -186,8 +190,10 @@ Kept ya waiting huh?
 
 **XoXFaby:** They have been super helpful in explaining IL stuff, and dealing with my cluelessness towards it!
 
-**WaltzingPhantom:** They provided the lovely item icon designs for Hardened Bone Fragments and Numbing Berries!
+**WaltzingPhantom:** They provided the lovely old item icon designs for Hardened Bone Fragments and Numbing Berries!
 
 **Rein:** They provided so much help with getting the different components in the Tome of Bloodletting working. I can't thank them enough!
 
 **Aaron:** They helped a ton with puzzling through the Plague Hat's IL hook!
+
+**Phreel:** Helped provide some fixes with porting to SOTV as well as motivation to actually get around to fixing this mod!
