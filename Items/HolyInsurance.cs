@@ -1,28 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using R2API;
 using RoR2;
 using UnityEngine;
-using TILER2;
+
 using SupplyDrop.Utils;
+using static SupplyDrop.Utils.ItemHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
+
+using BepInEx.Configuration;
 using UnityEngine.UI;
 
 namespace SupplyDrop.Items
 {
-    public class HolyInsurance : Item<HolyInsurance>
+    public class HolyInsurance : ItemBase<HolyInsurance>
     {
-        public override string displayName => "Afterlife Insurance";
-        public override ItemTier itemTier => ItemTier.Lunar;
-        public override ReadOnlyCollection<ItemTag> itemTags => new ReadOnlyCollection<ItemTag>(new[] { ItemTag.Utility });
-        protected override string GetNameString(string langID = null) => displayName;
-        protected override string GetPickupString(string langID = null) => "Some of the money you earn is invested into divine insurance (Coverage may vary).";
-        protected override string GetDescString(string langID = null) => "Gain 25% <style=cStack>(+25% per stack)</style> less money from all sources. " +
-            "100% <style=cStack>(+25% per stack)</style> of money lost is <style=cUtility>invested into upgrading your insurance</style> to cover more threats, " +
-            "up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will return to life, " +
+        //Config Stuff
+
+        public static ConfigOption<float> baseGoldDrain;
+        public static ConfigOption<float> addGoldDrain;
+        public static ConfigOption<uint> baseGoldToCoverage;
+        public static ConfigOption<float> addGoldToCoverage;
+        public static ConfigOption<float> costTierMultiplier;
+
+        //Item Data
+        public override string ItemName => "Afterlife Insurance";
+
+        public override string ItemLangTokenName => "HOLY_INSURANCE";
+
+        public override string ItemPickupDesc => "Some of the <style=cShrine>money</style> you earn is invested into <style=cIsUtility>divine insurance</style> (Coverage may vary).";
+
+        public override string ItemFullDescription => "Gain 25% <style=cStack>(+25% per stack)</style> less <style=cShrine>money</style> from all sources. " +
+            "100% <style=cStack>(+25% per stack)</style> of money lost is <style=cIsUtility>invested into upgrading your insurance</style> to cover more threats, " +
+            "up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will be revived, " +
             "and your <style=cIsUtility>insurance</style> level will be reset to zero.";
-        protected override string GetLoreString(string langID = null) => "Oops, no lore here. Try back later!";
+
+        public override string ItemLore => "Congratulations on becoming the newest member of the <style=cIsUtility>EternalLife<sup>TM</sup></style> family! Our motto at <style=cIsUtility>EternalLife<sup>TM</sup></style> is simple--provide the very best in insurance solutions, " +
+            "so you don't have to worry about what life (or death) throws your way!" +
+
+            "\n\nYou have opted into our<style=cIsUtility> Dynamic Afterlife Policy Plan<sup> TM</sup>!</style> " +
+            "This policy is unique, as you pay into it over time, and as you pay in, your coverage expands! " +
+            "Our angelic actuaries have calculated the following as appropriate coverage tiers for you, " +
+            "based on your career choice as <style= cMono >[REDACTED] </ style >:" +
+
+            "\n\nT1: <style=cHumanObjective> Small Pests and Vermin:</style> For creepy crawlies, rodents, and other small vermin" +
+            "\nT2: <style=cHumanObjective> Improperly - Placed Debris:</style> For danger due to intentional or unintentional<style:cSub>(Read: Natural Causes)</style> action" +
+            "\nT3: <style=cHumanObjective>Large Pests and Vermin:</style> For infestations that require trained professional removal" +
+            "\nT4: <style=cHumanObjective>Hazardous Exposure(Minor):</style> For spills of unusual toxic, acidic, or 'corrupting material'" +
+            "\nT5: <style=cHumanObjective>Catastrophic Equipment Failure:</style> For malfunctioning heavy machinery or technologies" +
+            "\nT6: <style=cHumanObjective>Hazardous Exposure(Major):</style> For sustained, direct exposure to hazardous material or conditions" +
+            "\nT7: <style=cHumanObjective>Supernatural Forces:</style> For those concerned by the possibility of otherworldly entities" +
+            "\nT8: <style=cHumanObjective>Interstellar Incidents:</style> For all damages sustained off-planet" +
+            "\nT9: <style=cHumanObjective>Extreme and/or Unmitigated Disaster:</style> For those who engage in activities with high probability of causing exceedingly large damages" +
+            "\nT10: <style=cHumanObjective>Acts of God(s) :</style> For those that have attracted the ire of the divine.We at<style=cIsUtility> EternalLife<sup>TM</sup></style> do not recommend engaging in activities that could necessitate this coverage" +
+
+            "\n\n<size=20%> Note that any causes of death not listed can not, and will not, be covered with your current plan. " +
+            "Subscription to plan cannot retroactively alleviate any deaths you may suffer from (previously or currently). "+
+            "As a subscriber, you agree to the term that EternalLife<sup> TM</sup> is entitled to your eternal soul in the event of failure to pay for a needed coverage. Some additional terms and conditions may apply. " +
+            "For questions and concerns, please visit your local place of worship, and direct all prayers to<style=cMono>[REDACTED]</style>, or visit us in-person by <style= cDeath > obliterating yourself</style>." +
+            "\n\n Thank you for choosing<style=cIsUtility> EternalLife<sup>TM</sup></style>! Have a blessed life (or several)!";
+
+        public override ItemTier Tier => ItemTier.Lunar;
+
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
+
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("TestModel.prefab");
+
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("TestIcon");
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
         public static GameObject ItemBodyModelPrefab;
@@ -35,43 +79,127 @@ namespace SupplyDrop.Items
         public Dictionary<string, Range> InsuranceDictionary = new Dictionary<string, Range>();
         //Navigation customNav = new Navigation();
 
-        public HolyInsurance()
+        public override void Init(ConfigFile config)
         {
-            //Don't forget to change these, currently using test model/icon
-            modelResource = MainAssets.LoadAsset<GameObject>("TestModel.prefab");
-            iconResource = MainAssets.LoadAsset<Sprite>("TestIcon");
+            CreateConfig(config);
+            CreateLang();
+            CreateItem();
+            SetupAttributes();
+            Hooks();
         }
-        public override void SetupAttributes()
-        {
-            if (ItemBodyModelPrefab == null)
-            {
-                ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("BloodBookTracker.prefab");
-                ItemFollowerPrefab = modelResource;
-                displayRules = GenerateItemDisplayRules();
-            }
-            base.SetupAttributes();
 
-            //T1 Coverage
-            InsuranceDictionary.Add("BeetleMonster", new Range(0, 1));
-            InsuranceDictionary.Add("BeetleGuardMonster", new Range(0, 1));
-            //T2 Coverage
-            InsuranceDictionary.Add("LemurianMonster", new Range(1, 2));
-            InsuranceDictionary.Add("LemurianBruiserMonster", new Range(1, 2));
-            //T3 Coverage
-            InsuranceDictionary.Add("Wisp1Monster", new Range(2, 3));
-            InsuranceDictionary.Add("GreaterWispMonster", new Range(2, 3));
-            //T4 Coverage
-            InsuranceDictionary.Add("MagmaWorm", new Range(3, 4));
-            //T5 Coverage
-            InsuranceDictionary.Add("BrotherMonster", new Range(4, 5));
-            //T6 Coverage (Not an actual tier, just an catch-all for money past T5)
-            InsuranceDictionary.Add("FullyCovered", new Range(5, uint.MaxValue));
-        }
-        private static ItemDisplayRuleDict GenerateItemDisplayRules()
+        private void CreateConfig(ConfigFile config)
         {
+            baseGoldDrain = config.ActiveBind<float>("Item: " + ItemName, "Base Percentage of Gold Taxed for Insurance with 1 Afterlife Insurance", .25f, "How much of a percentage of gold earned should be taxed with a single Afterlife Insurance? (.25 = 25%)");
+            addGoldDrain = config.ActiveBind<float>("Item: " + ItemName, "Additional Percentage of Gold Taxed for Insurance per Afterlife Insurance", .02f, "How much additional percentage of gold earned should be taxed for each Afterlife Insurance after the first?");
+            baseGoldToCoverage = config.ActiveBind<uint>("Item: " + ItemName, "Base Conversion Ratio of Gold Taken to Gold Stored with 1 Afterlife Insurance", 1, "How much gold is stored for each gold taxed with a single Afterlife Insurance? (1 = 100%)");
+            addGoldToCoverage = config.ActiveBind<float>("Item: " + ItemName, "Additional Conversion Ratio of Gold Taken to Gold Stored per Afterlife Insurance", .25f, "How much additional gold is stored for each gold taxed should each Afterlife Insurance after the first give?");
+            costTierMultiplier = config.ActiveBind<float>("Item: " + ItemName, "Multiplier Applied to All Insurance Tier Costs", 1f, "Apply a multiplier to all insurance tier costs to make them more or less expensive. (1 = 1x)");
+        }
+        
+        public void SetupAttributes()
+        {
+            //Here we set up all the coverages. Commented out entries still need to have their names verified
+
+            //T1 Coverage: Small Pests and Vermin
+            InsuranceDictionary.Add("BeetleMonster", new Range(0, 1));
+/*            InsuranceDictionary.Add("Jellyfish", new Range(0, 1));
+            InsuranceDictionary.Add("Blind Pest", new Range(0, 1));
+            InsuranceDictionary.Add("Blind Vermin", new Range(0, 1));
+            InsuranceDictionary.Add("Hermit Crab", new Range(0, 1));*/
+            InsuranceDictionary.Add("LemurianMonster", new Range(0, 1));
+
+            //T2 Coverage: Improperly-Stored Debris
+/*            InsuranceDictionary.Add("Stone Golem", new Range(1, 2));
+            InsuranceDictionary.Add("Stone Titan", new Range(1, 2));
+            InsuranceDictionary.Add("Coil Golem", new Range(1, 2));*/
+
+            //T3 Coverage: Large Pests and Vermin
+            InsuranceDictionary.Add("LemurianBruiserMonster", new Range(2, 3));
+/*            InsuranceDictionary.Add("Gup", new Range(2, 3));
+            InsuranceDictionary.Add("Bighorn Bison", new Range(2, 3));
+            InsuranceDictionary.Add("Alloy Vulture", new Range(2, 3));
+            InsuranceDictionary.Add("Assassin", new Range(2, 3));*/
+
+            //T4 Coverage: Hazardous Exposure (Minor)
+/*            InsuranceDictionary.Add("Mini Mushrum", new Range(3, 4));
+            InsuranceDictionary.Add("Mother Mushrum", new Range(3, 4));
+            InsuranceDictionary.Add("Larva", new Range(3, 4));
+            InsuranceDictionary.Add("Malachite Urchin", new Range(3, 4));
+            InsuranceDictionary.Add("Malachite Bombs", new Range(3, 4));
+            InsuranceDictionary.Add("Clay Man", new Range(3, 4));
+            InsuranceDictionary.Add("Clay Templar", new Range(3, 4));
+            InsuranceDictionary.Add("Clay Apothecary", new Range(3, 4));*/
+
+            //T5 Coverage: Catastrophic Equipment Failure
+/*            InsuranceDictionary.Add("Alpha Construct", new Range(4, 5));
+            InsuranceDictionary.Add("Solus Probe", new Range(4, 5));
+            InsuranceDictionary.Add("Overloading Bomb", new Range(4, 5));
+            InsuranceDictionary.Add("Brass Contraption", new Range(4, 5));
+            InsuranceDictionary.Add("Brass Monolith", new Range(4, 5));*/
+
+            //T6 Coverage: Hazardous Exposure (Major)
+/*            InsuranceDictionary.Add("Blight", new Range(5, 6));
+            InsuranceDictionary.Add("Poison", new Range(5, 6));
+            InsuranceDictionary.Add("Bleed", new Range(5, 6));
+            InsuranceDictionary.Add("Ice Explosion", new Range(5, 6));
+            InsuranceDictionary.Add("Burn Damage", new Range(5, 6));*/
+
+            //T7 Coverage: Supernatural Forces
+            InsuranceDictionary.Add("Wisp1Monster", new Range(6, 7));
+            InsuranceDictionary.Add("GreaterWispMonster", new Range(6, 7));
+/*            InsuranceDictionary.Add("Archaic Wisp", new Range(6, 7));
+            InsuranceDictionary.Add("Frost Wisp", new Range(6, 7));
+            InsuranceDictionary.Add("Parent", new Range(6, 7));
+            InsuranceDictionary.Add("Imp", new Range(6, 7));
+            InsuranceDictionary.Add("Child", new Range(6, 7));*/
+
+            //T8 Coverage: Interstellar Incidents
+/*            InsuranceDictionary.Add("Chimera Tank", new Range(7, 8));
+            InsuranceDictionary.Add("Chimera Exploder", new Range(7, 8));
+            InsuranceDictionary.Add("Chimera Wisp", new Range(7, 8));
+            InsuranceDictionary.Add("Void Infestor", new Range(7, 8));
+            InsuranceDictionary.Add("Void Barnacle", new Range(7, 8));
+            InsuranceDictionary.Add("Void Reaver", new Range(7, 8));
+            InsuranceDictionary.Add("Void Jailer", new Range(7, 8));
+            InsuranceDictionary.Add("Void Explosion", new Range(7, 8));*/
+
+            //T9 Coverage: Extreme and Unmitigated Disaster
+            InsuranceDictionary.Add("MagmaWorm", new Range(8, 9));
+            InsuranceDictionary.Add("OverloadingWorm", new Range(8, 9));
+/*            InsuranceDictionary.Add("Beetle Queen", new Range(8, 9));
+            InsuranceDictionary.Add("Wandering Vagrant", new Range(8, 9));
+            InsuranceDictionary.Add("Direseeker", new Range(8, 9));
+            InsuranceDictionary.Add("Clay Dunestrider", new Range(8, 9));
+            InsuranceDictionary.Add("Xi Construct", new Range(8, 9));
+            InsuranceDictionary.Add("Iota Construct", new Range(8, 9));
+            InsuranceDictionary.Add("Solus Control Unit", new Range(8, 9));
+            InsuranceDictionary.Add("Alloy Worship Unit", new Range(8, 9));
+            InsuranceDictionary.Add("Imp Overlord", new Range(8, 9));
+            InsuranceDictionary.Add("Grandparent", new Range(8, 9));
+            InsuranceDictionary.Add("Ancient Wisp", new Range(8, 9));
+            InsuranceDictionary.Add("Grovetender", new Range(8, 9));
+            InsuranceDictionary.Add("Void Devestator", new Range(8, 9));
+            InsuranceDictionary.Add("Voidling", new Range(8, 9));*/
+
+            //T10 Coverage
+            InsuranceDictionary.Add("BrotherMonster", new Range(9, 10));
+/*            InsuranceDictionary.Add("Providence", new Range(9, 10));
+            InsuranceDictionary.Add("The", new Range(9, 10));
+            InsuranceDictionary.Add("Crowdfunder Woolie", new Range(9, 10));*/
+
+            //T11 Coverage (Not an actual tier, just an catch-all for money past T10)
+            InsuranceDictionary.Add("FullyCovered", new Range(10, uint.MaxValue));
+        }
+
+        public override ItemDisplayRuleDict CreateItemDisplayRules()
+        {
+            ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("BloodBookTracker.prefab");
+            ItemFollowerPrefab = ItemModel;
+
             var ItemFollower = ItemBodyModelPrefab.AddComponent<Utils.ItemFollower>();
             ItemFollower.itemDisplay = ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemFollower.itemDisplay.rendererInfos = ItemHelpers.ItemDisplaySetup(ItemBodyModelPrefab);
+            ItemFollower.itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
             ItemFollower.followerPrefab = ItemFollowerPrefab;
             ItemFollower.targetObject = ItemBodyModelPrefab;
             ItemFollower.distanceDampTime = 0.15f;
@@ -79,7 +207,19 @@ namespace SupplyDrop.Items
             ItemFollower.SmoothingNumber = 0.25f;
 
             Vector3 generalScale = new Vector3(0.08f, 0.08f, 0.08f);
-            ItemDisplayRuleDict rules = new ItemDisplayRuleDict();
+
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new RoR2.ItemDisplayRule[]
+             {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Chest",
+                    localPos = new Vector3(0, 0, 0),
+                    localAngles = new Vector3(0, 0, 0),
+                    localScale = new Vector3(1, 1, 1)
+                }
+             });
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -104,6 +244,18 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
+            rules.Add("mdlBandit2", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.71034F, -0.63998F, 0.00227F),
+                    localAngles = new Vector3(344.1754F, 269.9999F, 90.00006F),
+                    localScale = generalScale
+                }
+            });
             rules.Add("mdlToolbot", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
@@ -111,9 +263,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Base",
-                    localPos = new Vector3(-4f, -4f, 8f),
-                    localAngles = new Vector3(-90f, 180f, 0f),
-                    localScale = generalScale * 1.5f
+                    localPos = new Vector3(-4F, -5.6233F, 2.49766F),
+                    localAngles = new Vector3(270F, 180F, 0F),
+                    localScale = new Vector3(0.12F, 0.12F, 0.12F)
                 }
             });
             rules.Add("mdlEngi", new ItemDisplayRule[]
@@ -200,7 +352,7 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
-            rules.Add("mdlBandit2", new ItemDisplayRule[]
+            rules.Add("mdlRailGunner", new ItemDisplayRule[]
             {
                 new ItemDisplayRule
                 {
@@ -212,12 +364,194 @@ namespace SupplyDrop.Items
                     localScale = generalScale
                 }
             });
+            rules.Add("mdlVoidSurvivor", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.4F, 1.25452F, -0.2507F),
+                    localAngles = new Vector3(73.45808F, 0F, 0F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+
+            //MODDED CHARACTER IDRs START HERE
+
+            rules.Add("mdlNemCommando", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(1.87817F, -3.2917F, -0.1163F),
+                    localAngles = new Vector3(285.2254F, 254.9387F, 108.4152F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            rules.Add("mdlHANDOverclocked", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(1.71372F, 6.76202F, -3.49337F),
+                    localAngles = new Vector3(0F, 349.7435F, 0F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            rules.Add("mdlEnforcer", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.60871F, 0.60074F, 1.48497F),
+                    localAngles = new Vector3(62.63927F, 257.8052F, 254.7548F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            //            rules.Add("mdlNemforcer(Clone)", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Chest",
+            //                    localPos = new Vector3(-0.25983F, 0.30917F, -0.02484F),
+            //                    localAngles = new Vector3(343.1456F, 273.5997F, 0.5956F),
+            //                    localScale = new Vector3(0.20149F, 0.20149F, 0.20149F)
+            //                }
+            //            });
+            rules.Add("mdlPaladin", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.62109F, 0.82824F, -1.07025F),
+                    localAngles = new Vector3(358.4169F, 352.8858F, 355.2294F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            //            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Chest",
+            //                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
+            //                    localAngles = new Vector3(0f, 0f, 0f),
+            //                    localScale = generalScale * 0.9f
+            //                }
+            //            });
+            rules.Add("mdlPathfinder", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.01657F, -0.80647F, -0.23414F),
+                    localAngles = new Vector3(286.6669F, 119.4015F, 232.9694F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            rules.Add("mdlExecutioner2", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.2794F, -0.82243F, -0.27335F),
+                    localAngles = new Vector3(283.4209F, 287.5865F, 71.18181F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            rules.Add("mdlHouse(Clone)", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "HouseMesh",
+                    localPos = new Vector3(0.28022F, 0.91114F, 1.72036F),
+                    localAngles = new Vector3(76.06631F, 212.0132F, 206.0062F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            rules.Add("mdlTeslaTrooper", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Root",
+                    localPos = new Vector3(0.25569F, 1.62016F, -0.88987F),
+                    localAngles = new Vector3(9.38397F, 348.1637F, 356.5085F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            rules.Add("mdlDesolator", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Root",
+                    localPos = new Vector3(-0.55023F, 1.86072F, -1.09078F),
+                    localAngles = new Vector3(4.60453F, 351.0109F, 355.5093F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            //            rules.Add("CHEF", new RoR2.ItemDisplayRule[]
+            //            {
+            //                new RoR2.ItemDisplayRule
+            //                {
+            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    childName = "Head",
+            //                    localPos = new Vector3(0F, 0.01245F, -0.00126F),
+            //                    localAngles = new Vector3(0F, 0F, 0F),
+            //                    localScale = new Vector3(0.00339F, 0.00339F, 0.00339F)
+            //                }
+            //            });
+            rules.Add("mdlArsonist", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "MainHurtbox",
+                    localPos = new Vector3(0.2661F, 0.13232F, -0.89047F),
+                    localAngles = new Vector3(10.73697F, 341.5828F, 359.0023F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
+            rules.Add("mdlRocket", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab,
+                    childName = "Base",
+                    localPos = new Vector3(0.56086F, 0.87333F, 0.53255F),
+                    localAngles = new Vector3(75.50265F, 252.8568F, 156.8284F),
+                    localScale = new Vector3(0.08F, 0.08F, 0.08F)
+                }
+            });
             return rules;
         }
-        public override void Install()
-        {
-            base.Install();
 
+        public override void Hooks()
+        {
             On.RoR2.Run.RecalculateDifficultyCoefficentInternal += PolicyUpgradePriceCalculator;
             On.RoR2.DeathRewards.OnKilledServer += MoneyReduction;
             On.RoR2.CharacterMaster.OnBodyDeath += CoverageCheck;
@@ -225,16 +559,6 @@ namespace SupplyDrop.Items
             On.RoR2.UI.HUD.Update += InsuranceBarUpdate;
         }
 
-        public override void Uninstall()
-        {
-            base.Uninstall();
-
-            On.RoR2.Run.RecalculateDifficultyCoefficentInternal -= PolicyUpgradePriceCalculator;
-            On.RoR2.DeathRewards.OnKilledServer -= MoneyReduction;
-            On.RoR2.CharacterMaster.OnBodyDeath -= CoverageCheck;
-            On.RoR2.UI.HUD.Awake += InsuranceBarAwake;
-            On.RoR2.UI.HUD.Update += InsuranceBarUpdate;
-        }
         public struct Range
         {
             public double Lower;
@@ -254,7 +578,7 @@ namespace SupplyDrop.Items
             orig(self);
 
             var diffCoeff = self.difficultyCoefficient;
-            var baseCost = 25 * Mathf.Pow(diffCoeff, 1.25f);
+            var baseCost = 25 * Mathf.Pow(diffCoeff, 1.25f) * costTierMultiplier;
 
             //Have to redefine all the dictionary entries here to set the Range values to their proper costs
             InsuranceDictionary["BeetleMonster"] = new Range(0, baseCost);
@@ -279,8 +603,8 @@ namespace SupplyDrop.Items
                 }
 
                 uint origGold = self.goldReward;
-                uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((.5f * inventoryCount) / (inventoryCount + 1))));
-                uint investedGold = origGold - reducedGold;
+                uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((baseGoldDrain + (addGoldDrain * (inventoryCount-1))) / ((inventoryCount * baseGoldDrain) + 1))));
+                uint investedGold = (uint)Mathf.FloorToInt((origGold - reducedGold) * (baseGoldToCoverage + addGoldToCoverage*(inventoryCount-1)));
                 self.goldReward = reducedGold;
 
                 //Could you theoretically go over uint.MaxValue here? idk
@@ -308,7 +632,7 @@ namespace SupplyDrop.Items
                 {
                     self.Invoke("RespawnExtraLife", 2f);
                     self.Invoke("PlayExtraLifeSFX", 1f);
-
+                    
                     //This chunk ensures the extra money you are forced to save once you unlock the final coverage tier isn't wasted,
                     //by only reducing your savings = to the cost of unlocking the final coverage tier (or just to zero, if you haven't unlocked that tier)
                     var savingsComponent = body.gameObject.GetComponent<Run>();
@@ -317,7 +641,7 @@ namespace SupplyDrop.Items
                         body.gameObject.AddComponent<Run>();
                     }
                     var diffCoeff = savingsComponent.difficultyCoefficient;
-                    var baseCost = Convert.ToUInt32(25 * Math.Pow(diffCoeff, 1.25f));
+                    var baseCost = Convert.ToUInt32(25 * Math.Pow(diffCoeff, 1.25f) * costTierMultiplier);
                     insuranceSavingsTrackerComponent.insuranceSavings = Math.Max(insuranceSavingsTrackerComponent.insuranceSavings - baseCost * 16, 0);
                 }
             }
