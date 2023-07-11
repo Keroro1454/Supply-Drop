@@ -12,10 +12,7 @@
 
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
-    <Compile Remove="Items\HolyInsurance.cs" />
     <Compile Remove="PlagueMask.cs" />
-    <Compile Remove="Utilities\InsuranceBarController.cs" />
-    <Compile Remove="Utilities\InsuranceSavingsTracker.cs" />
   </ItemGroup>
 
   <ItemGroup>
