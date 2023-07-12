@@ -6,52 +6,31 @@ More items are coming soon--over a dozen are planned as of now!
 # What's New with Update 1.4.10: Finally Back!
 Kept ya waiting huh?
 
-# Included Items:
-## Common Items:
-- **Hardened Bone Fragments**
-	- Killing an enemy temporarily grants 5 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor.
+----
+## Included Items:
+----
 
-- **Numbing Berries**
-	- Gain 5 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds.
-
-- **Unassuming Tie**
-	- Gain shield equal to 4% (+4% per stack) of your max HP. Breaking your shield gives you a Second Wind for 5 seconds, plus an additional amount based on max shield. Second Wind increases movement speed by 15% (+15% per stack).
-
-- **Salvaged Wires**
-	- Gain shield equal to 4% (+4% per stack) of your max HP. While shields are active, gain 10% (+10% per stack) increased attack speed.
-
-## Uncommon Items:
-- **Shell Plating**
-	- Killing an enemy increases your armor permanently by .2, up to a maximum of 10 (+10 per stack) armor.
-	
-- **Echo-Voltaic Plankton**
-	- Gain shield equal to 8% of your max HP. Dealing damage recharges 1 (+1 per stack) shield.
-
-- **Vintage Plague Mask**
-	- All healing is increased by 2% (+2% per stack) for every damage item you possess.
-
-- **Vintage Plague Hat**
-	- Increase maximum HP by 1% (+1% per stack) for every utility item you possess.
-	
-## Legendary Items:
-- **Quantum Shield Stabilizer**
-	- Gain shield equal to 16% of your max HP. If an attack exceeds your active shields, the excess damage is negated. This ability has a cooldown of 5s (-1s per stack).
-
-- **Tome of Bloodletting**
-	- Convert 10% (+10% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s.
-	
-## Lunar Items:
-- **UNKNOWN ITEM**
-	- `ERROR: Item log read-out scrambled during transmission. Please wait for update...`
-	
-- **UNKNOWN EQUIPMENT**
-	- `ERROR: Equipment log read-out scrambled during transmission. Please wait for update...` 
+| Icon | Item | Description | Rarity |
+|:-|-|------|-|-|
+|![](https://i.imgur.com/nv4V8R8.png) | **Hardened Bone Fragments** | Killing an enemy temporarily grants 5 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor. | Common |
+|![](https://i.imgur.com/VTys6yV.png) | **Numbing Berries** | Gain 5 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds. | Common |
+|![](https://i.imgur.com/0DuVrzU.png) | **Unassuming Tie** |  Gain shield equal to 4% (+4% per stack) of your max HP. Breaking your shield gives you a Second Wind for 5 seconds, plus an additional amount based on max shield. Second Wind increases movement speed by 15% (+15% per stack). | Common |
+|![](https://i.imgur.com/WIuK51q.png) | **Salvaged Wires** | Gain shield equal to 4% (+4% per stack) of your max HP. While shields are active, gain 10% (+10% per stack) increased attack speed. | Common |
+|![](https://i.imgur.com/Rw2A1He.png) | **Shell Plating** | Killing an enemy increases your armor permanently by .2, up to a maximum of 10 (+10 per stack) armor. |  Uncommon |
+|![](https://i.imgur.com/4BJoA04.png) | **Echo-Voltaic Plankton** | Gain shield equal to 8% of your max HP. Dealing damage recharges 1 (+1 per stack) shield. |  Uncommon |
+|![](https://i.imgur.com/kuqjqSn.png)|  **Vintage Plague Mask** |  All healing is increased by 2% (+2% per stack) for every damage item you possess. | Uncommon |
+|![](https://i.imgur.com/5slZP70.png)| **Vintage Plague Hat** | Increase maximum HP by 1% (+1% per stack) for every utility item you possess. | Uncommon |
+|![](https://i.imgur.com/0L658Aq.png)| **Quantum Shield Stabilizer** | Gain shield equal to 16% of your max HP. If an attack exceeds your active shields, the excess damage is negated. This ability has a cooldown of 5s (-1s per stack). | Legendary |
+|![](https://i.imgur.com/2Fgehyx.png)| **Tome of Bloodletting** | Convert 10% (+10% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s. |  Legendary |
+|![](https://i.imgur.com/dnC3ij0.gifv)| **UNKNOWN ITEM** | `ERROR: Item log read-out scrambled during transmission. Please wait for update...` | Lunar |
+|![](https://i.imgur.com/RNu4Bsh.jpg)|  **UNKNOWN ITEM** | `ERROR: Item log read-out scrambled during transmission. Please wait for update...` | Lunar |
 
 ## Changelog:
 - 1.4.10: Finally Back!
 	- Updated for Survivors of the Void
 	- Code has been completely re-worked to remove dependency on TILER2
 	- Completely reworked how Plague Mask works unde the hood--it should actually work now! (Thanks to Phreel for showing me how to hook Healing without needing IL anymore!)
+	- Reworked the README to be fancy!
 	- Additions:
 		- Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
 		- Added item displays for Railgunner and Void Fiend (plus finished the missing ones for Bandit)
