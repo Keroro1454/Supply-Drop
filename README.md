@@ -23,7 +23,7 @@ Icon | Item | Description | Rarity
 <img src="https://i.imgur.com/0L658Aq.png" width="100"/> | **Quantum Shield Stabilizer** | Gain shield equal to 16% of your max HP. If an attack exceeds your active shields, the excess damage is negated. This ability has a cooldown of 5s (-1s per stack). | Legendary 
 <img src="https://i.imgur.com/2Fgehyx.png" width="100"/> | **Tome of Bloodletting** | Convert 10% (+10% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s. |  Legendary 
 <img src="https://i.imgur.com/dnC3ij0.gif" width="100"/> | **UNKNOWN ITEM** | `ERROR: Item log read-out scrambled during transmission. Please wait for update...` | Lunar 
-<img src="https://i.imgur.com/EAvNTXB.gif" width="100"/> |  **UNKNOWN ITEM** | `ERROR: Item log read-out scrambled during transmission. Please wait for update...` | Lunar 
+<img src="https://i.imgur.com/or0D5Et.gif" width="100"/> |  **UNKNOWN ITEM** | `ERROR: Item log read-out scrambled during transmission. Please wait for update...` | Lunar 
 
 ----
 ## Changelog:
