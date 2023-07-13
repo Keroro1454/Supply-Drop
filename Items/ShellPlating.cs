@@ -462,10 +462,11 @@ namespace SupplyDrop.Items
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-                var shellStackTrackerComponent = sender.gameObject.GetComponent<ShellStackTracker>();
+                var shellStackTrackerComponent = sender.GetComponent<ShellStackTracker>();
                 if (!shellStackTrackerComponent)
                 {
                     sender.gameObject.AddComponent<ShellStackTracker>();
+                    shellStackTrackerComponent = sender.GetComponent<ShellStackTracker>();
                 }
 
                 var currentShellStack = shellStackTrackerComponent.shellStacks;
