@@ -62,6 +62,8 @@ namespace SupplyDrop.Items
             CreateBuff();
             CreateItem();
             Hooks();
+
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
         }
 
         private void CreateConfig(ConfigFile config)
@@ -454,9 +456,10 @@ namespace SupplyDrop.Items
                 if (inventoryCount > 0 && self.body.GetBuffCount(ShieldGateCooldown) <= 0)
                 {
                     float currentShield = self.body.healthComponent.shield;
+                    float currentBarrier = self.body.healthComponent.barrier;
                     float dmgTaken = damageInfo.damage * (100 / (100 + self.body.armor));
 
-                    if (currentShield > 0 && dmgTaken > currentShield)
+                    if (currentShield > 0 && dmgTaken > currentShield + currentBarrier)
                     {
                         damageInfo.damage = currentShield * (100 / (100 + self.body.armor));
 

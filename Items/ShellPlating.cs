@@ -430,7 +430,7 @@ namespace SupplyDrop.Items
         {
             On.RoR2.GlobalEventManager.OnCharacterDeath += CalculateShellBuffApplications;
 
-            On.RoR2.CharacterBody.RecalculateStats += AddShellPlateStats;
+            GetStatCoefficients += AddShellPlateStats;
         }
 
         private void CalculateShellBuffApplications(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
@@ -448,7 +448,7 @@ namespace SupplyDrop.Items
 
                 if (damageReport.attackerBody)
                 {
-                    var currentShellStackMax = (baseMaxArmorGain / armorOnKillAmount + ((inventoryCount - 1) * addMaxArmorGain / armorOnKillAmount));
+                    var currentShellStackMax = ((baseMaxArmorGain / armorOnKillAmount) + (((inventoryCount - 1) * addMaxArmorGain) / armorOnKillAmount));
                     var currentShellStack = shellStackTrackerComponent.shellStacks;
                     if (currentShellStack < currentShellStackMax)
                     {
@@ -456,34 +456,33 @@ namespace SupplyDrop.Items
                     }
                 }
             }
-
         }
-        private void AddShellPlateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody sender)
+        private void AddShellPlateStats(CharacterBody sender, StatHookEventArgs args)
         {
             var inventoryCount = GetCount(sender);
             if (inventoryCount > 0)
             {
-
                 var shellStackTrackerComponent = sender.gameObject.GetComponent<ShellStackTracker>();
                 if (!shellStackTrackerComponent)
                 {
                     sender.gameObject.AddComponent<ShellStackTracker>();
                 }
 
-                var currentShellStackMax = (((inventoryCount - 1) * (addMaxArmorGain/armorOnKillAmount)) + (baseMaxArmorGain/armorOnKillAmount));
+                var currentShellStack = shellStackTrackerComponent.shellStacks;
+                var currentShellStackMax = ((baseMaxArmorGain / armorOnKillAmount) + (((inventoryCount - 1) * addMaxArmorGain) / armorOnKillAmount));
+
+                //These two ifs give or take away the ShellStackMax "buff" so the player can tell if they've maxed out the Shell or not
                 if (shellStackTrackerComponent.shellStacks >= currentShellStackMax && sender.GetBuffCount(ShellStackMax) <= 0)
                 {
                     sender.AddBuff(ShellStackMax);
                 }
-
                 if (shellStackTrackerComponent.shellStacks < currentShellStackMax && sender.GetBuffCount(ShellStackMax) > 0)
                 {
                     sender.RemoveBuff(ShellStackMax);
                 }
-                var currentShellStack = shellStackTrackerComponent.shellStacks;
-                sender.baseArmor += (armorOnKillAmount * currentShellStack);
+
+                args.armorAdd += (armorOnKillAmount * currentShellStack);
             }
-            orig(sender);
         }
     }
 }
