@@ -23,7 +23,6 @@ namespace SupplyDrop.Items
         public static ConfigOption<uint> baseGoldToCoverage;
         public static ConfigOption<float> addGoldToCoverage;
         public static ConfigOption<float> costTierMultiplier;
-        public static ConfigOption<bool> betaTest;
 
         //Item Data
         public override string ItemName => "Afterlife Insurance";
@@ -97,14 +96,11 @@ namespace SupplyDrop.Items
 
         public override void Init(ConfigFile config)
         {
-            if(betaTest == true)
-            {
                 CreateConfig(config);
                 CreateLang();
                 CreateItem();
                 SetupAttributes();
                 Hooks();
-            }    
         }
 
         private void CreateConfig(ConfigFile config)
@@ -114,7 +110,6 @@ namespace SupplyDrop.Items
             baseGoldToCoverage = config.ActiveBind<uint>("Item: " + ItemName, "Base Conversion Ratio of Gold Taken to Gold Stored with 1 Afterlife Insurance", 1, "How much gold is stored for each gold taxed with a single Afterlife Insurance? (1 = 100%)");
             addGoldToCoverage = config.ActiveBind<float>("Item: " + ItemName, "Additional Conversion Ratio of Gold Taken to Gold Stored per Afterlife Insurance", .25f, "How much additional gold is stored for each gold taxed should each Afterlife Insurance after the first give?");
             costTierMultiplier = config.ActiveBind<float>("Item: " + ItemName, "Multiplier Applied to All Insurance Tier Costs", 1f, "Apply a multiplier to all insurance tier costs to make them more or less expensive. (1 = 1x)");
-            betaTest = config.ActiveBind<bool>("Item: " + ItemName, "Enable Item for Beta Testing", false, "Should the beta item Afterlife Insurance spawn? WARNING: ITEM IS STILL IN DEVELOPMENT AND MAY CAUSE ISSUES");
         }
         private void CreateBuff()
         {
@@ -729,8 +724,6 @@ namespace SupplyDrop.Items
                 //Could you theoretically go over uint.MaxValue here? idk
                 insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
 
-                orig(self, rep);
-
                 Debug.LogError("The money is actually being tracked. Rn you have " + insuranceSavingsTrackerComponent.insuranceSavings);
 
                 //This chunk checks if you have a buff/tier, and if your savings have reached the point where you should be bumped into the next tier
@@ -746,8 +739,8 @@ namespace SupplyDrop.Items
                     Debug.LogError("Buffs that are active:" + rep.attackerBody.activeBuffsList);
                 }
             }
+            orig(self, rep);
 
-            
         }
         private void CoverageCheck(On.RoR2.CharacterMaster.orig_OnBodyDeath orig, CharacterMaster self, CharacterBody body)
         {
