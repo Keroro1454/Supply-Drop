@@ -51,7 +51,9 @@ Icon | Item | Description | Rarity
 		- BUFF: Increased Tome of Bloodletting's damage conversion percentage from additional stacks, from 5% to 10%
 	- Bug Fixes:
 		- Fixed Hardened Bone Fragments not adjusting its values to the config values
-		- Fixed many of the pickup displays being exceedingly big
+		- Fixed many of the pickup displays being exceedingly big (or very small in some cases)
+		- Fixed Quantum Shield Generator not taking barrier into consideration during its shield-gate calculations
+		- Fixed Shell Plating throwing a whole mess of an NRE (and not working as a result)
 
 - 1.4.9
 	- Removed a debugging measure that was spamming the console
