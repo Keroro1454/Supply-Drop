@@ -27,9 +27,9 @@ namespace SupplyDrop.Items
 
         public override string ItemPickupDesc => "<style=cUtility>Buffs</style> last longer...but so do <style=cDeath>debuffs</style>";
 
-        public override string ItemFullDescription => $"All <style=cUtility>buff</style> durations are increased by {FloatToPercentageString(baseDurationIncrease)} (+{FloatToPercentageString(addDurationIncrease)}% " +
-            "per stack). All <style=cDeath>debuff</style> durations are also increased by {FloatToPercentageString(baseDurationIncrease)} (+{FloatToPercentageString(addDurationIncrease)}% " +
-            "per stack).";
+        public override string ItemFullDescription => $"All <style=cUtility>buff</style> durations are increased by {FloatToPercentageString(baseDurationIncrease)} (+{FloatToPercentageString(addDurationIncrease)} " +
+            $"per stack). All <style=cDeath>debuff</style> durations are also increased by {FloatToPercentageString(baseDurationIncrease)} (+{FloatToPercentageString(addDurationIncrease)} " +
+            $"per stack).";
 
         public override string ItemLore => "\"Relative to true time, everything is moving at blazing fast speeds. True time is in no hurry, after all.\n\n" +
             "If you were to wind a watch in the primordial stream of time, you would create a watch that, taken anywhere, would always seem to be off. Somehow, it would always be just a bit slow.\n\n" +
