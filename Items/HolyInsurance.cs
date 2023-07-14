@@ -710,38 +710,42 @@ namespace SupplyDrop.Items
         {
             orig(self, rep);
 
-            var inventoryCount = GetCount(rep.attackerMaster);
-            if (inventoryCount > 0)
+            var cbKiller = self.GetComponent<CharacterBody>();
+            if(cbKiller)
             {
-                var insuranceSavingsTrackerComponent = rep.attackerMaster.gameObject.GetComponent<InsuranceSavingsTracker>();
-                if (!insuranceSavingsTrackerComponent)
+                var inventoryCount = GetCount(cbKiller);
+                if (inventoryCount > 0)
                 {
-                    rep.attackerMaster.gameObject.AddComponent<InsuranceSavingsTracker>();
-                }
-
-                uint origGold = self.goldReward;
-                uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((baseGoldDrain + (addGoldDrain * (inventoryCount-1))) / ((inventoryCount * baseGoldDrain) + 1))));
-                uint investedGold = (uint)Mathf.FloorToInt((origGold - reducedGold) * (baseGoldToCoverage + addGoldToCoverage*(inventoryCount-1)));
-                self.goldReward = reducedGold;
-
-                //Could you theoretically go over uint.MaxValue here? idk
-                insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
-
-                Debug.LogError("The money is actually being tracked. Rn you have " + insuranceSavingsTrackerComponent.insuranceSavings);
-
-                //This chunk checks if you have a buff/tier, and if your savings have reached the point where you should be bumped into the next tier
-                int currentTier = Array.FindIndex(ranges, r => rep.attackerBody.HasBuff(r.Buff));
-                int nextTier = Array.FindIndex(ranges, r => r.Contains(insuranceSavingsTrackerComponent.insuranceSavings));
-                if (nextTier > currentTier)
-                {
-                    if (currentTier != -1)
+                    var insuranceSavingsTrackerComponent = rep.attackerMaster.gameObject.GetComponent<InsuranceSavingsTracker>();
+                    if (!insuranceSavingsTrackerComponent)
                     {
-                        rep.attackerBody.RemoveBuff(ranges[currentTier].Buff);
+                        rep.attackerMaster.gameObject.AddComponent<InsuranceSavingsTracker>();
                     }
-                    rep.attackerBody.AddBuff(ranges[nextTier].Buff);
-                    Debug.LogError("Buffs that are active:" + rep.attackerBody.activeBuffsList);
+
+                    uint origGold = self.goldReward;
+                    uint reducedGold = (uint)Mathf.FloorToInt(self.goldReward * (1 - ((baseGoldDrain + (addGoldDrain * (inventoryCount - 1))) / ((inventoryCount * baseGoldDrain) + 1))));
+                    uint investedGold = (uint)Mathf.FloorToInt((origGold - reducedGold) * (baseGoldToCoverage + addGoldToCoverage * (inventoryCount - 1)));
+                    self.goldReward = reducedGold;
+
+                    //Could you theoretically go over uint.MaxValue here? idk
+                    insuranceSavingsTrackerComponent.insuranceSavings += investedGold;
+
+                    Debug.LogError("The money is actually being tracked. Rn you have " + insuranceSavingsTrackerComponent.insuranceSavings);
+
+                    //This chunk checks if you have a buff/tier, and if your savings have reached the point where you should be bumped into the next tier
+                    int currentTier = Array.FindIndex(ranges, r => rep.attackerBody.HasBuff(r.Buff));
+                    int nextTier = Array.FindIndex(ranges, r => r.Contains(insuranceSavingsTrackerComponent.insuranceSavings));
+                    if (nextTier > currentTier)
+                    {
+                        if (currentTier != -1)
+                        {
+                            rep.attackerBody.RemoveBuff(ranges[currentTier].Buff);
+                        }
+                        rep.attackerBody.AddBuff(ranges[nextTier].Buff);
+                        Debug.LogError("Buffs that are active:" + rep.attackerBody.activeBuffsList);
+                    }
                 }
-            }
+            }     
         }
         private void CoverageCheck(On.RoR2.CharacterMaster.orig_OnBodyDeath orig, CharacterMaster self, CharacterBody body)
         {
