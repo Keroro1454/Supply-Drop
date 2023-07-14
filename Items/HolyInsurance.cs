@@ -32,8 +32,8 @@ namespace SupplyDrop.Items
 
         public override string ItemPickupDesc => "Some of the <style=cShrine>money</style> you earn is invested into <style=cIsUtility>divine insurance</style> (Coverage may vary).";
 
-        public override string ItemFullDescription => $"Gain {FloatToPercentageString(baseGoldDrain)}% <style=cStack>(+{FloatToPercentageString(addGoldDrain)}% per stack)</style> less <style=cShrine>money</style> from all sources. " +
-            $"{FloatToPercentageString(baseGoldToCoverage)}% <style=cStack>(+{FloatToPercentageString(addGoldToCoverage)}% per stack)</style> of money lost is <style=cIsUtility>invested into upgrading your insurance</style> to cover more threats, " +
+        public override string ItemFullDescription => $"Gain {FloatToPercentageString(baseGoldDrain)} <style=cStack>(+{FloatToPercentageString(addGoldDrain)} per stack)</style> less <style=cShrine>money</style> from all sources. " +
+            $"{FloatToPercentageString(baseGoldToCoverage)} <style=cStack>(+{FloatToPercentageString(addGoldToCoverage)} per stack)</style> of money lost is <style=cIsUtility>invested into upgrading your insurance</style> to cover more threats, " +
             $"up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will be revived, " +
             $"and your <style=cIsUtility>insurance</style> level will be reset to zero.";
 
