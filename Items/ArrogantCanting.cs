@@ -9,6 +9,7 @@ using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
+using System.Collections.Generic;
 
 namespace SupplyDrop.Items
 {
@@ -16,12 +17,12 @@ namespace SupplyDrop.Items
     {
         //Config Stuff
 
-        public static ConfigOption<float> baseEliteHPIncrease;
-        public static ConfigOption<float> addEliteHPIncrease;
-        public static ConfigOption<float> baseEliteDamageIncrease;
-        public static ConfigOption<float> addEliteDamageIncrease;
-        public static ConfigOption<float> baseEliteDropChance;
-        public static ConfigOption<float> addEliteDropChance;
+        public static ConfigOption<float> baseHPIncrease;
+        public static ConfigOption<float> addHPIncrease;
+        public static ConfigOption<float> baseDamageIncrease;
+        public static ConfigOption<float> addDamageIncrease;
+        public static ConfigOption<float> baseDropChance;
+        public static ConfigOption<float> addDropChance;
 
         //Item Data
 
@@ -31,9 +32,9 @@ namespace SupplyDrop.Items
 
         public override string ItemPickupDesc => "Elite enemies have a <style=cUtility>chance to drop items</style>, but are <style=cDeath>more powerful</style>.";
 
-        public override string ItemFullDescription => $"Elite enemies have a {FloatToPercentageString(baseEliteDropChance)} (+{FloatToPercentageString(addEliteDropChance)} " +
-            $"per stack) chance to drop a random item on death, but they also gain {FloatToPercentageString(baseEliteHPIncrease)} (+{FloatToPercentageString(addEliteHPIncrease)} " +
-            $"per stack) more HP and {FloatToPercentageString(baseEliteDamageIncrease)} (+{FloatToPercentageString(addEliteDamageIncrease)} " +
+        public override string ItemFullDescription => $"Elite enemies have a {FloatToPercentageString(baseDropChance)} (+{FloatToPercentageString(addDropChance)} " +
+            $"per stack) chance to drop a random item on death, but they also gain {FloatToPercentageString(baseHPIncrease)} (+{FloatToPercentageString(addHPIncrease)} " +
+            $"per stack) more HP and {FloatToPercentageString(baseDamageIncrease)} (+{FloatToPercentageString(addDamageIncrease)} " +
             $"per stack) more damage.";
 
         public override string ItemLore => "Do you remember, Brother, when I made a steed for myself?\n\n" +
@@ -52,6 +53,12 @@ namespace SupplyDrop.Items
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("CantingIcon");
         public static GameObject ItemBodyModelPrefab;
 
+        public List<PickupIndex> redItems = Run.instance.availableTier3DropList;
+        public List<PickupIndex> greenItems = Run.instance.availableTier2DropList;
+        public List<PickupIndex> whiteItems = Run.instance.availableTier1DropList;
+
+        private Vector3 constant = (Vector3.up * 20f) + (5 * Vector3.right * Mathf.Cos(2f * Mathf.PI / Run.instance.participatingPlayerCount)) + (5 * Vector3.forward * Mathf.Sin(2f * Mathf.PI / Run.instance.participatingPlayerCount));
+
         public override void Init(ConfigFile config)
         {
             CreateConfig(config);
@@ -62,12 +69,12 @@ namespace SupplyDrop.Items
 
         private void CreateConfig(ConfigFile config)
         {
-            baseEliteHPIncrease = config.ActiveBind<float>("Item: " + ItemName, "Base Increase to HP Buff Elites Get with 1 Arrogant Canting", .25f, "How much bonus HP should elites get with 1 Arrogant Canting? (.25 = 25%)");
-            addEliteHPIncrease = config.ActiveBind<float>("Item: " + ItemName, "Additional Increase to HP Buff Elites Get per Arrogant Canting", .25f, "How much bonus HP should elites get for each additional Arrogant Canting? (.25 = 25%)");
-            baseEliteDamageIncrease = config.ActiveBind<float>("Item: " + ItemName, "Base Increase to Damage Buff Elites Get with 1 Arrogant Canting", .15f, "How much bonus damage should elites get with 1 Arrogant Canting? (.15 = 15%)");
-            addEliteDamageIncrease = config.ActiveBind<float>("Item: " + ItemName, "Additional Increase to Damage Buff Elites Get per Arrogant Canting", .15f, "How much bonus damage should elites get for each additional Arrogant Canting? (.15 = 15%)");
-            baseEliteDropChance = config.ActiveBind<float>("Item: " + ItemName, "Base Chance for Elites to Drop Items with 1 Arrogant Canting", .02f, "What should the chance an elite drop an item be with 1 Arrogant Canting? (.02 = 2%)");
-            addEliteDropChance = config.ActiveBind<float>("Item: " + ItemName, "Additional Chance for Elites to Drop Items per Arrogant Canting", .02f, "What should the chance an elite drop an item be for each additional Arrogant Canting? (.02 = 2%)");
+            baseHPIncrease = config.ActiveBind<float>("Item: " + ItemName, "Base Increase to HP Buff Elites Get with 1 Arrogant Canting", .25f, "How much bonus HP should elites get with 1 Arrogant Canting? (.25 = 25%)");
+            addHPIncrease = config.ActiveBind<float>("Item: " + ItemName, "Additional Increase to HP Buff Elites Get per Arrogant Canting", .25f, "How much bonus HP should elites get for each additional Arrogant Canting? (.25 = 25%)");
+            baseDamageIncrease = config.ActiveBind<float>("Item: " + ItemName, "Base Increase to Damage Buff Elites Get with 1 Arrogant Canting", .15f, "How much bonus damage should elites get with 1 Arrogant Canting? (.15 = 15%)");
+            addDamageIncrease = config.ActiveBind<float>("Item: " + ItemName, "Additional Increase to Damage Buff Elites Get per Arrogant Canting", .15f, "How much bonus damage should elites get for each additional Arrogant Canting? (.15 = 15%)");
+            baseDropChance = config.ActiveBind<float>("Item: " + ItemName, "Base Chance for Elites to Drop Items with 1 Arrogant Canting", .02f, "What should the chance an elite drop an item be with 1 Arrogant Canting? (.02 = 2%)");
+            addDropChance = config.ActiveBind<float>("Item: " + ItemName, "Additional Chance for Elites to Drop Items per Arrogant Canting", .02f, "What should the chance an elite drop an item be for each additional Arrogant Canting? (.02 = 2%)");
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -439,7 +446,60 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            
+            GetStatCoefficients += ElitesEatVeggies;
+        }
+
+        //This whole chunk handles the item dropping
+        public void OnKilledOtherServer(DamageReport damageReport)
+        {
+            var victimBody = damageReport.victimBody;
+            var dropLocation = damageReport.victimBody.transform.position;
+            var cbKiller = damageReport.attackerBody.GetComponent<CharacterBody>();
+            if (cbKiller)
+            {
+                var inventoryCount = GetCount(cbKiller);
+                if (inventoryCount > 0)
+                {
+                    if (victimBody.isElite && Util.CheckRoll(Mathf.Min((baseDropChance * 100) + ((addDropChance * 100) * (inventoryCount-1)),100),0))
+                    {
+                        var redItem = Util.CheckRoll(1 + ((baseDropChance * 100) * (inventoryCount - 1)), cbKiller.master.luck);
+                        if (redItem)
+                        {
+
+                            SpawnItem(redItems, Run.instance.treasureRng.RangeInt(0, redItems.Count));
+                            return;
+                        }
+
+                        var greenItem = Util.CheckRoll(19 + ((baseDropChance * 100) * (inventoryCount - 1)), cbKiller.master.luck);
+                        if (greenItem)
+                        {
+                            SpawnItem(greenItems, Run.instance.treasureRng.RangeInt(0, greenItems.Count));
+                            return;
+                        }
+
+                        else
+                        {
+                            SpawnItem(whiteItems, Run.instance.treasureRng.RangeInt(0, whiteItems.Count));
+                            return;
+                        }
+                    }
+                }
+            }
+            void SpawnItem(List<PickupIndex> items, int nextItem)
+            {
+                PickupDropletController.CreatePickupDroplet(items[nextItem], victimBody.transform.position, constant);
+            }
+        }
+
+        //This chunk handles the elite buffing
+        private void ElitesEatVeggies(CharacterBody body, StatHookEventArgs args)
+        {
+            int cantingsActive = Util.GetItemCountGlobal(ItemDef.itemIndex, true);
+            if (cantingsActive > 0 && body.inventory && body.teamComponent && (body.teamComponent.teamIndex == TeamIndex.Monster | body.teamComponent.teamIndex == TeamIndex.Lunar | body.teamComponent.teamIndex == TeamIndex.Void))
+            {
+                args.damageMultAdd += (baseDamageIncrease + (cantingsActive * addDamageIncrease));
+                args.healthMultAdd += (baseHPIncrease + (cantingsActive * addHPIncrease));
+            }
         }
     }
 }
