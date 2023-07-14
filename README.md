@@ -54,6 +54,7 @@ Icon | Item | Description | Rarity
 		- Fixed many of the pickup displays being exceedingly big (or very small in some cases)
 		- Fixed Quantum Shield Generator not taking barrier into consideration during its shield-gate calculations
 		- Fixed Shell Plating throwing a whole mess of an NRE (and not working as a result)
+		- Fixed Vintage Plague Mask and Hat not updating their descriptions based on changes in their configs
 
 - 1.4.9
 	- Removed a debugging measure that was spamming the console

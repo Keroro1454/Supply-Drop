@@ -5,6 +5,7 @@ using MonoMod.Cil;
 
 using SupplyDrop.Utils;
 using static SupplyDrop.Utils.ItemHelpers;
+using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
@@ -33,7 +34,7 @@ namespace SupplyDrop.Items
         public override string ItemPickupDesc => "Heal more the more damage items you have.";
 
         public override string ItemFullDescription => $"All <style=cIsHealing>healing</style> is increased by " +
-            "<style=cIsHealing>2%</style> <style=cStack>(+2% per stack)</style> for every <style=cIsDamage>damage item</style> you possess.";
+            $"<style=cIsHealing>{FloatToPercentageString(baseStackHealPercent)}%</style> <style=cStack>(+{FloatToPercentageString(addStackHealPercent)}% per stack)</style> for every <style=cIsDamage>damage item</style> you possess.";
 
         public override string ItemLore => "A fire crackled from within the ornate fireplace that dominated one side " +
             "of the pristine office. Across, beautiful bookshelves that seemed to stretch into the heavens were packed with tomes, " +

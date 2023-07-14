@@ -10,6 +10,7 @@ using static R2API.RecalculateStatsAPI;
 
 using SupplyDrop.Utils;
 using static SupplyDrop.Utils.ItemHelpers;
+using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
@@ -32,8 +33,8 @@ namespace SupplyDrop.Items
 
         public override string ItemPickupDesc => "Gain <style=cIsHealing>HP</style> the more <style=cIsUtility>utility items</style> you have.";
 
-        public override string ItemFullDescription => "Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>1%</style> " +
-            "<style=cStack>(+1% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
+        public override string ItemFullDescription => $"Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>{FloatToPercentageString(baseStackHPPercent)}%</style> " +
+            $"<style=cStack>(+{FloatToPercentageString(addStackHPPercent)}% per stack)</style> for every <style=cIsUtility>utility item</style> you possess.";
 
         public override string ItemLore => "Order: \"NR-G Sports Soda (49)\"\nTracking Number: 49******\n" +
             "Estimated Delivery: 3/01/2056\nShipping Method: Priority\nShipping Address: P.O. Box 749, Sector A, Moon\nShipping Details:" +

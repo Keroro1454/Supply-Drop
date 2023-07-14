@@ -6,6 +6,7 @@ using UnityEngine;
 
 using SupplyDrop.Utils;
 using static SupplyDrop.Utils.ItemHelpers;
+using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
@@ -31,10 +32,10 @@ namespace SupplyDrop.Items
 
         public override string ItemPickupDesc => "Some of the <style=cShrine>money</style> you earn is invested into <style=cIsUtility>divine insurance</style> (Coverage may vary).";
 
-        public override string ItemFullDescription => "Gain 25% <style=cStack>(+25% per stack)</style> less <style=cShrine>money</style> from all sources. " +
-            "100% <style=cStack>(+25% per stack)</style> of money lost is <style=cIsUtility>invested into upgrading your insurance</style> to cover more threats, " +
-            "up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will be revived, " +
-            "and your <style=cIsUtility>insurance</style> level will be reset to zero.";
+        public override string ItemFullDescription => $"Gain {FloatToPercentageString(baseGoldDrain)}% <style=cStack>(+{FloatToPercentageString(addGoldDrain)}% per stack)</style> less <style=cShrine>money</style> from all sources. " +
+            $"{FloatToPercentageString(baseGoldToCoverage)}% <style=cStack>(+{FloatToPercentageString(addGoldToCoverage)}% per stack)</style> of money lost is <style=cIsUtility>invested into upgrading your insurance</style> to cover more threats, " +
+            $"up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will be revived, " +
+            $"and your <style=cIsUtility>insurance</style> level will be reset to zero.";
 
         public override string ItemLore => "Congratulations on becoming the newest member of the <style=cIsUtility>EternalLife<sup>TM</sup></style> family! Our motto at <style=cIsUtility>EternalLife<sup>TM</sup></style> is simple--provide the very best in insurance solutions, " +
             "so you don't have to worry about what life (or death) throws your way!" +
