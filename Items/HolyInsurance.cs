@@ -708,6 +708,8 @@ namespace SupplyDrop.Items
         }
         private void MoneyReduction(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
         {
+            orig(self, rep);
+
             var inventoryCount = GetCount(rep.attackerMaster);
             if (inventoryCount > 0)
             {
@@ -740,8 +742,6 @@ namespace SupplyDrop.Items
                     Debug.LogError("Buffs that are active:" + rep.attackerBody.activeBuffsList);
                 }
             }
-            orig(self, rep);
-
         }
         private void CoverageCheck(On.RoR2.CharacterMaster.orig_OnBodyDeath orig, CharacterMaster self, CharacterBody body)
         {
