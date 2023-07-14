@@ -70,7 +70,7 @@ namespace SupplyDrop.Items
 
         private void CreateConfig(ConfigFile config)
         {
-            baseBonusArmor = config.ActiveBind<float>("Item: " + ItemName, "Base Armor Gained on Taking Damage with 1 Numbing Berries", 5f, "How much armor should you gain upon taking damage with a single numbing berries?");
+            baseBonusArmor = config.ActiveBind<float>("Item: " + ItemName, "Base Armor Gained on Taking Damage with 1 Numbing Berries", 10f, "How much armor should you gain upon taking damage with a single numbing berries?");
             addBonusArmor = config.ActiveBind<float>("Item: " + ItemName, "Additional Armor Gained on Taking Damage per Numbing Berries", 5f, "How much additional armor gained upon taking damage should each numbing berries after the first give?");
             baseBerryBuffDuration = config.ActiveBind<float>("Item: " + ItemName, "Base duration of the Armor Boost with 1 Numbing Berries", 2f, "How long should the armor boost last for with a single numbing berries, in seconds?");
             addBerryBuffDuration = config.ActiveBind<float>("Item: " + ItemName, "Additional duration of the Armor Boost per Numbing Berries", .5f, "How much additional armor boost duration should each numbing berries after the first give, in seconds?");
