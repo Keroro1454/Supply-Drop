@@ -49,6 +49,7 @@ Icon | Item | Description | Rarity
 		- BUFF: Increased Unassuming Tie's base duration of Second Wind, from 4 to 5 seconds
 		- BUFF: Increased QSS's cooldown reduction from additional stacks, from 0.5 to 1 seconds
 		- BUFF: Increased Tome of Bloodletting's damage conversion percentage from additional stacks, from 5% to 10%
+		- BUFF: Increased Numbing Berries' base armor granted, from 5 to 10
 	- Bug Fixes:
 		- Fixed Hardened Bone Fragments not adjusting its values to the config values
 		- Fixed many of the pickup displays being exceedingly big (or very small in some cases)
