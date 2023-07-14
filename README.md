@@ -8,8 +8,6 @@ Kept ya waiting huh?
 
 ----
 # Included Items:
-----
-
 Icon | Item | Description | Rarity
 ---|---:|---:|---
 <img src="https://i.imgur.com/nv4V8R8.png" width="100"/> | **Hardened Bone Fragments** | Killing an enemy temporarily grants 5 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor. | Common 
@@ -27,7 +25,6 @@ Icon | Item | Description | Rarity
 
 ----
 ## Changelog:
-----
 - 1.4.10: Finally Back!
 	- Updated for Survivors of the Void
 	- Code has been completely re-worked to remove dependency on TILER2
@@ -37,7 +34,7 @@ Icon | Item | Description | Rarity
 		- Added configuration options to the Vintage Plague Mask and Vintage Plague Hat items
 		- Added item displays for Railgunner and Void Fiend (plus finished the missing ones for Bandit)
 		- Added item displays to all characters for Hardened Bone Fragments
-		- Added item displays for a large number of modded characters (Nemmando, HAND, Enforcer, Nemforcer, Paladin, Miner, Pathfinder, Executioner, House, Tesla, Desolator, Arsonist, Rocket)
+		- Added item displays for a large number of modded characters (Nemmando, HAN-D, Enforcer, Nemforcer, Paladin, Miner, Pathfinder, Executioner, House, Tesla, Desolator, Arsonist, Rocket)
 	- Improvements:
 		- Fixed or improved item displays for numerous items on all characters
 		- Made configs of all items more clear
@@ -47,7 +44,7 @@ Icon | Item | Description | Rarity
 		- BUFF: Increased Shell Plating's armor granted per kill, from .2 to .5
 		- BUFF: Increased Shell Plating's base max armor, from 10 to 25
 		- BUFF: Increased Unassuming Tie's base duration of Second Wind, from 4 to 5 seconds
-		- BUFF: Increased QSS's cooldown reduction from additional stacks, from 0.5 to 1 seconds
+		- BUFF: Increased Quantum Shield Stabilizer's cooldown reduction from additional stacks, from 0.5 to 1 seconds
 		- BUFF: Increased Tome of Bloodletting's damage conversion percentage from additional stacks, from 5% to 10%
 		- BUFF: Increased Numbing Berries' base armor granted, from 5 to 10
 	- Bug Fixes:
