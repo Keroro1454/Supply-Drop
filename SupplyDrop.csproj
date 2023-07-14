@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
+    <Compile Remove="Items\SilverWatch.cs" />
     <Compile Remove="PlagueMask.cs" />
   </ItemGroup>
 
