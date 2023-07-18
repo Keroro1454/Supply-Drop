@@ -32,9 +32,9 @@ namespace SupplyDrop.Items
 
         public override string ItemPickupDesc => "Some of the <style=cShrine>money</style> you earn is invested into <style=cIsUtility>divine insurance</style> (Coverage may vary).";
 
-        public override string ItemFullDescription => $"Gain {FloatToPercentageString(baseGoldDrain)} <style=cStack>(+{FloatToPercentageString(addGoldDrain)} per stack)</style> less <style=cShrine>money</style> from all sources. " +
+        public override string ItemFullDescription => $"Gain {FloatToPercentageString(baseGoldDrain)} <style=cStack>(+{FloatToPercentageString(addGoldDrain)} per stack)</style> less <style=cShrine>money</style> from killing monsters. " +
             $"{FloatToPercentageString(baseGoldToCoverage)} <style=cStack>(+{FloatToPercentageString(addGoldToCoverage)} per stack)</style> of money lost is <style=cIsUtility>invested into upgrading your insurance</style> to cover more threats, " +
-            $"up to 5 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will be revived, " +
+            $"up to 10 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will be revived, " +
             $"and your <style=cIsUtility>insurance</style> level will be reset to zero.";
 
         public override string ItemLore => "Congratulations on becoming the newest member of the <style=cIsUtility>EternalLife<sup>TM</sup></style> family! Our motto at <style=cIsUtility>EternalLife<sup>TM</sup></style> is simple--provide the very best in insurance solutions, " +
@@ -107,7 +107,7 @@ namespace SupplyDrop.Items
         private void CreateConfig(ConfigFile config)
         {
             baseGoldDrain = config.ActiveBind<float>("Item: " + ItemName, "Base Percentage of Gold Taxed for Insurance with 1 Afterlife Insurance", .25f, "How much of a percentage of gold earned should be taxed with a single Afterlife Insurance? (.25 = 25%)");
-            addGoldDrain = config.ActiveBind<float>("Item: " + ItemName, "Additional Percentage of Gold Taxed for Insurance per Afterlife Insurance", .02f, "How much additional percentage of gold earned should be taxed for each Afterlife Insurance after the first?");
+            addGoldDrain = config.ActiveBind<float>("Item: " + ItemName, "Additional Percentage of Gold Taxed for Insurance per Afterlife Insurance", .10f, "How much additional percentage of gold earned should be taxed for each Afterlife Insurance after the first?");
             baseGoldToCoverage = config.ActiveBind<uint>("Item: " + ItemName, "Base Conversion Ratio of Gold Taken to Gold Stored with 1 Afterlife Insurance", 1, "How much gold is stored for each gold taxed with a single Afterlife Insurance? (1 = 100%)");
             addGoldToCoverage = config.ActiveBind<float>("Item: " + ItemName, "Additional Conversion Ratio of Gold Taken to Gold Stored per Afterlife Insurance", .25f, "How much additional gold is stored for each gold taxed should each Afterlife Insurance after the first give?");
             costTierMultiplier = config.ActiveBind<float>("Item: " + ItemName, "Multiplier Applied to All Insurance Tier Costs", 1f, "Apply a multiplier to all insurance tier costs to make them more or less expensive. (1 = 1x)");
