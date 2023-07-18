@@ -17,8 +17,8 @@ namespace SupplyDrop.Items
     {
         //Config Stuff
 
-        public static ConfigOption<float> baseGoodStatPercent;
-        public static ConfigOption<float> baseBadStatPercent;
+        public static ConfigOption<float> goodStatPercent;
+        public static ConfigOption<float> badStatPercent;
         public static ConfigOption<int> baseNumStatsRolled;
         public static ConfigOption<int> addNumStatsRolled;
         public static ConfigOption<float> addGoodStatPercent;
@@ -32,7 +32,7 @@ namespace SupplyDrop.Items
         public override string ItemPickupDesc => "Using a shrine rolls two stats, one to <style=cUtility>buff</style>, one to <style=cDeath>nerf</style>.";
 
         public override string ItemFullDescription => $"Whenever you use a shrine, {baseNumStatsRolled} (+{addNumStatsRolled} per stack) stats are picked at random. " +
-            $"One is <style=cUtility>buffed by {FloatToPercentageString(baseGoodStatPercent)}</style>, the other is <style=cDeath>nerfed by {FloatToPercentageString(baseBadStatPercent)}</style>.";
+            $"One is <style=cUtility>buffed by {FloatToPercentageString(goodStatPercent)}</style>, the other is <style=cDeath>nerfed by {FloatToPercentageString(badStatPercent)}</style>.";
 
         public override string ItemLore => "The little newt had loved to play with their siblings. But ever since they left them, all that time ago, they had no one to play with.\n\n" +
             "So they devised new games, games that could be played all alone. The newt was still lonely, but the games helped distract them from the loneliness of their quiet little tide pool.\n\n" +
@@ -50,6 +50,7 @@ namespace SupplyDrop.Items
 
         public static Range[] goodRanges;
         public static Range[] badRanges;
+        List<int> weights = new List<int>();
 
         public override void Init(ConfigFile config)
         {
@@ -64,8 +65,8 @@ namespace SupplyDrop.Items
 
         private void CreateConfig(ConfigFile config)
         {
-            baseGoodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Good Stat is Buffed with 1 Salvaged Wires", .50f, "How much should the one stat be buffed by with a single two-sided die? (.5 = 50%)");
-            baseBadStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bad Stat is Buffed with 1 Two-Sided Die", .25f, "How much should the one stat be nerfed by with a single two-sided die? (.25 = 25%)");
+            goodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Good Stat is Buffed with 1 Salvaged Wires", .50f, "How much should the one stat be buffed by with a single two-sided die? (.5 = 50%)");
+            badStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bad Stat is Buffed with 1 Two-Sided Die", .25f, "How much should the one stat be nerfed by with a single two-sided die? (.25 = 25%)");
             baseNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Base Attack Speed Gained with 1 Salvaged Wires", 2, "How many stats should be rolled with a single two-sided die?");
             addNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Additional Attack Speed Gained per Salvaged Wires", 2, "How many more stats should be rolled for each two-sided die after the first?");
             addGoodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Attack Speed Gained with 1 Salvaged Wires", .1f, "How much more should affected stats be buffed by after all stats are being affected? (.1 = 10%)");
@@ -83,8 +84,8 @@ namespace SupplyDrop.Items
                 new Range(46, 54, "preciser"),
                 new Range(55, 63, "livelier"),
                 new Range(64, 72, "tougher"),
-                new Range(73, 81, "bigger"),
-                new Range(82, 90, "lighter"),
+                new Range(73, 81, "lighter"),
+                new Range(82, 90, "bigger"),
                 new Range(91, 99, "luckier!"),
                 new Range(100, int.MaxValue, "like a million bucks!!!")
             };
@@ -98,11 +99,36 @@ namespace SupplyDrop.Items
                 new Range(46, 54, "sloppier"),
                 new Range(55, 63, "drowsier"),
                 new Range(64, 72, "squishier"),
-                new Range(73, 81, "smaller"),
-                new Range(82, 90, "heavier"),
+                new Range(73, 81, "heavier"),
+                new Range(82, 90, "smaller"),
                 new Range(91, 99, "unluckier..."),
                 new Range(100, int.MaxValue, "totally worthless...")
             };
+
+            //#0: HP
+            weights.Add(10);
+            //#1: Damage
+            weights.Add(10);
+            //#2: Speed
+            weights.Add(10);
+            //#3: Gold
+            weights.Add(10);
+            //#4: XP
+            weights.Add(10);
+            //#5: Crit
+            weights.Add(10);
+            //#6: Cooldowns
+            weights.Add(10);
+            //#7: Armor
+            weights.Add(10);
+            //#8: Jump
+            weights.Add(10);
+            //#9: Size
+            weights.Add(6);
+            //#10: Luck
+            weights.Add(3);
+            //#11: EVERYTHING!
+            weights.Add(1);
         }
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -483,10 +509,10 @@ namespace SupplyDrop.Items
             {
                 if (self.CanBeAffordedByInteractor(activator) && self.isShrine)
                 {
-                    var rollCheckComponent = activator.gameObject.GetComponent<RollCheck>();
+                    var rollCheckComponent = activator.gameObject.GetComponent<StoredVariables>();
                     if (!rollCheckComponent)
                     {
-                        rollCheckComponent = activator.gameObject.AddComponent<RollCheck>();
+                        rollCheckComponent = activator.gameObject.AddComponent<StoredVariables>();
                     }
                     rollCheckComponent.timeToRoll++;
                 }
@@ -498,23 +524,233 @@ namespace SupplyDrop.Items
             int inventoryCount = GetCount(body);
             if (inventoryCount > 0)
             {
-                var rollCheckComponent = body.gameObject.GetComponent<RollCheck>();
-                if (!rollCheckComponent)
+                TwoSidedDie weightRandom = new TwoSidedDie();
+                var chatSpamFilter = 0;
+
+                var storedVariablesComponent = body.gameObject.GetComponent<StoredVariables>();
+                if (!storedVariablesComponent)
                 {
-                    rollCheckComponent = body.gameObject.AddComponent<RollCheck>();
+                    storedVariablesComponent = body.gameObject.AddComponent<StoredVariables>();
                 }
-                if (rollCheckComponent.timeToRoll > 0)
+                var rollsRemaining = storedVariablesComponent.timeToRoll;
+                if (rollsRemaining > 0)
                 {
-                    rollCheckComponent.timeToRoll--;
-                    int goodBuff = Random.Range(0, 100);
-                    int badBuff = Random.Range(0, 100);
+                    for (rollsRemaining--; rollsRemaining >= 0; rollsRemaining--)
+                    {
+                        var goodRoll = weightRandom.WeightedRandom();
+                        var badRoll = weightRandom.WeightedRandom();
+
+                        //HP Roll (10%)
+                        if (goodRoll == 0 || badRoll == 0)
+                        {
+                            if (goodRoll == 0)
+                            {
+                                args.healthMultAdd += goodStatPercent;
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel healthier!");
+                                    chatSpamFilter++;
+                                }
+                            }
+                            else
+                            {
+                                args.healthMultAdd -= badStatPercent;
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel scrawnier.");
+                                    chatSpamFilter++;
+                                }
+                            }
+                        }
+                        //Damage Roll (10%)
+                        if (goodRoll == 1 || badRoll == 1)
+                        {
+                            if (goodRoll == 1)
+                            {
+                                args.damageMultAdd += goodStatPercent;
+                            }
+                            else
+                            {
+                                args.damageMultAdd -= badStatPercent;
+                            }
+                        }
+                        //Speed Roll (10%)
+                        if (goodRoll == 2 || badRoll == 2)
+                        {
+                            if (goodRoll == 2)
+                            {
+                                args.moveSpeedMultAdd += goodStatPercent;
+                            }
+                            else
+                            {
+                                args.moveSpeedMultAdd -= badStatPercent;
+                            }
+                        }
+                        //Gold Roll (10%)
+                        if (goodRoll == 3 || badRoll == 3)
+                        {
+                            if (goodRoll == 3)
+                            {
+                                storedVariablesComponent.goldModifier++;
+                            }
+                            else
+                            {
+                                storedVariablesComponent.goldModifier--;
+                            }
+                        }
+                        //XP Roll (10%)
+                        if (goodRoll == 4 || badRoll == 4)
+                        {
+                            if (goodRoll == 4)
+                            {
+                                args.levelMultAdd += goodStatPercent;
+                            }
+                            else
+                            {
+                                args.levelMultAdd -= badStatPercent;
+                            }
+                        }
+                        //Crit Roll (10%)
+                        if (goodRoll == 5 || badRoll == 5)
+                        {
+                            if (goodRoll == 5)
+                            {
+                                args.critAdd += goodStatPercent;
+                            }
+                            else
+                            {
+                                args.critAdd -= badStatPercent;
+                            }
+                        }
+                        //Cooldown Roll (10%)
+                        if (goodRoll == 6 || badRoll == 6)
+                        {
+                            if (goodRoll == 6)
+                            {
+                                args.cooldownMultAdd += goodStatPercent;
+                            }
+                            else
+                            {
+                                args.cooldownMultAdd -= badStatPercent;
+                            }
+                        }
+                        //Armor Roll (10%)
+                        if (goodRoll == 7 || badRoll == 7)
+                        {
+                            if (goodRoll == 7)
+                            {
+                                args.armorAdd += body.baseArmor * goodStatPercent;
+                            }
+                            else
+                            {
+                                args.armorAdd -= body.baseArmor * badStatPercent;
+                            }
+                        }
+                        //Jump Height Roll (10%)
+                        if (goodRoll == 8 || badRoll == 8)
+                        {
+                            if (goodRoll == 8)
+                            {
+                                args.jumpPowerMultAdd += goodStatPercent;
+                            }
+                            else
+                            {
+                                args.jumpPowerMultAdd -= badStatPercent;
+                            }
+                        }
+                        //Size Roll (6%)
+                        if (goodRoll == 9 || badRoll == 9)
+                        {
+                            if (goodRoll == 9)
+                            {
+                                body.modelLocator.modelTransform.localScale *= (1 + goodStatPercent);
+                            }
+                            else
+                            {
+                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - badStatPercent, 0.25f);
+                            }
+                        }
+                        //Luck Roll (3%)
+                        if (goodRoll == 10 || badRoll == 10)
+                        {
+                            if (goodRoll == 10)
+                            {
+                                storedVariablesComponent.luckModifier++;
+                            }
+                            else
+                            {
+                                storedVariablesComponent.luckModifier--;
+                            }
+                        }
+                        //EVERYTHING Roll (1%)
+                        if (goodRoll == 11 || badRoll == 11)
+                        {
+                            if (goodRoll == 11)
+                            {
+                                args.healthMultAdd += goodStatPercent;
+                                args.damageMultAdd += goodStatPercent;
+                                args.moveSpeedMultAdd += goodStatPercent;
+                                storedVariablesComponent.goldModifier++;
+                                args.levelMultAdd += goodStatPercent;
+                                args.critAdd += goodStatPercent;
+                                args.cooldownMultAdd += goodStatPercent;
+                                args.armorAdd += body.baseArmor * goodStatPercent;
+                                args.jumpPowerMultAdd += goodStatPercent;
+                                body.modelLocator.modelTransform.localScale *= (1 + goodStatPercent);
+                                storedVariablesComponent.luckModifier++;
+                            }
+                            else
+                            {
+                                args.healthMultAdd -= badStatPercent;
+                                args.damageMultAdd -= badStatPercent;
+                                args.moveSpeedMultAdd -= badStatPercent;
+                                storedVariablesComponent.goldModifier--;
+                                args.levelMultAdd -= badStatPercent;
+                                args.critAdd -= badStatPercent;
+                                args.cooldownMultAdd -= badStatPercent;
+                                args.armorAdd -= body.baseArmor * badStatPercent;
+                                args.jumpPowerMultAdd -= badStatPercent;
+                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - badStatPercent, 0.25f);
+                                storedVariablesComponent.luckModifier--;
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        public class RollCheck : MonoBehaviour
+        int WeightedRandom()
         {
-            public int timeToRoll = 0;
+            float total = 0f;
+            foreach (float weight in weights)
+            {
+                total += weight;
+            }
+
+            float max = weights[0],
+            random = Random.Range(0f, total);
+
+            for (int index = 0; index < weights.Count; index++)
+            {
+                if (random < max)
+                {
+                    return index;
+                }
+                else if (index == weights.Count - 1)
+                {
+                    return weights.Count - 1;
+                }
+                max += weights[index + 1];
+            }
+            return -1;
         }
+
+
+    }
+    public class StoredVariables : MonoBehaviour
+    {
+        public int timeToRoll = 0;
+        public int goldModifier = 0;
+        public int luckModifier = 0;
     }
 }
