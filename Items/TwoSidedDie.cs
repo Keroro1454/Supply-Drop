@@ -29,7 +29,7 @@ namespace SupplyDrop.Items
 
         public override string ItemLangTokenName => "TWOSIDEDDIE";
 
-        public override string ItemPickupDesc => "Using a shrine rolls two stats, one to <style=cUtility>buff</style>, one to <style=cDeath>nerf</style>.";
+        public override string ItemPickupDesc => $"Using a shrine rolls {baseNumStatsRolled} stats, {baseNumStatsRolled / 2} to <style=cUtility>buff</style>, {baseNumStatsRolled / 2} to <style=cDeath>nerf</style>.";
 
         public override string ItemFullDescription => $"Whenever you use a shrine, {baseNumStatsRolled} (+{addNumStatsRolled} per stack) stats are picked at random. " +
             $"One is <style=cUtility>buffed by {FloatToPercentageString(goodStatPercent)}</style>, the other is <style=cDeath>nerfed by {FloatToPercentageString(badStatPercent)}</style>.";
@@ -48,8 +48,6 @@ namespace SupplyDrop.Items
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("TwoSidedDieIcon");
         public static GameObject ItemBodyModelPrefab;
 
-        public static Range[] goodRanges;
-        public static Range[] badRanges;
         List<int> weights = new List<int>();
 
         public override void Init(ConfigFile config)
@@ -74,37 +72,6 @@ namespace SupplyDrop.Items
         }
         public void SetupAttributes()
         {
-            goodRanges = new Range[]
-            {
-                new Range(0, 9, "healthier"),
-                new Range(10, 18, "stronger"),
-                new Range(19, 27, "quicker"),
-                new Range(28, 36, "richer"),
-                new Range(37, 45, "wiser"),
-                new Range(46, 54, "preciser"),
-                new Range(55, 63, "livelier"),
-                new Range(64, 72, "tougher"),
-                new Range(73, 81, "lighter"),
-                new Range(82, 90, "bigger"),
-                new Range(91, 99, "luckier!"),
-                new Range(100, int.MaxValue, "like a million bucks!!!")
-            };
-            badRanges = new Range[]
-            {
-                new Range(0, 9, "scrawnier"),
-                new Range(10, 18, "weaker"),
-                new Range(19, 27, "slower"),
-                new Range(28, 36, "pooer"),
-                new Range(37, 45, "dumber"),
-                new Range(46, 54, "sloppier"),
-                new Range(55, 63, "drowsier"),
-                new Range(64, 72, "squishier"),
-                new Range(73, 81, "heavier"),
-                new Range(82, 90, "smaller"),
-                new Range(91, 99, "unluckier..."),
-                new Range(100, int.MaxValue, "totally worthless...")
-            };
-
             //#0: HP
             weights.Add(10);
             //#1: Damage
@@ -483,23 +450,9 @@ namespace SupplyDrop.Items
         {
             On.RoR2.PurchaseInteraction.OnInteractionBegin += ShrineInteraction;
             GetStatCoefficients += ApplyBuffDebuff;
-        }
-        public struct Range
-        {
-            public int Lower;
-            public int Upper;
-            public string EffectDesc;
 
-            public Range(int lower, int upper, string effectdesc)
-            {
-                Lower = lower;
-                Upper = upper;
-                EffectDesc = effectdesc;
-            }
-            public bool Contains(int value)
-            {
-                return value >= Lower && value <= Upper;
-            }
+            On.RoR2.DeathRewards.OnKilledServer += MoneyBonus;
+            On.RoR2.Util.CheckRoll_float_float_CharacterMaster += LuckBonus;
         }
         private void ShrineInteraction(On.RoR2.PurchaseInteraction.orig_OnInteractionBegin orig, PurchaseInteraction self, Interactor activator)
         {
@@ -509,12 +462,14 @@ namespace SupplyDrop.Items
             {
                 if (self.CanBeAffordedByInteractor(activator) && self.isShrine)
                 {
-                    var rollCheckComponent = activator.gameObject.GetComponent<StoredVariables>();
-                    if (!rollCheckComponent)
+                    var storedVariablesComponent = activator.gameObject.GetComponent<StoredVariables>();
+                    if (!storedVariablesComponent)
                     {
-                        rollCheckComponent = activator.gameObject.AddComponent<StoredVariables>();
+                        storedVariablesComponent = activator.gameObject.AddComponent<StoredVariables>();
                     }
-                    rollCheckComponent.timeToRoll++;
+                    storedVariablesComponent.timeToRoll++;
+                    storedVariablesComponent.goldModifier = 0;
+                    storedVariablesComponent.luckModifier = 0;
                 }
             }    
             orig(self, activator);
@@ -535,6 +490,29 @@ namespace SupplyDrop.Items
                 var rollsRemaining = storedVariablesComponent.timeToRoll;
                 if (rollsRemaining > 0)
                 {
+                    var goodHPRoll = 0;
+                    var badHPRoll = 0;
+                    var goodDamageRoll = 0;
+                    var badDamageRoll = 0;
+                    var goodSpeedRoll = 0;
+                    var badSpeedRoll = 0;
+                    var goodXPRoll = 0;
+                    var badXPRoll = 0;
+                    var goodCritRoll = 0;
+                    var badCritRoll = 0;
+                    var goodCDRoll = 0;
+                    var badCDRoll = 0;
+                    var goodArmorRoll = 0;
+                    var badArmorRoll = 0;
+                    var goodSizeRoll = 0;
+                    var badSizeRoll = 0;
+                    var goodJumpRoll = 0;
+                    var badJumpRoll = 0;
+                    var goodLuckRoll = 0;
+                    var badLuckRoll = 0;
+                    var goodEveryRoll = 0;
+                    var badEveryRoll = 0;
+
                     for (rollsRemaining--; rollsRemaining >= 0; rollsRemaining--)
                     {
                         var goodRoll = weightRandom.WeightedRandom();
@@ -545,7 +523,8 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 0)
                             {
-                                args.healthMultAdd += goodStatPercent;
+                                goodHPRoll++;
+                                args.healthMultAdd += (goodStatPercent * goodHPRoll);
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel healthier!");
@@ -554,7 +533,8 @@ namespace SupplyDrop.Items
                             }
                             else
                             {
-                                args.healthMultAdd -= badStatPercent;
+                                badHPRoll++;
+                                args.healthMultAdd -= (badStatPercent * badHPRoll);
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel scrawnier.");
@@ -567,11 +547,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 1)
                             {
-                                args.damageMultAdd += goodStatPercent;
+                                goodDamageRoll++;
+                                args.damageMultAdd += (goodStatPercent * goodDamageRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel stronger!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                args.damageMultAdd -= badStatPercent;
+                                badDamageRoll++;
+                                args.damageMultAdd -= (badStatPercent * badDamageRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel weaker.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Speed Roll (10%)
@@ -579,11 +571,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 2)
                             {
-                                args.moveSpeedMultAdd += goodStatPercent;
+                                goodSpeedRoll++;
+                                args.moveSpeedMultAdd += (goodStatPercent * goodSpeedRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel quicker!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                args.moveSpeedMultAdd -= badStatPercent;
+                                badSpeedRoll++;
+                                args.moveSpeedMultAdd -= (badStatPercent * badSpeedRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel slower.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Gold Roll (10%)
@@ -591,11 +595,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 3)
                             {
+                                storedVariablesComponent.goodGoldRoll++;
                                 storedVariablesComponent.goldModifier++;
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel richer!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
+                                storedVariablesComponent.badGoldRoll++;
                                 storedVariablesComponent.goldModifier--;
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel poorer.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //XP Roll (10%)
@@ -603,11 +619,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 4)
                             {
-                                args.levelMultAdd += goodStatPercent;
+                                goodXPRoll++;
+                                args.levelMultAdd += (goodStatPercent * goodXPRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel wiser!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                args.levelMultAdd -= badStatPercent;
+                                badXPRoll++;
+                                args.levelMultAdd -= (badStatPercent * badXPRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel dumber.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Crit Roll (10%)
@@ -615,11 +643,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 5)
                             {
-                                args.critAdd += goodStatPercent;
+                                goodCritRoll++;
+                                args.critAdd += (goodStatPercent * goodCritRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel preciser!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                args.critAdd -= badStatPercent;
+                                badCritRoll++;
+                                args.critAdd -= (badStatPercent * badCritRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel sloppier.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Cooldown Roll (10%)
@@ -627,11 +667,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 6)
                             {
-                                args.cooldownMultAdd += goodStatPercent;
+                                goodCDRoll++;
+                                args.cooldownMultAdd += (goodStatPercent * goodCDRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel livelier!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                args.cooldownMultAdd -= badStatPercent;
+                                badCDRoll++;
+                                args.cooldownMultAdd -= (badStatPercent * badCDRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel drowsier.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Armor Roll (10%)
@@ -639,11 +691,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 7)
                             {
-                                args.armorAdd += body.baseArmor * goodStatPercent;
+                                goodArmorRoll++;
+                                args.armorAdd += body.baseArmor * (goodStatPercent * goodArmorRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel tougher!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                args.armorAdd -= body.baseArmor * badStatPercent;
+                                badArmorRoll++;
+                                args.armorAdd -= body.baseArmor * (badStatPercent * badArmorRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel squishier.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Jump Height Roll (10%)
@@ -651,11 +715,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 8)
                             {
-                                args.jumpPowerMultAdd += goodStatPercent;
+                                goodJumpRoll++;
+                                args.jumpPowerMultAdd += (goodStatPercent * goodJumpRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel lighter!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                args.jumpPowerMultAdd -= badStatPercent;
+                                badJumpRoll++;
+                                args.jumpPowerMultAdd -= (badStatPercent * badJumpRoll);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel heavier.");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Size Roll (6%)
@@ -663,11 +739,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 9)
                             {
-                                body.modelLocator.modelTransform.localScale *= (1 + goodStatPercent);
+                                goodSizeRoll++;
+                                body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodSizeRoll));
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel BIGGER!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
-                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - badStatPercent, 0.25f);
+                                badSizeRoll++;
+                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - (badStatPercent * badSizeRoll), 0.10f);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel tiny...");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //Luck Roll (3%)
@@ -675,11 +763,23 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 10)
                             {
+                                storedVariablesComponent.goodLuckRoll++;
                                 storedVariablesComponent.luckModifier++;
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel LUCKIER!!");
+                                    chatSpamFilter++;
+                                }
                             }
                             else
                             {
+                                storedVariablesComponent.badLuckRoll++;
                                 storedVariablesComponent.luckModifier--;
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel unluckier...");
+                                    chatSpamFilter++;
+                                }
                             }
                         }
                         //EVERYTHING Roll (1%)
@@ -687,38 +787,115 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 11)
                             {
-                                args.healthMultAdd += goodStatPercent;
-                                args.damageMultAdd += goodStatPercent;
-                                args.moveSpeedMultAdd += goodStatPercent;
+                                goodEveryRoll++;
+                                args.healthMultAdd += (goodStatPercent * goodEveryRoll);
+                                args.damageMultAdd += (goodStatPercent * goodEveryRoll);
+                                args.moveSpeedMultAdd += (goodStatPercent * goodEveryRoll);
+                                storedVariablesComponent.goodGoldRoll++;
                                 storedVariablesComponent.goldModifier++;
-                                args.levelMultAdd += goodStatPercent;
-                                args.critAdd += goodStatPercent;
-                                args.cooldownMultAdd += goodStatPercent;
-                                args.armorAdd += body.baseArmor * goodStatPercent;
-                                args.jumpPowerMultAdd += goodStatPercent;
-                                body.modelLocator.modelTransform.localScale *= (1 + goodStatPercent);
+                                args.levelMultAdd += (goodStatPercent * goodEveryRoll);
+                                args.critAdd += (goodStatPercent * goodEveryRoll);
+                                args.cooldownMultAdd += (goodStatPercent * goodEveryRoll);
+                                args.armorAdd += body.baseArmor * (goodStatPercent * goodEveryRoll);
+                                args.jumpPowerMultAdd += (goodStatPercent * goodEveryRoll);
+                                body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodEveryRoll));
+                                storedVariablesComponent.goodLuckRoll++;
                                 storedVariablesComponent.luckModifier++;
+                                Chat.AddMessage("YOU FEEL LIKE A MILLION BUCKS!");
                             }
                             else
                             {
-                                args.healthMultAdd -= badStatPercent;
-                                args.damageMultAdd -= badStatPercent;
-                                args.moveSpeedMultAdd -= badStatPercent;
+                                badEveryRoll++;
+                                args.healthMultAdd -= (badStatPercent * badEveryRoll);
+                                args.damageMultAdd -= (badStatPercent * badEveryRoll);
+                                args.moveSpeedMultAdd -= (badStatPercent * badEveryRoll);
+                                storedVariablesComponent.badGoldRoll++;
                                 storedVariablesComponent.goldModifier--;
-                                args.levelMultAdd -= badStatPercent;
-                                args.critAdd -= badStatPercent;
-                                args.cooldownMultAdd -= badStatPercent;
-                                args.armorAdd -= body.baseArmor * badStatPercent;
-                                args.jumpPowerMultAdd -= badStatPercent;
-                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - badStatPercent, 0.25f);
+                                args.levelMultAdd -= (badStatPercent * badEveryRoll);
+                                args.critAdd -= (badStatPercent * badEveryRoll);
+                                args.cooldownMultAdd -= (badStatPercent * badEveryRoll);
+                                args.armorAdd -= body.baseArmor * (badStatPercent * badEveryRoll);
+                                args.jumpPowerMultAdd -= (badStatPercent * badEveryRoll);
+                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - (badStatPercent * badEveryRoll), 0.10f);
+                                storedVariablesComponent.badLuckRoll++;
                                 storedVariablesComponent.luckModifier--;
+                                Chat.AddMessage("You feel utterly worthless...");
                             }
+                        }
+                        if(chatSpamFilter > 10)
+                        {
+                            Chat.AddMessage("In summary: You feel like a confused mess right now.");
+                        }    
+                    }
+                }
+            }
+        }
+        private void MoneyBonus(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
+        {
+            orig(self, rep);
+
+            var cbKiller = self.GetComponent<CharacterBody>();
+            if (cbKiller)
+            {
+                var inventoryCount = GetCount(cbKiller);
+                if (inventoryCount > 0)
+                {
+                    var storedVariablesComponent = rep.attackerMaster.gameObject.GetComponent<StoredVariables>();
+                    if (!storedVariablesComponent)
+                    {
+                        storedVariablesComponent = rep.attackerMaster.gameObject.AddComponent<StoredVariables>();
+                    }
+
+                    if (storedVariablesComponent.goldModifier != 0)
+                    {
+                        uint origGold = self.goldReward;
+
+                        if (storedVariablesComponent.goldModifier > 0)
+                        {
+                            uint increasedGold = (uint)Mathf.FloorToInt(origGold * (goodStatPercent * storedVariablesComponent.goodGoldRoll));
+                            self.goldReward = increasedGold;
+                        }
+                        else
+                        {
+                            uint reducedGold = (uint)Mathf.FloorToInt(origGold * (badStatPercent * storedVariablesComponent.badGoldRoll));
+                            self.goldReward = reducedGold;
                         }
                     }
                 }
             }
         }
+        private bool LuckBonus(On.RoR2.Util.orig_CheckRoll_float_float_CharacterMaster orig, float percentChance, float luck, CharacterMaster effectOriginMaster)
+        {
+            if (percentChance >= 1f)
+            {
+                if (effectOriginMaster)
+                {
+                    var inventoryCount = GetCount(effectOriginMaster);
+                    if (inventoryCount > 0)
+                    {
+                        var storedVariablesComponent = effectOriginMaster.gameObject.GetComponent<StoredVariables>();
+                        if (!storedVariablesComponent)
+                        {
+                            storedVariablesComponent = effectOriginMaster.gameObject.AddComponent<StoredVariables>();
+                        }
 
+                        if (storedVariablesComponent.goldModifier != 0)
+                        {
+                            var currentPercent = percentChance;
+                            if (storedVariablesComponent.goldModifier > 0)
+                            {
+                                percentChance = currentPercent + (currentPercent * (goodStatPercent * storedVariablesComponent.goodLuckRoll));
+                            }
+                            else
+                            {
+                                percentChance = currentPercent - (currentPercent * (badStatPercent * storedVariablesComponent.badLuckRoll));
+                            }
+                        }
+                    }
+                }
+            }
+            return orig(percentChance, luck, effectOriginMaster);
+        }
         int WeightedRandom()
         {
             float total = 0f;
@@ -744,13 +921,15 @@ namespace SupplyDrop.Items
             }
             return -1;
         }
-
-
     }
     public class StoredVariables : MonoBehaviour
     {
         public int timeToRoll = 0;
         public int goldModifier = 0;
+        public int goodGoldRoll = 0;
+        public int badGoldRoll = 0;
         public int luckModifier = 0;
+        public int goodLuckRoll = 0;
+        public int badLuckRoll = 0;
     }
 }
