@@ -40,7 +40,7 @@ namespace SupplyDrop.Items
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
 
         public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("SilverWatch.prefab");
-        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("WatchIcon");
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("SilverWatchIcon");
         public static GameObject ItemBodyModelPrefab;
 
         public override void Init(ConfigFile config)

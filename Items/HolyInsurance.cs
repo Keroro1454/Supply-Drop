@@ -66,9 +66,9 @@ namespace SupplyDrop.Items
 
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
 
-        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("TestModel.prefab");
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("HolyInsurance.prefab");
 
-        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("TestIcon");
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("HolyInsuranceIcon");
 
         public static GameObject ItemBodyModelPrefab;
         public static GameObject ItemFollowerPrefab;
