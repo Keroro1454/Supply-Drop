@@ -52,7 +52,7 @@ namespace SupplyDrop.Items
             "\"Fu-\"\n\n" +
             "The Adminstrator raised their hand. \"The Order does not tolerate such blasphemous acts. We are an Order of science and reason, " +
             "and you have acted against reason.\"\n\n" +
-            "\"Reason? You idiots are going to unleash those them! Onto everyone! How is that reasonable?!\"\n\n" +
+            "\"Reason? You idiots are going to unleash them! Onto everyone! How is that reasonable?!\"\n\n" +
             "\"You have thusly been deemed <b>Unreasonable</b>. Your membership to the Order has been severed.\"\n\n" +
             "The Administrator reached out, and placed a single, gloved finger upon the quivering man's mask.\n\n" +
             "\"Goodbye Doctor.\"\n\n" +
