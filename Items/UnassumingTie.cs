@@ -344,9 +344,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
-                    localAngles = new Vector3(0f, 0f, 0f),
-                    localScale = generalScale * 0.9f
+                    localPos = new Vector3(-0.04102F, 0.22901F, 0.13424F),
+                    localAngles = new Vector3(351.8255F, 341.0915F, 353.5952F),
+                    localScale = new Vector3(0.16063F, 0.16063F, 0.16063F)
                 }
             });
             rules.Add("mdlPathfinder", new RoR2.ItemDisplayRule[]
