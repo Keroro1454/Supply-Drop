@@ -48,8 +48,11 @@ Icon | Item | Description | Rarity
 		- Fixed some typos in logbook entries
 	- Bug Fixes:
 		- Fixed the item display for the Unassuming Tie on Miner being massive
+<details>
+<summary>
+1.4: The Doctor is Back! and Finally Back!
+</summary>
 
-- <details><summary>1.4: The Doctor is Back! and Finally Back!</summary>
 - 1.4.10: Finally Back!
 	- Updated for Survivors of the Void
 	- Code has been completely re-worked to remove dependency on TILER2
@@ -116,9 +119,15 @@ Icon | Item | Description | Rarity
 	- Reworked Hardened Bone Fragments slightly; the number of fragment stacks lost on hit is now tied to the amount of damage you receive
 	- Fixed shield items not granting reduced shield gains on additional stacks
 	- Fixed a typo in the QSS pick-up description
-	- Cleaned stuff up a lot</details>
+	- Cleaned stuff up a lot
+	
+</details>
 
-- <details><summary>1.3: The Doctor is In...</summary>
+<details>
+<summary>
+1.3: The Doctor is In...
+</summary>
+
 - 1.3.2
 	- Publicized item displays so devs of modded characters can add displays for Supply Drop items
 	- Cleaned stuff up a bit
@@ -131,9 +140,15 @@ Icon | Item | Description | Rarity
 	- Re-worked Quantum Shield Stabilizer. Still provides 16% max HP shield. Now completely negates excess damage when an attack breaks your shields, but has a 5 second cooldown before the effect can activate again.
 	- Fixed issue causing console to throw warnings regarding missing scripts
 	- Fixed a couple remaining minor text errors/awkwardness in logbook entries
-	- Made a few minor under-the-hood optimizations</details>
+	- Made a few minor under-the-hood optimizations
+	
+</details>
 
-- <details><summary>1.2: Shield Your Eyes!</summary>
+<details>
+<summary>
+1.2: Shield Your Eyes!
+</summary>
+
 - 1.2.3
 	- Buffed Hardened Bone Fragments to provide 1 -> 2 armor per kill. Additional item stacks still give +1 additional armor on kill, this may be subject to change
 	- Fixed Echo-Voltaic Plankton not proc-ing shield against bosses
@@ -154,22 +169,36 @@ Icon | Item | Description | Rarity
 	- Fixed Shell Plating not carrying over between stages
 	- Fixed Shell Plating sometimes not appearing properly on MUL-T's model
 	- Made slight changes/fixes to the logs of Hardened Bone Fragments, Shell Plating, and Numbing Berries
-	- Optimized some code with Numbing Berries and Hardened Bone Fragments that was previously causing performance dips when ClassicItems and/or BanditReloaded was present</details>
+	- Optimized some code with Numbing Berries and Hardened Bone Fragments that was previously causing performance dips when ClassicItems and/or BanditReloaded was present
 
-- <details><summary>1.1: Mi A(rmor)!</summary>
+</details>
+
+<details>
+<summary>
+1.1: Mi A(rmor)!
+</summary>
+
 - 1.1.0: The Mi A(r)mor! Update
 	- Added two new items, Numbing Berries and Shell Plating
 	- Minor adjustments to rigging on the survivors with Hardened Bone Fragments (the rest are coming soon, I swear)
 	- Re-adjusted values for Hardened Bone Fragments from .5 back to 1. This is fixing an error caused in 1.0.2.
-	- A new legendary item transmission has appeared, but it is sadly scrambled. Perhaps it will be unscrambled with the remaining transmissions soon...</details>
+	- A new legendary item transmission has appeared, but it is sadly scrambled. Perhaps it will be unscrambled with the remaining transmissions soon...
 
-- <details><summary>1.0: Incoming Supply Drop!</summary>
+</details>
+
+<details>
+<summary>
+1.0: Incoming Supply Drop!
+</summary>
+
 - 1.0.2
 	- Fixed Hardened Bone Fragments to be compatible with Forgive Me Please
 - 1.0.1
 	- Edited README to have the correct stats for the Hardened Bone Fragments
 - 1.0.0
-	- Release! Includes just one item right now, the Hardened Bone Fragments. More to come!</details>
+	- Release! Includes just one item right now, the Hardened Bone Fragments. More to come!
+
+</details>
 
 ----
 # Special Thanks:
