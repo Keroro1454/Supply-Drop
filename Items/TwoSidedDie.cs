@@ -21,18 +21,16 @@ namespace SupplyDrop.Items
         public static ConfigOption<float> badStatPercent;
         public static ConfigOption<int> baseNumStatsRolled;
         public static ConfigOption<int> addNumStatsRolled;
-        public static ConfigOption<float> addGoodStatPercent;
-        public static ConfigOption<float> addBadStatPercent;
 
         //Item Data
         public override string ItemName => "Two-Sided Die";
 
         public override string ItemLangTokenName => "TWOSIDEDDIE";
 
-        public override string ItemPickupDesc => $"Using a shrine rolls {baseNumStatsRolled} stats, {baseNumStatsRolled / 2} to <style=cUtility>buff</style>, {baseNumStatsRolled / 2} to <style=cDeath>nerf</style>.";
+        public override string ItemPickupDesc => $"Using a shrine rolls {baseNumStatsRolled} stats; {baseNumStatsRolled / 2} to <style=cIsUtility>buff</style>, {baseNumStatsRolled / 2} to <style=cDeath>nerf</style>.";
 
         public override string ItemFullDescription => $"Whenever you use a shrine, {baseNumStatsRolled} (+{addNumStatsRolled} per stack) stats are picked at random. " +
-            $"One is <style=cUtility>buffed by {FloatToPercentageString(goodStatPercent)}</style>, the other is <style=cDeath>nerfed by {FloatToPercentageString(badStatPercent)}</style>.";
+            $"One is <style=cIsUtility>buffed by {FloatToPercentageString(goodStatPercent)}</style>, the other is <style=cDeath>nerfed by {FloatToPercentageString(badStatPercent)}</style>.";
 
         public override string ItemLore => "The little newt had loved to play with their siblings. But ever since they left them, all that time ago, they had no one to play with.\n\n" +
             "So they devised new games, games that could be played all alone. The newt was still lonely, but the games helped distract them from the loneliness of their quiet little tide pool.\n\n" +
@@ -58,17 +56,15 @@ namespace SupplyDrop.Items
             Hooks();
             SetupAttributes();
 
-            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(6f, 6f, 6f);
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
         }
 
         private void CreateConfig(ConfigFile config)
         {
-            goodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Good Stat is Buffed with 1 Salvaged Wires", .50f, "How much should the one stat be buffed by with a single two-sided die? (.5 = 50%)");
-            badStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bad Stat is Buffed with 1 Two-Sided Die", .25f, "How much should the one stat be nerfed by with a single two-sided die? (.25 = 25%)");
-            baseNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Base Attack Speed Gained with 1 Salvaged Wires", 2, "How many stats should be rolled with a single two-sided die?");
-            addNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Additional Attack Speed Gained per Salvaged Wires", 2, "How many more stats should be rolled for each two-sided die after the first?");
-            addGoodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Attack Speed Gained with 1 Salvaged Wires", .1f, "How much more should affected stats be buffed by after all stats are being affected? (.1 = 10%)");
-            addBadStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Attack Speed Gained per Salvaged Wires", .05f, "How much more should affected stats be nerfed by after all stats are being affected? (.05 = 5%)");
+            goodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Good Stat is Buffed By with 1 1 Two-Sided Die", .50f, "How much should the one stat be buffed by with a single two-sided die? (.5 = 50%)");
+            badStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bad Stat is Nerfed By with 1 Two-Sided Die", .25f, "How much should the one stat be nerfed by with a single two-sided die? (.25 = 25%)");
+            baseNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Base Number of Stats Rolled with 1 Two-Sided Die", 2, "How many stats should be rolled with a single two-sided die?");
+            addNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Additional Number of Stats Rolled per Two-Sided Die", 2, "How many more stats should be rolled for each two-sided die after the first?");
         }
         public void SetupAttributes()
         {
@@ -123,10 +119,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(0.025f, 0f, 0f),
-                    localAngles = new Vector3(350f, 20f, 50f),
-                    localScale = generalScale
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.18131F, -0.04646F, -0.04665F),
+                    localAngles = new Vector3(49.34735F, 154.0507F, 140.8065F),
+                    localScale = new Vector3(0.00593F, 0.00593F, 0.00593F)
                 }
             });
             rules.Add("mdlHuntress", new ItemDisplayRule[]
@@ -479,7 +475,6 @@ namespace SupplyDrop.Items
             int inventoryCount = GetCount(body);
             if (inventoryCount > 0)
             {
-                TwoSidedDie weightRandom = new TwoSidedDie();
                 var chatSpamFilter = 0;
 
                 var storedVariablesComponent = body.gameObject.GetComponent<StoredVariables>();
@@ -508,15 +503,13 @@ namespace SupplyDrop.Items
                     var badSizeRoll = 0;
                     var goodJumpRoll = 0;
                     var badJumpRoll = 0;
-                    var goodLuckRoll = 0;
-                    var badLuckRoll = 0;
                     var goodEveryRoll = 0;
                     var badEveryRoll = 0;
 
                     for (rollsRemaining--; rollsRemaining >= 0; rollsRemaining--)
                     {
-                        var goodRoll = weightRandom.WeightedRandom();
-                        var badRoll = weightRandom.WeightedRandom();
+                        var goodRoll = WeightedRandom();
+                        var badRoll = WeightedRandom();
 
                         //HP Roll (10%)
                         if (goodRoll == 0 || badRoll == 0)
