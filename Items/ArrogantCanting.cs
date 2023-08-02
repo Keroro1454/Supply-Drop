@@ -53,11 +53,11 @@ namespace SupplyDrop.Items
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("ArrogantCantingIcon");
         public static GameObject ItemBodyModelPrefab;
 
-        public List<PickupIndex> redItems = Run.instance.availableTier3DropList;
-        public List<PickupIndex> greenItems = Run.instance.availableTier2DropList;
-        public List<PickupIndex> whiteItems = Run.instance.availableTier1DropList;
+        public static List<PickupIndex> redItems = null;
+        public static List<PickupIndex> greenItems = null;
+        public static List<PickupIndex> whiteItems = null;
 
-        private Vector3 constant = (Vector3.up * 20f) + (5 * Vector3.right * Mathf.Cos(2f * Mathf.PI / Run.instance.participatingPlayerCount)) + (5 * Vector3.forward * Mathf.Sin(2f * Mathf.PI / Run.instance.participatingPlayerCount));
+        
 
         public override void Init(ConfigFile config)
         {
@@ -452,9 +452,25 @@ namespace SupplyDrop.Items
         //This whole chunk handles the item dropping
         public void OnKilledOtherServer(DamageReport damageReport)
         {
+            if (redItems is null)
+            {
+                redItems = Run.instance.availableTier3DropList;
+            }
+            if (greenItems is null)
+            {
+                greenItems = Run.instance.availableTier2DropList;
+            }
+            if (whiteItems is null)
+            {
+                whiteItems = Run.instance.availableTier1DropList;
+            }    
+
             var victimBody = damageReport.victimBody;
             var dropLocation = damageReport.victimBody.transform.position;
             var cbKiller = damageReport.attackerBody.GetComponent<CharacterBody>();
+
+            //Vector3 constant = (Vector3.up * 20f) + (5 * Vector3.right * Mathf.Cos(2f * Mathf.PI / Run.instance.participatingPlayerCount)) + (5 * Vector3.forward * Mathf.Sin(2f * Mathf.PI / Run.instance.participatingPlayerCount));
+
             if (cbKiller)
             {
                 var inventoryCount = GetCount(cbKiller);
@@ -485,9 +501,10 @@ namespace SupplyDrop.Items
                     }
                 }
             }
+
             void SpawnItem(List<PickupIndex> items, int nextItem)
             {
-                PickupDropletController.CreatePickupDroplet(items[nextItem], victimBody.transform.position, constant);
+                PickupDropletController.CreatePickupDroplet(items[nextItem], victimBody.transform.position, Vector3.zero);
             }
         }
 
