@@ -30,12 +30,12 @@ namespace SupplyDrop.Items
 
         public override string ItemLangTokenName => "ARROGANTCANTING";
 
-        public override string ItemPickupDesc => "Elite enemies have a <style=cUtility>chance to drop items</style>, but are <style=cDeath>more powerful</style>.";
+        public override string ItemPickupDesc => "Elite enemies have a <style=cIsUtility>chance to drop items</style>, but are <style=cDeath>more powerful</style>.";
 
         public override string ItemFullDescription => $"Elite enemies have a {FloatToPercentageString(baseDropChance)} (+{FloatToPercentageString(addDropChance)} " +
-            $"per stack) chance to drop a random item on death, but they also gain {FloatToPercentageString(baseHPIncrease)} (+{FloatToPercentageString(addHPIncrease)} " +
-            $"per stack) more HP and {FloatToPercentageString(baseDamageIncrease)} (+{FloatToPercentageString(addDamageIncrease)} " +
-            $"per stack) more damage.";
+            $"per stack) chance to <style=cIsUtility>drop a random item</style> on death, but they also gain {FloatToPercentageString(baseHPIncrease)} (+{FloatToPercentageString(addHPIncrease)} " +
+            $"per stack) <style=cDeath>more HP</style> and {FloatToPercentageString(baseDamageIncrease)} (+{FloatToPercentageString(addDamageIncrease)} " +
+            $"per stack) <style=cDeath>more damage</style>.";
 
         public override string ItemLore => "Do you remember, Brother, when I made a steed for myself?\n\n" +
             "Stone. Silver. Fire. All the ingredients to make a perfect creation, fast and able. But that was not enough this time. I wished to prove how right I had always been." +
