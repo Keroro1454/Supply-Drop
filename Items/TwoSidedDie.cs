@@ -506,7 +506,7 @@ namespace SupplyDrop.Items
                     var goodEveryRoll = 0;
                     var badEveryRoll = 0;
 
-                    for (rollsRemaining--; rollsRemaining >= 0; rollsRemaining--)
+                    for (rollsRemaining--; rollsRemaining > 0; rollsRemaining--)
                     {
                         var goodRoll = WeightedRandom();
                         var badRoll = WeightedRandom();

@@ -63,7 +63,7 @@ namespace SupplyDrop.Items
             CreateItem();
             Hooks();
 
-            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(.2f, .2f, .2f);
         }
 
         private void CreateConfig(ConfigFile config)

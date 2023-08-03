@@ -25,9 +25,9 @@ namespace SupplyDrop.Items
 
         public override string ItemLangTokenName => "SILVERWATCH";
 
-        public override string ItemPickupDesc => "<style=cUtility>Buffs</style> last longer...but so do <style=cDeath>debuffs</style>.";
+        public override string ItemPickupDesc => "<style=cIsUtility>Buffs</style> last longer...but so do <style=cDeath>debuffs</style>.";
 
-        public override string ItemFullDescription => $"All <style=cUtility>buff</style> durations are increased by {FloatToPercentageString(baseDurationIncrease)} (+{FloatToPercentageString(addDurationIncrease)} " +
+        public override string ItemFullDescription => $"All <style=cIsUtility>buff</style> durations are increased by {FloatToPercentageString(baseDurationIncrease)} (+{FloatToPercentageString(addDurationIncrease)} " +
             $"per stack). All <style=cDeath>debuff</style> durations are also increased by {FloatToPercentageString(baseDurationIncrease)} (+{FloatToPercentageString(addDurationIncrease)} " +
             $"per stack).";
 

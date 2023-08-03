@@ -71,7 +71,7 @@ namespace SupplyDrop.Items
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("HolyInsuranceIcon");
 
         public static GameObject ItemBodyModelPrefab;
-        public static GameObject ItemFollowerPrefab;
+
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
 
@@ -102,6 +102,8 @@ namespace SupplyDrop.Items
                 CreateItem();
                 SetupAttributes();
                 Hooks();
+
+                ItemDef.pickupModelPrefab.transform.localPosition = new Vector3(0f, -2f, 0f);
         }
 
         private void CreateConfig(ConfigFile config)
@@ -288,17 +290,9 @@ namespace SupplyDrop.Items
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
-            ItemBodyModelPrefab = MainAssets.LoadAsset<GameObject>("BloodBookTracker.prefab");
-            ItemFollowerPrefab = ItemModel;
-
-            var ItemFollower = ItemBodyModelPrefab.AddComponent<Utils.ItemFollower>();
-            ItemFollower.itemDisplay = ItemBodyModelPrefab.AddComponent<ItemDisplay>();
-            ItemFollower.itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
-            ItemFollower.followerPrefab = ItemFollowerPrefab;
-            ItemFollower.targetObject = ItemBodyModelPrefab;
-            ItemFollower.distanceDampTime = 0.15f;
-            ItemFollower.distanceMaxSpeed = 100;
-            ItemFollower.SmoothingNumber = 0.25f;
+            ItemBodyModelPrefab = ItemModel;
+            var itemDisplay = ItemBodyModelPrefab.AddComponent<RoR2.ItemDisplay>();
+            itemDisplay.rendererInfos = ItemDisplaySetup(ItemBodyModelPrefab);
 
             Vector3 generalScale = new Vector3(0.08f, 0.08f, 0.08f);
 
