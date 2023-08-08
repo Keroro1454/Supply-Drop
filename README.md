@@ -47,6 +47,7 @@ Icon | Item | Description | Rarity
 		- Changed the README to not display all patchnotes by default anymore
 		- Fixed some typos in logbook entries
 	- Bug Fixes:
+		- Fixed Hardened Shell Plating incorrectly calculating armor, which spammed NREs and made you invincible?
 		- Fixed the item display for the Unassuming Tie on Miner being massive
 <details>
 <summary>

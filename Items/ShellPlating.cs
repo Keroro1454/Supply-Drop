@@ -448,11 +448,10 @@ namespace SupplyDrop.Items
 
                 if (damageReport.attackerBody)
                 {
-                    var currentShellStackMax = ((baseMaxArmorGain / armorOnKillAmount) + (((inventoryCount - 1) * addMaxArmorGain) / armorOnKillAmount));
-                    var currentShellStack = shellStackTrackerComponent.shellStacks;
-                    if (currentShellStack < currentShellStackMax)
+                    if (damageReport.attackerBody.HasBuff(ShellStackMax) == false)
                     {
                         shellStackTrackerComponent.shellStacks++;
+                        damageReport.attackerBody.RecalculateStats();
                     }
                 }
             }
@@ -473,17 +472,21 @@ namespace SupplyDrop.Items
                 var currentShellStackMax = ((baseMaxArmorGain / armorOnKillAmount) + (((inventoryCount - 1) * addMaxArmorGain) / armorOnKillAmount));
 
                 //These two ifs give or take away the ShellStackMax "buff" so the player can tell if they've maxed out the Shell or not
-                if (shellStackTrackerComponent.shellStacks >= currentShellStackMax && sender.GetBuffCount(ShellStackMax) <= 0)
+                if (currentShellStack >= currentShellStackMax && sender.HasBuff(ShellStackMax) == false)
                 {
                     sender.AddBuff(ShellStackMax);
+                    shellStackTrackerComponent.shellStacks = currentShellStackMax;
                 }
-                if (shellStackTrackerComponent.shellStacks < currentShellStackMax && sender.GetBuffCount(ShellStackMax) > 0)
+                if (currentShellStack < currentShellStackMax && sender.HasBuff(ShellStackMax) == true)
                 {
                     sender.RemoveBuff(ShellStackMax);
                 }
-
                 args.armorAdd += (armorOnKillAmount * currentShellStack);
             }
         }
+    }
+    public class ShellStackTracker : MonoBehaviour
+    {
+        public float shellStacks { get; set; }
     }
 }
