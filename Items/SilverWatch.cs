@@ -51,6 +51,7 @@ namespace SupplyDrop.Items
             Hooks();
 
             ItemDef.pickupModelPrefab.transform.localScale = new Vector3(.85f, .85f, .85f);
+            ItemDef.pickupModelPrefab.transform.localRotation = new Quaternion(0, 90, 0, 0);
         }
 
         private void CreateConfig(ConfigFile config)
