@@ -48,6 +48,14 @@ namespace SupplyDrop.Items
 
         List<int> weights = new List<int>();
 
+        public int timeToRoll = 0;
+        public int goldModifier = 0;
+        public int goodGoldRoll = 0;
+        public int badGoldRoll = 0;
+        public int luckModifier = 0;
+        public int goodLuckRoll = 0;
+        public int badLuckRoll = 0;
+
         public override void Init(ConfigFile config)
         {
             CreateConfig(config);
@@ -56,7 +64,7 @@ namespace SupplyDrop.Items
             Hooks();
             SetupAttributes();
 
-            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
+            ItemDef.pickupModelPrefab.transform.localScale = new Vector3(1.75f, 1.75f, 1.75f);
         }
 
         private void CreateConfig(ConfigFile config)
@@ -120,8 +128,8 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Pelvis",
-                    localPos = new Vector3(0.18131F, -0.04646F, -0.04665F),
-                    localAngles = new Vector3(49.34735F, 154.0507F, 140.8065F),
+                    localPos = new Vector3(-0.08154F, -0.08107F, 0.13188F),
+                    localAngles = new Vector3(49.34736F, 154.0507F, 140.8065F),
                     localScale = new Vector3(0.00593F, 0.00593F, 0.00593F)
                 }
             });
@@ -131,10 +139,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(0f, 0.15f, 0.05f),
-                    localAngles = new Vector3(350f, 20f, 50f),
-                    localScale = generalScale * .8f
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.00208F, -0.1081F, 0.11237F),
+                    localAngles = new Vector3(350F, 20F, 50F),
+                    localScale = new Vector3(0.00669F, 0.00669F, 0.00669F)
                 }
             });
             rules.Add("mdlBandit2", new ItemDisplayRule[]
@@ -143,10 +151,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(0.00265F, -0.03657F, 0.0143F),
-                    localAngles = new Vector3(359.48F, 43.11174F, 50.39743F),
-                    localScale = new Vector3(0.31502F, 0.31502F, 0.31502F)
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.08973F, -0.07531F, 0.14956F),
+                    localAngles = new Vector3(333.7748F, 85.98743F, 25.71445F),
+                    localScale = new Vector3(0.00806F, 0.00806F, 0.00806F)
                 }
             });
             rules.Add("mdlToolbot", new ItemDisplayRule[]
@@ -155,10 +163,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "UpperArmL",
-                    localPos = new Vector3(0.5f, 1f, 0f),
-                    localAngles = new Vector3(350f, 20f, 50f),
-                    localScale = generalScale * 8f
+                    childName = "Hip",
+                    localPos = new Vector3(-0.80082F, -0.52007F, -0.04797F),
+                    localAngles = new Vector3(85.90327F, 81.63601F, 85.18798F),
+                    localScale = new Vector3(0.0776F, 0.0776F, 0.0776F)
                 }
             });
             rules.Add("mdlEngi", new ItemDisplayRule[]
@@ -168,9 +176,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Pelvis",
-                    localPos = new Vector3(-0.10506F, 0.11393F, 0.11157F),
+                    localPos = new Vector3(-0.13648F, 0.0702F, 0.19105F),
                     localAngles = new Vector3(279.1171F, 264.1212F, 166.8357F),
-                    localScale = new Vector3(0.35019F, 0.35019F, 0.35019F)
+                    localScale = new Vector3(0.01234F, 0.01234F, 0.01234F)
                 }
             });
             rules.Add("mdlMage", new ItemDisplayRule[]
@@ -180,9 +188,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "ThighR",
-                    localPos = new Vector3(0.02f, 0.1f, 0.1f),
-                    localAngles = new Vector3(-10f, 20f, 50f),
-                    localScale = generalScale * .8f
+                    localPos = new Vector3(0.11043F, 0.13608F, 0.00734F),
+                    localAngles = new Vector3(350F, 20F, 50F),
+                    localScale = new Vector3(0.01916F, 0.01916F, 0.01916F)
                 }
             });
             rules.Add("mdlMerc", new ItemDisplayRule[]
@@ -191,10 +199,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(0f, 0f, 0f),
-                    localAngles = new Vector3(-25f, 0f, 0f),
-                    localScale = generalScale
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.07934F, 0.03535F, 0.09635F),
+                    localAngles = new Vector3(281.6085F, 180.0001F, 179.9999F),
+                    localScale = new Vector3(0.00779F, 0.00779F, 0.00779F)
                 }
             });
             rules.Add("mdlTreebot", new ItemDisplayRule[]
@@ -204,9 +212,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "FlowerBase",
-                    localPos = new Vector3(.7f, -0.3f, -0.1f),
-                    localAngles = new Vector3(0f, 30f, 350f),
-                    localScale = new Vector3(1f, 1f, 1f)
+                    localPos = new Vector3(0.4554F, -0.42787F, -0.1F),
+                    localAngles = new Vector3(0F, 30F, 350F),
+                    localScale = new Vector3(0.02442F, 0.02442F, 0.02442F)
                 }
             });
             rules.Add("mdlLoader", new ItemDisplayRule[]
@@ -215,10 +223,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(0.005f, 0.1f, 0.05f),
-                    localAngles = new Vector3(-10f, 20f, 50f),
-                    localScale = generalScale
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.119F, -0.01527F, 0.13382F),
+                    localAngles = new Vector3(350F, 20F, 50F),
+                    localScale = new Vector3(0.00988F, 0.00988F, 0.00988F)
                 }
             });
             rules.Add("mdlCroco", new ItemDisplayRule[]
@@ -227,10 +235,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(-.5f, -.5f, 0f),
-                    localAngles = new Vector3(350f, 10f, 50f),
-                    localScale = new Vector3(3f, 3f, 3f)
+                    childName = "Chest",
+                    localPos = new Vector3(-1.50453F, -2.54864F, 6.0931F),
+                    localAngles = new Vector3(2.02295F, 10.79687F, 51.8512F),
+                    localScale = new Vector3(0.08457F, 0.08457F, 0.08457F)
                 }
             });
             rules.Add("mdlCaptain", new ItemDisplayRule[]
@@ -239,10 +247,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(0f, 0.2f, 0f),
-                    localAngles = new Vector3(-10f, 20f, 50f),
-                    localScale = generalScale
+                    childName = "HandL",
+                    localPos = new Vector3(0.11601F, 0.3246F, -0.00091F),
+                    localAngles = new Vector3(0.54158F, 1.49096F, 10.94836F),
+                    localScale = new Vector3(0.00703F, 0.00703F, 0.00703F)
                 }
             });
             rules.Add("mdlRailGunner", new ItemDisplayRule[]
@@ -251,10 +259,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Backpack",
-                    localPos = new Vector3(0.34321F, -0.4299F, 0.01623F),
+                    childName = "GunBarrel",
+                    localPos = new Vector3(0.11666F, 0.32543F, -0.00506F),
                     localAngles = new Vector3(5.64815F, 213.8979F, 332.4933F),
-                    localScale = new Vector3(0.25F, 0.25F, 0.25F)
+                    localScale = new Vector3(0.00709F, 0.00709F, 0.00709F)
                 }
             });
             rules.Add("mdlVoidSurvivor", new ItemDisplayRule[]
@@ -263,10 +271,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "ThighR",
-                    localPos = new Vector3(-0.00666F, 0.11757F, -0.24366F),
+                    childName = "Chest",
+                    localPos = new Vector3(0.17704F, -0.12655F, 0.08999F),
                     localAngles = new Vector3(322.6534F, 103.1517F, 57.29504F),
-                    localScale = new Vector3(0.34589F, 0.34589F, 0.34589F)
+                    localScale = new Vector3(0.00826F, 0.00826F, 0.00826F)
                 }
             });
 
@@ -279,9 +287,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Pelvis",
-                    localPos = new Vector3(0.31494F, -0.18761F, -0.17258F),
+                    localPos = new Vector3(0.20891F, -0.04733F, 0.72026F),
                     localAngles = new Vector3(335.493F, 232.5327F, 67.74959F),
-                    localScale = new Vector3(1F, 1F, 1F)
+                    localScale = new Vector3(0.0348F, 0.0348F, 0.0348F)
                 }
             });
             rules.Add("mdlHANDOverclocked", new RoR2.ItemDisplayRule[]
@@ -291,9 +299,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(-0.06073F, 0.32593F, 1.61903F),
-                    localAngles = new Vector3(40.32495F, 358.8392F, 61.77407F),
-                    localScale = new Vector3(1F, 1F, 1F)
+                    localPos = new Vector3(0.84508F, 0.61262F, -1.57745F),
+                    localAngles = new Vector3(30.05503F, 5.90662F, 330.852F),
+                    localScale = new Vector3(0.04223F, 0.04223F, 0.04223F)
                 }
             });
             rules.Add("mdlEnforcer", new RoR2.ItemDisplayRule[]
@@ -302,10 +310,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Shield",
-                    localPos = new Vector3(-0.2206F, 0.42782F, -0.2573F),
-                    localAngles = new Vector3(319.5918F, 236.7235F, 59.01326F),
-                    localScale = new Vector3(0.34147F, 0.34147F, 0.34147F)
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.20553F, 0.06428F, -0.15422F),
+                    localAngles = new Vector3(319.5918F, 236.7235F, 59.01325F),
+                    localScale = new Vector3(0.01397F, 0.01397F, 0.01397F)
                 }
             });
             //            rules.Add("mdlNemforcer(Clone)", new RoR2.ItemDisplayRule[]
@@ -326,10 +334,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Stomach",
-                    localPos = new Vector3(0.30973F, 0.17743F, 0.27637F),
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.21501F, 0.09457F, -0.09146F),
                     localAngles = new Vector3(296.5848F, 92.26048F, 296.3256F),
-                    localScale = new Vector3(0.25259F, 0.25259F, 0.25259F)
+                    localScale = new Vector3(0.00958F, 0.00958F, 0.00958F)
                 }
             });
             //            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
@@ -351,9 +359,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "StomachBone",
-                    localPos = new Vector3(0.14386F, 0.02673F, 0.0927F),
-                    localAngles = new Vector3(71.50155F, 34.82064F, 267.4682F),
-                    localScale = new Vector3(0.23988F, 0.23988F, 0.23988F)
+                    localPos = new Vector3(0.20314F, -0.04124F, -0.01563F),
+                    localAngles = new Vector3(71.50156F, 34.82064F, 267.4682F),
+                    localScale = new Vector3(0.00772F, 0.00772F, 0.00772F)
                 }
             });
             rules.Add("mdlExecutioner2", new RoR2.ItemDisplayRule[]
@@ -362,10 +370,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Chest",
-                    localPos = new Vector3(-0.00412F, 0.4909F, 0.06661F),
-                    localAngles = new Vector3(11.91084F, 297.4003F, 161.7602F),
-                    localScale = new Vector3(0.39985F, 0.39985F, 0.39985F)
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.20641F, -0.03294F, 0.07756F),
+                    localAngles = new Vector3(298.2086F, 14.25678F, 50.07993F),
+                    localScale = new Vector3(0.00831F, 0.00831F, 0.00831F)
                 }
             });
             rules.Add("mdlHouse(Clone)", new RoR2.ItemDisplayRule[]
@@ -374,10 +382,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Head",
-                    localPos = new Vector3(-0.07903F, 0.1611F, -0.02105F),
-                    localAngles = new Vector3(356.6518F, 10.61094F, 276.0065F),
-                    localScale = new Vector3(0.19345F, 0.32592F, 0.32592F)
+                    childName = "Chest",
+                    localPos = new Vector3(-0.14874F, -0.11301F, 0.12039F),
+                    localAngles = new Vector3(6.3079F, 22.66821F, 245.9716F),
+                    localScale = new Vector3(0.00549F, 0.00549F, 0.00549F)
                 }
             });
             rules.Add("mdlTeslaTrooper", new RoR2.ItemDisplayRule[]
@@ -386,10 +394,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Gauntlet",
-                    localPos = new Vector3(-0.01513F, 0.12734F, -0.07705F),
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.27567F, -0.24226F, 0.06472F),
                     localAngles = new Vector3(34.52929F, 225.0661F, 234.0565F),
-                    localScale = new Vector3(0.36985F, 0.36985F, 0.36985F)
+                    localScale = new Vector3(0.00968F, 0.00968F, 0.00968F)
                 }
             });
             rules.Add("mdlDesolator", new RoR2.ItemDisplayRule[]
@@ -398,10 +406,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "RadCannonItems",
-                    localPos = new Vector3(-0.01233F, -0.94931F, 0.03734F),
+                    childName = "Chest",
+                    localPos = new Vector3(0.12704F, 0.08498F, -0.27089F),
                     localAngles = new Vector3(349.4721F, 32.35767F, 228.9647F),
-                    localScale = new Vector3(0.33094F, 0.33094F, 0.33094F)
+                    localScale = new Vector3(0.01286F, 0.01286F, 0.01286F)
                 }
             });
             //            rules.Add("CHEF", new RoR2.ItemDisplayRule[]
@@ -423,9 +431,9 @@ namespace SupplyDrop.Items
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
                     childName = "Chest",
-                    localPos = new Vector3(-0.07296F, -0.1664F, -0.10151F),
+                    localPos = new Vector3(-0.12722F, -0.15195F, -0.12722F),
                     localAngles = new Vector3(352.1798F, 3.71516F, 11.09392F),
-                    localScale = new Vector3(0.499F, 0.499F, 0.499F)
+                    localScale = new Vector3(0.00956F, 0.00956F, 0.00956F)
                 }
             });
             rules.Add("mdlRocket", new RoR2.ItemDisplayRule[]
@@ -434,10 +442,10 @@ namespace SupplyDrop.Items
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
                     followerPrefab = ItemBodyModelPrefab,
-                    childName = "Chest",
-                    localPos = new Vector3(-0.08808F, 0.27131F, -0.0954F),
+                    childName = "Pelvis",
+                    localPos = new Vector3(-0.13969F, 0.30041F, 0.21507F),
                     localAngles = new Vector3(340.7634F, 353.4143F, 58.50154F),
-                    localScale = new Vector3(0.29697F, 0.29697F, 0.29697F)
+                    localScale = new Vector3(0.01134F, 0.01134F, 0.01134F)
                 }
             });
             return rules;
@@ -458,14 +466,10 @@ namespace SupplyDrop.Items
             {
                 if (self.CanBeAffordedByInteractor(activator) && self.isShrine)
                 {
-                    var storedVariablesComponent = activator.gameObject.GetComponent<StoredVariables>();
-                    if (!storedVariablesComponent)
-                    {
-                        storedVariablesComponent = activator.gameObject.AddComponent<StoredVariables>();
-                    }
-                    storedVariablesComponent.timeToRoll++;
-                    storedVariablesComponent.goldModifier = 0;
-                    storedVariablesComponent.luckModifier = 0;
+                    timeToRoll++;
+                    goldModifier = 0;
+                    luckModifier = 0;
+                    body.RecalculateStats();
                 }
             }    
             orig(self, activator);
@@ -477,13 +481,7 @@ namespace SupplyDrop.Items
             {
                 var chatSpamFilter = 0;
 
-                var storedVariablesComponent = body.gameObject.GetComponent<StoredVariables>();
-                if (!storedVariablesComponent)
-                {
-                    storedVariablesComponent = body.gameObject.AddComponent<StoredVariables>();
-                }
-                var rollsRemaining = storedVariablesComponent.timeToRoll;
-                if (rollsRemaining > 0)
+                if (timeToRoll > 0)
                 {
                     var goodHPRoll = 0;
                     var badHPRoll = 0;
@@ -505,8 +503,8 @@ namespace SupplyDrop.Items
                     var badJumpRoll = 0;
                     var goodEveryRoll = 0;
                     var badEveryRoll = 0;
-
-                    for (rollsRemaining--; rollsRemaining > 0; rollsRemaining--)
+                    
+                    while (timeToRoll > 0)
                     {
                         var goodRoll = WeightedRandom();
                         var badRoll = WeightedRandom();
@@ -588,8 +586,8 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 3)
                             {
-                                storedVariablesComponent.goodGoldRoll++;
-                                storedVariablesComponent.goldModifier++;
+                                goodGoldRoll++;
+                                goldModifier++;
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel richer!");
@@ -598,8 +596,8 @@ namespace SupplyDrop.Items
                             }
                             else
                             {
-                                storedVariablesComponent.badGoldRoll++;
-                                storedVariablesComponent.goldModifier--;
+                                badGoldRoll++;
+                                goldModifier--;
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel poorer.");
@@ -743,7 +741,7 @@ namespace SupplyDrop.Items
                             else
                             {
                                 badSizeRoll++;
-                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - (badStatPercent * badSizeRoll), 0.10f);
+                                body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - (badStatPercent * badSizeRoll), 0.10f);
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel tiny...");
@@ -756,8 +754,8 @@ namespace SupplyDrop.Items
                         {
                             if (goodRoll == 10)
                             {
-                                storedVariablesComponent.goodLuckRoll++;
-                                storedVariablesComponent.luckModifier++;
+                                goodLuckRoll++;
+                                luckModifier++;
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel LUCKIER!!");
@@ -766,8 +764,8 @@ namespace SupplyDrop.Items
                             }
                             else
                             {
-                                storedVariablesComponent.badLuckRoll++;
-                                storedVariablesComponent.luckModifier--;
+                                badLuckRoll++;
+                                luckModifier--;
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel unluckier...");
@@ -784,17 +782,18 @@ namespace SupplyDrop.Items
                                 args.healthMultAdd += (goodStatPercent * goodEveryRoll);
                                 args.damageMultAdd += (goodStatPercent * goodEveryRoll);
                                 args.moveSpeedMultAdd += (goodStatPercent * goodEveryRoll);
-                                storedVariablesComponent.goodGoldRoll++;
-                                storedVariablesComponent.goldModifier++;
+                                goodGoldRoll++;
+                                goldModifier++;
                                 args.levelMultAdd += (goodStatPercent * goodEveryRoll);
                                 args.critAdd += (goodStatPercent * goodEveryRoll);
                                 args.cooldownMultAdd += (goodStatPercent * goodEveryRoll);
                                 args.armorAdd += body.baseArmor * (goodStatPercent * goodEveryRoll);
                                 args.jumpPowerMultAdd += (goodStatPercent * goodEveryRoll);
                                 body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodEveryRoll));
-                                storedVariablesComponent.goodLuckRoll++;
-                                storedVariablesComponent.luckModifier++;
+                                goodLuckRoll++;
+                                luckModifier++;
                                 Chat.AddMessage("YOU FEEL LIKE A MILLION BUCKS!");
+                                chatSpamFilter++;
                             }
                             else
                             {
@@ -802,23 +801,28 @@ namespace SupplyDrop.Items
                                 args.healthMultAdd -= (badStatPercent * badEveryRoll);
                                 args.damageMultAdd -= (badStatPercent * badEveryRoll);
                                 args.moveSpeedMultAdd -= (badStatPercent * badEveryRoll);
-                                storedVariablesComponent.badGoldRoll++;
-                                storedVariablesComponent.goldModifier--;
+                                badGoldRoll++;
+                                goldModifier--;
                                 args.levelMultAdd -= (badStatPercent * badEveryRoll);
                                 args.critAdd -= (badStatPercent * badEveryRoll);
                                 args.cooldownMultAdd -= (badStatPercent * badEveryRoll);
                                 args.armorAdd -= body.baseArmor * (badStatPercent * badEveryRoll);
                                 args.jumpPowerMultAdd -= (badStatPercent * badEveryRoll);
                                 body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - (badStatPercent * badEveryRoll), 0.10f);
-                                storedVariablesComponent.badLuckRoll++;
-                                storedVariablesComponent.luckModifier--;
+                                badLuckRoll++;
+                                luckModifier--;
                                 Chat.AddMessage("You feel utterly worthless...");
+                                chatSpamFilter++;
                             }
                         }
+
+                        //This won't let more than 10 chat messages be sent as a result of rolling. Maybe set this to be a configurable value? Don't know if that's worth doing...
                         if(chatSpamFilter > 10)
                         {
                             Chat.AddMessage("In summary: You feel like a confused mess right now.");
-                        }    
+                        }
+
+                        timeToRoll--;
                     }
                 }
             }
@@ -833,24 +837,18 @@ namespace SupplyDrop.Items
                 var inventoryCount = GetCount(cbKiller);
                 if (inventoryCount > 0)
                 {
-                    var storedVariablesComponent = rep.attackerMaster.gameObject.GetComponent<StoredVariables>();
-                    if (!storedVariablesComponent)
-                    {
-                        storedVariablesComponent = rep.attackerMaster.gameObject.AddComponent<StoredVariables>();
-                    }
-
-                    if (storedVariablesComponent.goldModifier != 0)
+                    if (goldModifier != 0)
                     {
                         uint origGold = self.goldReward;
 
-                        if (storedVariablesComponent.goldModifier > 0)
+                        if (goldModifier > 0)
                         {
-                            uint increasedGold = (uint)Mathf.FloorToInt(origGold * (goodStatPercent * storedVariablesComponent.goodGoldRoll));
+                            uint increasedGold = (uint)Mathf.FloorToInt(origGold * (goodStatPercent * goodGoldRoll));
                             self.goldReward = increasedGold;
                         }
                         else
                         {
-                            uint reducedGold = (uint)Mathf.FloorToInt(origGold * (badStatPercent * storedVariablesComponent.badGoldRoll));
+                            uint reducedGold = (uint)Mathf.FloorToInt(origGold * (badStatPercent * badGoldRoll));
                             self.goldReward = reducedGold;
                         }
                     }
@@ -866,22 +864,16 @@ namespace SupplyDrop.Items
                     var inventoryCount = GetCount(effectOriginMaster);
                     if (inventoryCount > 0)
                     {
-                        var storedVariablesComponent = effectOriginMaster.gameObject.GetComponent<StoredVariables>();
-                        if (!storedVariablesComponent)
-                        {
-                            storedVariablesComponent = effectOriginMaster.gameObject.AddComponent<StoredVariables>();
-                        }
-
-                        if (storedVariablesComponent.goldModifier != 0)
+                        if (goldModifier != 0)
                         {
                             var currentPercent = percentChance;
-                            if (storedVariablesComponent.goldModifier > 0)
+                            if (goldModifier > 0)
                             {
-                                percentChance = currentPercent + (currentPercent * (goodStatPercent * storedVariablesComponent.goodLuckRoll));
+                                percentChance = currentPercent + (currentPercent * (goodStatPercent * goodLuckRoll));
                             }
                             else
                             {
-                                percentChance = currentPercent - (currentPercent * (badStatPercent * storedVariablesComponent.badLuckRoll));
+                                percentChance = currentPercent - (currentPercent * (badStatPercent * badLuckRoll));
                             }
                         }
                     }
@@ -914,15 +906,5 @@ namespace SupplyDrop.Items
             }
             return -1;
         }
-    }
-    public class StoredVariables : MonoBehaviour
-    {
-        public int timeToRoll = 0;
-        public int goldModifier = 0;
-        public int goodGoldRoll = 0;
-        public int badGoldRoll = 0;
-        public int luckModifier = 0;
-        public int goodLuckRoll = 0;
-        public int badLuckRoll = 0;
     }
 }
