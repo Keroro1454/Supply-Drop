@@ -13,6 +13,7 @@
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
     <Compile Remove="PlagueMask.cs" />
+    <Compile Remove="Utilities\ShellStackTracker.cs" />
   </ItemGroup>
 
   <ItemGroup>
