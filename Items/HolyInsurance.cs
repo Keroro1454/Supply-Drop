@@ -37,16 +37,16 @@ namespace SupplyDrop.Items
             $"up to 10 times. <style=cDeath>Upon dying</style> to an source you are <style=cIsUtility>insured</style> for, you will be revived, " +
             $"and your <style=cIsUtility>insurance</style> level will be reset to zero.";
 
-        public override string ItemLore => "Congratulations on becoming the newest member of the <style=cIsUtility>EternalLife<sup>TM</sup></style> family! Our motto at <style=cIsUtility>EternalLife<sup>TM</sup></style> is simple--provide the very best in insurance solutions, " +
+        public override string ItemLore => "Congratulations on becoming the newest member of the <style=cIsUtility>EternalLife<sup>TM</sup></style> family! Our motto at <style=cIsUtility>EternalLife<sup>TM</sup></style> is simple-provide the very best in insurance solutions, " +
             "so you don't have to worry about what life (or death) throws your way!" +
 
-            "\n\nYou have opted into our<style=cIsUtility> Dynamic Afterlife Policy Plan<sup> TM</sup>!</style> " +
+            "\n\nYou have opted into our<style=cIsUtility> Dynamic Afterlife Policy Plan<sup> TM</sup></style>! " +
             "This policy is unique, as you pay into it over time, and as you pay in, your coverage expands! " +
             "Our angelic actuaries have calculated the following as appropriate coverage tiers for you, " +
             "based on your career choice as <style=cMono>[REDACTED]</style>:" +
 
-            "\n\nT1: <style=cHumanObjective> Small Pests and Vermin:</style> For creepy crawlies, rodents, and other small vermin" +
-            "\nT2: <style=cHumanObjective> Improperly-Placed Debris:</style> For danger due to intentional or unintentional <style:cSub>(Read: Natural Causes)</style> action" +
+            "\n\nT1: <style=cHumanObjective>Small Pests and Vermin:</style> For creepy crawlies, rodents, and other small vermin" +
+            "\nT2: <style=cHumanObjective>Improperly-Placed Debris:</style> For danger due to intentional or unintentional <style=cSub>(Read: Natural Causes)</style> action" +
             "\nT3: <style=cHumanObjective>Large Pests and Vermin:</style> For infestations that require trained professional removal" +
             "\nT4: <style=cHumanObjective>Hazardous Exposure (Minor):</style> For spills of unusual, toxic, and acidic materials" +
             "\nT5: <style=cHumanObjective>Catastrophic Equipment Failure:</style> For malfunctioning heavy machinery or technologies" +
@@ -54,13 +54,14 @@ namespace SupplyDrop.Items
             "\nT7: <style=cHumanObjective>Supernatural Forces:</style> For those concerned by the possibility of otherworldly entities" +
             "\nT8: <style=cHumanObjective>Interstellar Incidents:</style> For all damages sustained off-planet" +
             "\nT9: <style=cHumanObjective>Extreme and/or Unmitigated Disaster:</style> For those who engage in activities with high probability of causing exceedingly large damages" +
-            "\nT10: <style=cHumanObjective>Acts of God(s) :</style> For those that have attracted the ire of the divine.We at<style=cIsUtility> EternalLife<sup>TM</sup></style> do not recommend engaging in activities that could necessitate this coverage" +
+            "\nT10: <style=cHumanObjective>Acts of God(s) :</style> For those that have attracted the ire of the divine. We at<style=cIsUtility> EternalLife<sup>TM</sup></style> do not recommend engaging in activities that could necessitate this coverage" +
 
-            "\n\n<size=40%> Note that any causes of death not listed can not, and will not, be covered with your current plan. " +
+            "\n\n<size=40%>Note that any causes of death not listed can not, and will not, be covered with your current plan. " +
             "Subscription to plan cannot retroactively alleviate any deaths you may suffer from (previously or currently). "+
-            "As a subscriber, you agree to the term that EternalLife<sup> TM</sup> is entitled to your eternal soul in the event of failure to pay for a needed coverage. Some additional terms and conditions may apply. " +
-            "For questions and concerns, please visit your local place of worship, and direct all prayers to<style=cMono>[REDACTED]</style>, or visit us in-person by <style= cDeath > obliterating yourself</style>." +
-            "\n\n Thank you for choosing<style=cIsUtility> EternalLife<sup>TM</sup></style>! Have a blessed life (or several)!";
+            "As a subscriber, you agree to the terms that EternalLife<sup> TM</sup> is entitled to your eternal soul in the event of failure to pay for a needed coverage. Some additional terms and conditions may apply. " +
+            "For questions and concerns, please visit your local place of worship, and direct all prayers to<style=cMono>[REDACTED]</style>, or visit us in-person by <style=cDeath>obliterating yourself</style>." +
+            "\n\nThank you for choosing<style=cIsUtility> EternalLife<sup>TM</sup></style>" +
+            "\nHave a blessed life...or several!";
 
         public override ItemTier Tier => ItemTier.Lunar;
 
@@ -104,6 +105,7 @@ namespace SupplyDrop.Items
                 Hooks();
 
                 ItemDef.pickupModelPrefab.transform.localPosition = new Vector3(0f, -2f, 0f);
+                ItemDef.pickupModelPrefab.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
         }
 
         private void CreateConfig(ConfigFile config)
