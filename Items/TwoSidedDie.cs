@@ -56,6 +56,9 @@ namespace SupplyDrop.Items
         public int goodLuckRoll = 0;
         public int badLuckRoll = 0;
 
+        public int normalSizeCounter = 0;
+        Vector3 bodySizeReset;
+
         public override void Init(ConfigFile config)
         {
             CreateConfig(config);
@@ -462,13 +465,26 @@ namespace SupplyDrop.Items
         {
             CharacterBody body = activator.GetComponent<CharacterBody>();
             int inventoryCount = GetCount(body);
+            
             if(inventoryCount > 0)
             {
                 if (self.CanBeAffordedByInteractor(activator) && self.isShrine)
                 {
+                    //This just stores the model's "correct" size so it can be reset later. Will only be accessed once.
+                    if (normalSizeCounter == 0)
+                    {
+                        bodySizeReset = body.modelLocator.modelTransform.localScale;
+                        normalSizeCounter++;
+                    }
+
                     timeToRoll++;
+
+                    //Resets modifiers that can't be reset within the ApplyBuffDebuff method
                     goldModifier = 0;
                     luckModifier = 0;
+                    body.modelLocator.modelTransform.localScale = bodySizeReset;
+
+                    //This forces the ApplyBuffDebuff method to trigger after shrine usage. Unsure if there's a more efficient way to do that.
                     body.RecalculateStats();
                 }
             }    
@@ -808,7 +824,7 @@ namespace SupplyDrop.Items
                                 args.cooldownMultAdd -= (badStatPercent * badEveryRoll);
                                 args.armorAdd -= body.baseArmor * (badStatPercent * badEveryRoll);
                                 args.jumpPowerMultAdd -= (badStatPercent * badEveryRoll);
-                                body.modelLocator.modelTransform.localScale *= Mathf.Min(1 - (badStatPercent * badEveryRoll), 0.10f);
+                                body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - (badStatPercent * badEveryRoll), 0.25f);
                                 badLuckRoll++;
                                 luckModifier--;
                                 Chat.AddMessage("You feel utterly worthless...");
