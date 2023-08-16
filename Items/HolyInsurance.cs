@@ -202,91 +202,93 @@ namespace SupplyDrop.Items
             //Here we set up all the coverages. Commented out entries still need to have their names verified
 
             //T1 Coverage: Small Pests and Vermin
-            InsuranceDictionary.Add("BeetleMonster", new Range(1, 2, T1Coverage));
-/*            InsuranceDictionary.Add("Jellyfish", new Range(1, 2));
-            InsuranceDictionary.Add("Blind Pest", new Range(1, 2));
-            InsuranceDictionary.Add("Blind Vermin", new Range(1, 2));
-            InsuranceDictionary.Add("Hermit Crab", new Range(1, 2));
-            InsuranceDictionary.Add("Malachite Urchin", new Range(1, 2));*/
-            InsuranceDictionary.Add("LemurianMonster", new Range(1, 2, T1Coverage));
+            InsuranceDictionary.Add("BeetleBody", new Range(1, 2, T1Coverage));
+            InsuranceDictionary.Add("JellyfishBody", new Range(1, 2, T1Coverage));
+            InsuranceDictionary.Add("FlyingVerminBody", new Range(1, 2, T1Coverage));
+            InsuranceDictionary.Add("HermitCrabBody", new Range(1, 2, T1Coverage));
+            InsuranceDictionary.Add("UrchinTurretBody", new Range(1, 2, T1Coverage));
+            InsuranceDictionary.Add("LemurianBody", new Range(1, 2, T1Coverage));
 
             //T2 Coverage: Improperly-Stored Debris
-/*            InsuranceDictionary.Add("Stone Golem", new Range(2, 3));
-            InsuranceDictionary.Add("Stone Titan", new Range(2, 3));
-            InsuranceDictionary.Add("Coil Golem", new Range(2, 3));*/
+            InsuranceDictionary.Add("GolemBody", new Range(2, 3, T2Coverage));
+            InsuranceDictionary.Add("TitanBody", new Range(2, 3, T2Coverage));
+            //InsuranceDictionary.Add("Coil Golem", new Range(2, 3, T2Coverage));
+            InsuranceDictionary.Add("ExplosivePotDestructibleBody", new Range(2, 3, T2Coverage));
 
             //T3 Coverage: Large Pests and Vermin
-            InsuranceDictionary.Add("LemurianBruiserMonster", new Range(3, 4, T3Coverage));
-            InsuranceDictionary.Add("BeetleGuardMonster", new Range(3, 4, T3Coverage));
-/*            InsuranceDictionary.Add("Gup", new Range(3, 4));
-            InsuranceDictionary.Add("Bighorn Bison", new Range(3, 4));
-            InsuranceDictionary.Add("Alloy Vulture", new Range(3, 4));
-            InsuranceDictionary.Add("Assassin", new Range(3, 4));*/
+            InsuranceDictionary.Add("LemurianBruiserBody", new Range(3, 4, T3Coverage));
+            InsuranceDictionary.Add("BeetleGuardBody", new Range(3, 4, T3Coverage));
+            InsuranceDictionary.Add("GupBody", new Range(3, 4, T3Coverage));
+            InsuranceDictionary.Add("GipBody", new Range(3, 4, T3Coverage));
+            InsuranceDictionary.Add("GeepBody", new Range(3, 4, T3Coverage));
+            InsuranceDictionary.Add("BisonBody", new Range(3, 4, T3Coverage));
+            InsuranceDictionary.Add("VultureBody", new Range(3, 4, T3Coverage));
+            InsuranceDictionary.Add("Assassin2Body", new Range(3, 4, T3Coverage));
 
             //T4 Coverage: Hazardous Exposure (Minor)
-/*            InsuranceDictionary.Add("Mini Mushrum", new Range(4, 5));
-            InsuranceDictionary.Add("Mother Mushrum", new Range(4, 5));
-            InsuranceDictionary.Add("Larva", new Range(4, 5));*/
+            InsuranceDictionary.Add("MiniMushrumBody", new Range(4, 5, T4Coverage));
+            //InsuranceDictionary.Add("Mother Mushrum", new Range(4, 5, T4Coverage));
+            InsuranceDictionary.Add("AcidLarvaBody", new Range(4, 5, T4Coverage));
 
             //T5 Coverage: Catastrophic Equipment Failure
-/*            InsuranceDictionary.Add("Alpha Construct", new Range(5, 6));
-            InsuranceDictionary.Add("Solus Probe", new Range(5, 6));
-            InsuranceDictionary.Add("Overloading Bomb", new Range(5, 6));
-            InsuranceDictionary.Add("Brass Contraption", new Range(5, 6));
-            InsuranceDictionary.Add("Brass Monolith", new Range(5, 6));
-            InsuranceDictionary.Add("Exploding Barrels", new Range(5, 6));
-            InsuranceDictionary.Add("Self Damage", new Range(5, 6));*/
+            InsuranceDictionary.Add("MinorConstructBody", new Range(5, 6, T5Coverage));
+            InsuranceDictionary.Add("MinorConstructAttachableBody", new Range(5, 6, T5Coverage));
+            InsuranceDictionary.Add("RoboBallMiniBody", new Range(5, 6, T5Coverage));
+            InsuranceDictionary.Add("BellBody", new Range(5, 6, T5Coverage));
+            //InsuranceDictionary.Add("Brass Monolith", new Range(5, 6, T5Coverage));
+            InsuranceDictionary.Add("EngiTurretBody", new Range(5, 6, T5Coverage));
+            InsuranceDictionary.Add("EngiWalkerTurretBody", new Range(5, 6, T5Coverage));
+            InsuranceDictionary.Add("EngiBeamTurretBody", new Range(5, 6, T5Coverage));
 
             //T6 Coverage: Hazardous Exposure (Major)
-/*            InsuranceDictionary.Add("Clay Man", new Range(6, 7));
-            InsuranceDictionary.Add("Clay Templar", new Range(6, 7));
-            InsuranceDictionary.Add("Clay Apothecary", new Range(6, 7));
-            InsuranceDictionary.Add("Void Fog", new Range(6, 7));*/
+            InsuranceDictionary.Add("ClayBody", new Range(6, 7, T6Coverage));
+            InsuranceDictionary.Add("ClayBruiserBody", new Range(6, 7, T6Coverage));
+            InsuranceDictionary.Add("ClayGrenadierBody", new Range(6, 7, T6Coverage));
 
             //T7 Coverage: Supernatural Forces
-            InsuranceDictionary.Add("Wisp1Monster", new Range(7, 8, T7Coverage));
-            InsuranceDictionary.Add("GreaterWispMonster", new Range(7, 8, T7Coverage));
-/*            InsuranceDictionary.Add("Archaic Wisp", new Range(7, 8));
-            InsuranceDictionary.Add("Frost Wisp", new Range(7, 8));
-            InsuranceDictionary.Add("Parent", new Range(7, 8));
-            InsuranceDictionary.Add("Imp", new Range(7, 8));
-            InsuranceDictionary.Add("Child", new Range(7, 8));
-            InsuranceDictionary.Add("Artifact Reliquary", new Range(7, 8));*/
+            InsuranceDictionary.Add("WispBody", new Range(7, 8, T7Coverage));
+            InsuranceDictionary.Add("WispSoulBody", new Range(7, 8, T7Coverage));
+            InsuranceDictionary.Add("GreaterWispBody", new Range(7, 8, T7Coverage));
+            InsuranceDictionary.Add("ArchWispBody", new Range(7, 8, T7Coverage));
+            //InsuranceDictionary.Add("Frost Wisp", new Range(7, 8, T7Coverage));
+            InsuranceDictionary.Add("ParentBody", new Range(7, 8, T7Coverage));
+            InsuranceDictionary.Add("ImpBody", new Range(7, 8, T7Coverage));
+            //InsuranceDictionary.Add("Child", new Range(7, 8, T7Coverage));
+            InsuranceDictionary.Add("ArtifactShellBody", new Range(7, 8, T7Coverage));
 
             //T8 Coverage: Interstellar Incidents
-/*            InsuranceDictionary.Add("Chimera Tank", new Range(8, 9));
-            InsuranceDictionary.Add("Chimera Exploder", new Range(8, 9));
-            InsuranceDictionary.Add("Chimera Wisp", new Range(8, 9));
-            InsuranceDictionary.Add("Void Infestor", new Range(8, 9));
-            InsuranceDictionary.Add("Void Barnacle", new Range(8, 9));
-            InsuranceDictionary.Add("Void Reaver", new Range(8, 9));
-            InsuranceDictionary.Add("Void Jailer", new Range(8, 9));
-            InsuranceDictionary.Add("Void Explosion", new Range(8, 9));*/
+            InsuranceDictionary.Add("LunarGolemBody", new Range(8, 9, T8Coverage));
+            InsuranceDictionary.Add("LunarExploderBody", new Range(8, 9, T8Coverage));
+            InsuranceDictionary.Add("LunarWispBody", new Range(8, 9, T8Coverage));
+            InsuranceDictionary.Add("VoidInfestorBody", new Range(8, 9, T8Coverage));
+            InsuranceDictionary.Add("VoidBarnacleBody", new Range(8, 9, T8Coverage));
+            InsuranceDictionary.Add("NullifierBody", new Range(8, 9, T8Coverage));
+            InsuranceDictionary.Add("VoidJailerBody", new Range(8, 9, T8Coverage));
 
             //T9 Coverage: Extreme and Unmitigated Disaster
-            InsuranceDictionary.Add("MagmaWorm", new Range(9, 10, T9Coverage));
-            InsuranceDictionary.Add("OverloadingWorm", new Range(9, 10, T9Coverage));
-/*            InsuranceDictionary.Add("Beetle Queen", new Range(9, 10));
-            InsuranceDictionary.Add("Wandering Vagrant", new Range(9, 10));
-            InsuranceDictionary.Add("Direseeker", new Range(9, 10));
-            InsuranceDictionary.Add("Clay Dunestrider", new Range(9, 10));
-            InsuranceDictionary.Add("Xi Construct", new Range(9, 10));
-            InsuranceDictionary.Add("Iota Construct", new Range(9, 10));
-            InsuranceDictionary.Add("Solus Control Unit", new Range(9, 10));
-            InsuranceDictionary.Add("Alloy Worship Unit", new Range(9, 10));
-            InsuranceDictionary.Add("Imp Overlord", new Range(9, 10));
-            InsuranceDictionary.Add("Grandparent", new Range(9, 10));
-            InsuranceDictionary.Add("Ancient Wisp", new Range(9, 10));
-            InsuranceDictionary.Add("Grovetender", new Range(9, 10));
-            InsuranceDictionary.Add("Void Devestator", new Range(9, 10));
-            InsuranceDictionary.Add("Voidling", new Range(9, 10));
-            InsuranceDictionary.Add("Scavenger", new Range(9, 10));*/
+            InsuranceDictionary.Add("MagmaWormBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("ElectricWormBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("BeetleQueen2Body", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("VagrantBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("DireseekerBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("ClayBossBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("MegaConstructBody", new Range(9, 10, T9Coverage));
+            //InsuranceDictionary.Add("Iota Construct", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("RoboBallBossBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("SuperRoboBallBossBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("ImpBossBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("GrandParentBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("AncientWispBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("GravekeeperBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("VoidMegaCrabBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("VoidRaidCrabBody", new Range(9, 10, T9Coverage));
+            InsuranceDictionary.Add("ScavBody", new Range(9, 10, T9Coverage));
 
             //T10 Coverage
-            InsuranceDictionary.Add("BrotherMonster", new Range(10, uint.MaxValue, T10Coverage));
-/*            InsuranceDictionary.Add("Providence", new Range(10, uint.MaxValue));
-            InsuranceDictionary.Add("The", new Range(10, uint.MaxValue));
-            InsuranceDictionary.Add("Crowdfunder Woolie", new Range(10, uint.MaxValue));*/
+            InsuranceDictionary.Add("BrotherBody", new Range(10, uint.MaxValue, T10Coverage));
+            //InsuranceDictionary.Add("Providence", new Range(10, uint.MaxValue, T10Coverage));
+            //InsuranceDictionary.Add("The", new Range(10, uint.MaxValue, T10Coverage));
+            //InsuranceDictionary.Add("Crowdfunder Woolie", new Range(10, uint.MaxValue, T10Coverage));
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -672,19 +674,86 @@ namespace SupplyDrop.Items
             var diffCoeff = self.difficultyCoefficient;
             var baseCost = 25 * Mathf.Pow(diffCoeff, 1.25f) * costTierMultiplier;
 
-            //Have to redefine all the dictionary entries here to set the Range values to their proper costs
-            InsuranceDictionary["BeetleMonster"] = new Range(baseCost, baseCost * 2, T1Coverage);   
-            InsuranceDictionary["LemurianMonster"] = new Range(baseCost, baseCost * 2, T1Coverage);
+            //Have to redefine all the dictionary entries here to set the Range values to their proper costs. Commented stuff doesn't have the right name
 
-            InsuranceDictionary["LemurianBruiserMonster"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
-            InsuranceDictionary["BeetleGuardMonster"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["BeetleBody"] = new Range(baseCost, baseCost * 2, T1Coverage);
+            InsuranceDictionary["JellyfishBody"] = new Range(baseCost, baseCost * 2, T1Coverage);
+            InsuranceDictionary["FlyingVerminBody"] = new Range(baseCost, baseCost * 2, T1Coverage);
+            InsuranceDictionary["HermitCrabBody"] = new Range(baseCost, baseCost * 2, T1Coverage);
+            InsuranceDictionary["UrchinTurretBody"] = new Range(baseCost, baseCost * 2, T1Coverage);
+            InsuranceDictionary["LemurianBody"] = new Range(baseCost, baseCost * 2, T1Coverage);
 
-            InsuranceDictionary["Wisp1Monster"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
-            InsuranceDictionary["GreaterWispMonster"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            InsuranceDictionary["GolemBody"] = new Range(baseCost * 2, baseCost * 3, T2Coverage);
+            InsuranceDictionary["TitanBody"] = new Range(baseCost * 2, baseCost * 3, T2Coverage);
+            //InsuranceDictionary["Coil Golem"] = new Range(baseCost * 2, baseCost * 3, T2Coverage);
+            InsuranceDictionary["ExplosivePotDestructibleBody"] = new Range(baseCost * 2, baseCost * 3, T2Coverage);
 
-            InsuranceDictionary["MagmaWorm"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["LemurianBruiserBody"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["BeetleGuardBody"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["GupBody"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["GipBody"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["GeepBody"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["BisonBody"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["VultureBody"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
+            InsuranceDictionary["Assassin2Body"] = new Range(baseCost * 3, baseCost * 4, T3Coverage);
 
-            InsuranceDictionary["BrotherMonster"] = new Range(baseCost * 10, baseCost * uint.MaxValue, T10Coverage);
+            InsuranceDictionary["MiniMushrumBody"] = new Range(baseCost * 4, baseCost * 5, T4Coverage);
+            //InsuranceDictionary["Mother Mushrum"] = new Range(baseCost * 4, baseCost * 5, T4Coverage);
+            InsuranceDictionary["AcidLarvaBody"] = new Range(baseCost * 4, baseCost * 5, T4Coverage);
+
+            InsuranceDictionary["MinorConstructBody"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+            InsuranceDictionary["MinorConstructAttachableBody"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+            InsuranceDictionary["RoboBallMiniBody"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+            InsuranceDictionary["BellBody"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+            //InsuranceDictionary["Brass Monolith"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+            InsuranceDictionary["EngiTurretBody"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+            InsuranceDictionary["EngiWalkerTurretBody"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+            InsuranceDictionary["EngiBeamTurretBody"] = new Range(baseCost * 5, baseCost * 6, T5Coverage);
+
+            InsuranceDictionary["ClayBody"] = new Range(baseCost * 6, baseCost * 7, T6Coverage);
+            InsuranceDictionary["ClayBruiserBody"] = new Range(baseCost * 6, baseCost * 7, T6Coverage);
+            InsuranceDictionary["ClayGrenadierBody"] = new Range(baseCost * 6, baseCost * 7, T6Coverage);
+
+            InsuranceDictionary["WispBody"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            InsuranceDictionary["WispSoulBody"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            InsuranceDictionary["GreaterWispBody"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            InsuranceDictionary["ArchWispBody"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            //InsuranceDictionary["Frost Wisp"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            InsuranceDictionary["ParentBody"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            InsuranceDictionary["ImpBody"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            //InsuranceDictionary["Child"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+            InsuranceDictionary["ArtifactShellBody"] = new Range(baseCost * 7, baseCost * 8, T7Coverage);
+
+            InsuranceDictionary["LunarGolemBody"] = new Range(baseCost * 8, baseCost * 9, T8Coverage);
+            InsuranceDictionary["LunarExploderBody"] = new Range(baseCost * 8, baseCost * 9, T8Coverage);
+            InsuranceDictionary["LunarWispBody"] = new Range(baseCost * 8, baseCost * 9, T8Coverage);
+            InsuranceDictionary["VoidInfestorBody"] = new Range(baseCost * 8, baseCost * 9, T8Coverage);
+            InsuranceDictionary["VoidBarnacleBody"] = new Range(baseCost * 8, baseCost * 9, T8Coverage);
+            InsuranceDictionary["NullifierBody"] = new Range(baseCost * 8, baseCost * 9, T8Coverage);
+            InsuranceDictionary["VoidJailerBody"] = new Range(baseCost * 8, baseCost * 9, T8Coverage);
+
+            InsuranceDictionary["MagmaWormBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["ElectricWormBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["BeetleQueen2Body"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["VagrantBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["DireseekerBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["ClayBossBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["MegaConstructBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            //InsuranceDictionary["Iota Construct"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["RoboBallBossBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["SuperRoboBallBossBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["ImpBossBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["GrandParentBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["AncientWispBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["GravekeeperBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["VoidMegaCrabBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["VoidRaidCrabBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+            InsuranceDictionary["ScavBody"] = new Range(baseCost * 9, baseCost * 10, T9Coverage);
+
+            InsuranceDictionary["BrotherBody"] = new Range(baseCost * 10, uint.MaxValue, T10Coverage);
+            //InsuranceDictionary["Providence"] = new Range(baseCost * 10, uint.MaxValue, T10Coverage);
+            //InsuranceDictionary["The"] = new Range(baseCost * 10, uint.MaxValue, T10Coverage);
+            //InsuranceDictionary["Crowdfunder Woolie"] = new Range(baseCost * 10, uint.MaxValue, T10Coverage);
 
             //Sets up ranges for the buff application to draw from, since it can't use the dictionary (It is illiterate :p )
             ranges = new Range[]
