@@ -24,10 +24,10 @@ maybe that damn rock has turned over a new leaf. We doubt it though. No leaves o
 Icon | Item | Description | Rarity
 ---|---:|---:|---
 <img src="https://i.imgur.com/nv4V8R8.png" width="100"/> | **Hardened Bone Fragments** | Killing an enemy temporarily grants 5 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor. | Common 
-<img src="https://i.imgur.com/VTys6yV.png" width="100"/> | **Numbing Berries** | Gain 5 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds. | Common 
+<img src="https://i.imgur.com/VTys6yV.png" width="100"/> | **Numbing Berries** | Gain 10 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds. | Common 
 <img src="https://i.imgur.com/0DuVrzU.png" width="100"/> | **Unassuming Tie** |  Gain shield equal to 4% (+4% per stack) of your max HP. Breaking your shield gives you a Second Wind for 5 seconds, plus an additional amount based on max shield. Second Wind increases movement speed by 15% (+15% per stack). | Common 
 <img src="https://i.imgur.com/WIuK51q.png" width="100"/> | **Salvaged Wires** | Gain shield equal to 4% (+4% per stack) of your max HP. While shields are active, gain 10% (+10% per stack) increased attack speed. | Common 
-<img src="https://i.imgur.com/Rw2A1He.png" width="100"/> | **Shell Plating** | Killing an enemy increases your armor permanently by .2, up to a maximum of 10 (+10 per stack) armor. |  Uncommon 
+<img src="https://i.imgur.com/Rw2A1He.png" width="100"/> | **Shell Plating** | Killing an enemy increases your armor permanently by .5, up to a maximum of 25 (+10 per stack) armor. |  Uncommon 
 <img src="https://i.imgur.com/4BJoA04.png" width="100"/> | **Echo-Voltaic Plankton** | Gain shield equal to 8% of your max HP. Dealing damage recharges 1 (+1 per stack) shield. |  Uncommon 
 <img src="https://i.imgur.com/kuqjqSn.png" width="100"/> |  **Vintage Plague Mask** |  All healing is increased by 2% (+2% per stack) for every damage item you possess. | Uncommon 
 <img src="https://i.imgur.com/5slZP70.png" width="100"/> | **Vintage Plague Hat** | Increase maximum HP by 1% (+1% per stack) for every utility item you possess. | Uncommon 
