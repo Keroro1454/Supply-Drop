@@ -97,9 +97,9 @@ namespace SupplyDrop.Items
             weights.Add(10);
             //#8: Jump
             weights.Add(10);
-            //#9: Size
+            //#9: Luck
             weights.Add(6);
-            //#10: Luck
+            //#10: Size
             weights.Add(3);
             //#11: EVERYTHING!
             weights.Add(1);
@@ -699,7 +699,7 @@ namespace SupplyDrop.Items
                             if (goodRoll == 7)
                             {
                                 goodArmorRoll++;
-                                args.armorAdd += body.baseArmor * (goodStatPercent * goodArmorRoll);
+                                args.armorAdd += Mathf.Max(body.baseArmor * (goodStatPercent * goodArmorRoll), 5);
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel tougher!");
@@ -709,7 +709,7 @@ namespace SupplyDrop.Items
                             else
                             {
                                 badArmorRoll++;
-                                args.armorAdd -= body.baseArmor * (badStatPercent * badArmorRoll);
+                                args.armorAdd -= Mathf.Max(body.baseArmor * (badStatPercent * badArmorRoll), 5);
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel squishier.");
@@ -723,7 +723,7 @@ namespace SupplyDrop.Items
                             if (goodRoll == 8)
                             {
                                 goodJumpRoll++;
-                                args.jumpPowerMultAdd += (goodStatPercent * goodJumpRoll);
+                                args.jumpPowerMultAdd += (goodStatPercent * goodJumpRoll * 2);
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel lighter!");
@@ -733,7 +733,7 @@ namespace SupplyDrop.Items
                             else
                             {
                                 badJumpRoll++;
-                                args.jumpPowerMultAdd -= (badStatPercent * badJumpRoll);
+                                args.jumpPowerMultAdd -= (badStatPercent * badJumpRoll * 2);
                                 if (chatSpamFilter < 10)
                                 {
                                     Chat.AddMessage("You feel heavier.");
@@ -741,34 +741,10 @@ namespace SupplyDrop.Items
                                 }
                             }
                         }
-                        //Size Roll (6%)
+                        //Luck Roll (6%)
                         if (goodRoll == 9 || badRoll == 9)
                         {
                             if (goodRoll == 9)
-                            {
-                                goodSizeRoll++;
-                                body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodSizeRoll));
-                                if (chatSpamFilter < 10)
-                                {
-                                    Chat.AddMessage("You feel BIGGER!");
-                                    chatSpamFilter++;
-                                }
-                            }
-                            else
-                            {
-                                badSizeRoll++;
-                                body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - (badStatPercent * badSizeRoll), 0.10f);
-                                if (chatSpamFilter < 10)
-                                {
-                                    Chat.AddMessage("You feel tiny...");
-                                    chatSpamFilter++;
-                                }
-                            }
-                        }
-                        //Luck Roll (3%)
-                        if (goodRoll == 10 || badRoll == 10)
-                        {
-                            if (goodRoll == 10)
                             {
                                 goodLuckRoll++;
                                 luckModifier++;
@@ -789,6 +765,30 @@ namespace SupplyDrop.Items
                                 }
                             }
                         }
+                        //Size Roll (3%)
+                        if (goodRoll == 10 || badRoll == 10)
+                        {
+                            if (goodRoll == 10)
+                            {
+                                goodSizeRoll++;
+                                body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodSizeRoll));
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel BIGGER!");
+                                    chatSpamFilter++;
+                                }
+                            }
+                            else
+                            {
+                                badSizeRoll++;
+                                body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - (badStatPercent * badSizeRoll), 0.10f);
+                                if (chatSpamFilter < 10)
+                                {
+                                    Chat.AddMessage("You feel tiny...");
+                                    chatSpamFilter++;
+                                }
+                            }
+                        }
                         //EVERYTHING Roll (1%)
                         if (goodRoll == 11 || badRoll == 11)
                         {
@@ -803,8 +803,8 @@ namespace SupplyDrop.Items
                                 args.levelMultAdd += (goodStatPercent * goodEveryRoll);
                                 args.critAdd += (goodStatPercent * goodEveryRoll);
                                 args.cooldownMultAdd += (goodStatPercent * goodEveryRoll);
-                                args.armorAdd += body.baseArmor * (goodStatPercent * goodEveryRoll);
-                                args.jumpPowerMultAdd += (goodStatPercent * goodEveryRoll);
+                                args.armorAdd += Mathf.Max(body.baseArmor * (goodStatPercent * goodEveryRoll), 5);
+                                args.jumpPowerMultAdd += (goodStatPercent * goodEveryRoll * 2);
                                 body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodEveryRoll));
                                 goodLuckRoll++;
                                 luckModifier++;
@@ -822,8 +822,8 @@ namespace SupplyDrop.Items
                                 args.levelMultAdd -= (badStatPercent * badEveryRoll);
                                 args.critAdd -= (badStatPercent * badEveryRoll);
                                 args.cooldownMultAdd -= (badStatPercent * badEveryRoll);
-                                args.armorAdd -= body.baseArmor * (badStatPercent * badEveryRoll);
-                                args.jumpPowerMultAdd -= (badStatPercent * badEveryRoll);
+                                args.armorAdd -= Mathf.Max(body.baseArmor * (badStatPercent * badEveryRoll), 5);
+                                args.jumpPowerMultAdd -= (badStatPercent * badEveryRoll * 2);
                                 body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - (badStatPercent * badEveryRoll), 0.25f);
                                 badLuckRoll++;
                                 luckModifier--;
@@ -880,10 +880,10 @@ namespace SupplyDrop.Items
                     var inventoryCount = GetCount(effectOriginMaster);
                     if (inventoryCount > 0)
                     {
-                        if (goldModifier != 0)
+                        if (luckModifier != 0)
                         {
                             var currentPercent = percentChance;
-                            if (goldModifier > 0)
+                            if (luckModifier > 0)
                             {
                                 percentChance = currentPercent + (currentPercent * (goodStatPercent * goodLuckRoll));
                             }
