@@ -187,7 +187,7 @@ namespace SupplyDrop.Items
                     childName = "Chest",
                     localPos = new Vector3(0, 0, 0),
                     localAngles = new Vector3(0, 0, 0),
-                    localScale = new Vector3(1, 1, 1)
+                    localScale = generalScale
                 }
             });
             rules.Add("mdlCommandoDualies", new ItemDisplayRule[]

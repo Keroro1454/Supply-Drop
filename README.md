@@ -5,20 +5,6 @@ More items are coming soon--over a dozen are planned as of now!
 
 **PLEASE DELETE YOUR CONFIG FILE IF YOU INSTALLED THIS MOD PRE-SOTV!!!**
 
-# What's New with Update 1.5: By the Light of the Moon!
-Historically, the moon has been a pain in the butt of humanity. I know all you lunar nerds are upset to hear it, but it's true. Consider what the moon has ever done for us:
-
-Created werewolves? Terrible dinner party guests.
-
-Housed Nazis? Those guys suck. And were also probably terrible dinner party guests.
-
-Driven us crazy? They put me in a room for that!
-
-Enabled Halloween cosmetics? If I hear that fly set one more time...
-
-But today, for the first time, the moon has done something halfway decent: It's given us some brand new items to play with! Admittedly, because the moon can't help but be annoying, these items may be of...dubious benefit, but still,
-maybe that damn rock has turned over a new leaf. We doubt it though. No leaves on the moon.
-
 ----
 # Included Items:
 Icon | Item | Description | Rarity
@@ -33,22 +19,20 @@ Icon | Item | Description | Rarity
 <img src="https://i.imgur.com/5slZP70.png" width="100"/> | **Vintage Plague Hat** | Increase maximum HP by 1% (+1% per stack) for every utility item you possess. | Uncommon 
 <img src="https://i.imgur.com/0L658Aq.png" width="100"/> | **Quantum Shield Stabilizer** | Gain shield equal to 16% of your max HP. If an attack exceeds your active shields, the excess damage is negated. This ability has a cooldown of 5s (-1s per stack). | Legendary 
 <img src="https://i.imgur.com/2Fgehyx.png" width="100"/> | **Tome of Bloodletting** | Convert 10% (+10% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s. |  Legendary 
-<img src="https://i.imgur.com/9ee2ayr.png" width="100"/> | **Afterlife Insurance** | Gain 25% (+10% per stack) less money from killing monsters. 100% (+25% per stack) of money lost is invested into upgrading your insurance to cover more threats, up to 10 times. Upon dying to an source you are insured for, you will be revived, and your insurance level will be reset to zero. | Lunar 
-<img src="https://i.imgur.com/2lSag6M.png" width="100"/> |  **Silver Pocketwatch** | All buff durations are increased by 50% (+25% per stack). All debuff durations are also increased by 50% (+25% per stack). | Lunar
-<img src="https://i.imgur.com/I8mSekS.png" width="100"/> |  **Arrogant Canting** | Elite enemies have a 2% (+2% per stack) chance to drop a random item on death, but they also gain 25% (+25% per stack) more HP and 15% (+15% per stack) more damage. | Lunar
-<img src="https://i.imgur.com/FGIJv4a.png" width="100"/> |  **Two-Sided Die** | Whenever you use a shrine, 2 (+2 per stack) stats are picked at random. One is buffed by 50%, the other is nerfed by 25%. | Lunar
+<img src="https://i.imgur.com/dnC3ij0.gif" width="100"/> | **UNKNOWN ITEM** | `ERROR: Item log read-out scrambled during transmission. Please wait for update...` | Lunar 
+<img src="https://i.imgur.com/or0D5Et.gif" width="100"/> |  **UNKNOWN ITEM** | `ERROR: Item log read-out scrambled during transmission. Please wait for update...` | Lunar 
 
 ----
 ## Changelog:
-- 1.5.0: By the Light of the Moon!
-	- Additions:
-		- Added four new items: Afterlife Insurance, Silver Pocketwatch, Arrogant Canting, and Two-Sided Die
+- 1.4.11
 	- Improvements:
 		- Changed the README to not display all patchnotes by default anymore
 		- Fixed some typos in logbook entries
 	- Bug Fixes:
 		- Fixed Hardened Shell Plating incorrectly calculating armor, which spammed NREs and made you invincible?
 		- Fixed the item display for the Unassuming Tie on Miner being massive
+		- Fixed item displays for unsupported modded characters often being way too big
+
 <details>
 <summary>
 1.4: The Doctor is Back! and Finally Back!

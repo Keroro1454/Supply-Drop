@@ -12,7 +12,13 @@
 
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
+    <Compile Remove="Items\ArrogantCanting.cs" />
+    <Compile Remove="Items\HolyInsurance.cs" />
+    <Compile Remove="Items\SilverWatch.cs" />
+    <Compile Remove="Items\TwoSidedDie.cs" />
     <Compile Remove="PlagueMask.cs" />
+    <Compile Remove="Utilities\InsuranceBarController.cs" />
+    <Compile Remove="Utilities\InsuranceSavingsTracker.cs" />
     <Compile Remove="Utilities\ShellStackTracker.cs" />
   </ItemGroup>
 
