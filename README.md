@@ -3,8 +3,6 @@ Supply Drop is a mod for Risk of Rain 2 designed to add a number of items.
 Items are designed with not just variety in mind, but with the goal of staying true to the game's design aesthetic, as well as balance.
 More items are coming soon--over a dozen are planned as of now!
 
-**PLEASE DELETE YOUR CONFIG FILE IF YOU INSTALLED THIS MOD PRE-SOTV!!!**
-
 # What's New with Update 1.5: By the Light of the Moon!
 Historically, the moon has been a pain in the butt of humanity. I know all you lunar nerds are upset to hear it, but it's true. Consider what the moon has ever done for us:
 
@@ -35,17 +33,16 @@ Icon | Item | Description | Rarity
 <img src="https://i.imgur.com/2Fgehyx.png" width="100"/> | **Tome of Bloodletting** | Convert 10% (+10% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s. |  Legendary 
 <img src="https://i.imgur.com/9ee2ayr.png" width="100"/> | **Afterlife Insurance** | Gain 25% (+10% per stack) less money from killing monsters. 100% (+25% per stack) of money lost is invested into upgrading your insurance to cover more threats, up to 10 times. Upon dying to an source you are insured for, you will be revived, and your insurance level will be reset to zero. | Lunar 
 <img src="https://i.imgur.com/2lSag6M.png" width="100"/> |  **Silver Pocketwatch** | All buff durations are increased by 50% (+25% per stack). All debuff durations are also increased by 50% (+25% per stack). | Lunar
-<img src="https://i.imgur.com/I8mSekS.png" width="100"/> |  **Arrogant Canting** | Elite enemies have a 2% (+2% per stack) chance to drop a random item on death, but they also gain 25% (+25% per stack) more HP and 15% (+15% per stack) more damage. | Lunar
+<img src="https://i.imgur.com/I8mSekS.png" width="100"/> |  **Arrogant Canting** | Elite enemies have a 6% (+6% per stack) chance to drop a random item on death, but they also gain 25% (+25% per stack) more HP and 15% (+15% per stack) more damage. | Lunar
 <img src="https://i.imgur.com/FGIJv4a.png" width="100"/> |  **Two-Sided Die** | Whenever you use a shrine, 2 (+2 per stack) stats are picked at random. One is buffed by 50%, the other is nerfed by 25%. | Lunar
 
 ----
 ## Changelog:
 - 1.5.0: By the Light of the Moon!
 	- Additions:
-		- Added four new items: Afterlife Insurance, Silver Pocketwatch, Arrogant Canting, and Two-Sided Die
-	- Improvements:
-
+		- Added four new items: Arrogant Canting, Afterlife Insurance, Silver Pocketwatch, and Two-Sided Die
 	- Bug Fixes:
+		- Fixed the Tome of Bloodletting bleeding visual not appearing -------> TO BE DONE
 
 
 <details>
@@ -53,6 +50,8 @@ Icon | Item | Description | Rarity
 1.4: The Doctor is Back! and Finally Back!
 </summary>
 
+- 1.4.12
+	- Updated for Seekers of the Storm
 - 1.4.11
 	- Improvements:
 		- Changed the README to not display all patchnotes by default anymore

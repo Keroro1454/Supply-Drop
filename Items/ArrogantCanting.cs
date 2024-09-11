@@ -75,8 +75,8 @@ namespace SupplyDrop.Items
             addHPIncrease = config.ActiveBind<float>("Item: " + ItemName, "Additional Increase to HP Buff Elites Get per Arrogant Canting", .25f, "How much bonus HP should elites get for each additional Arrogant Canting? (.25 = 25%)");
             baseDamageIncrease = config.ActiveBind<float>("Item: " + ItemName, "Base Increase to Damage Buff Elites Get with 1 Arrogant Canting", .15f, "How much bonus damage should elites get with 1 Arrogant Canting? (.15 = 15%)");
             addDamageIncrease = config.ActiveBind<float>("Item: " + ItemName, "Additional Increase to Damage Buff Elites Get per Arrogant Canting", .15f, "How much bonus damage should elites get for each additional Arrogant Canting? (.15 = 15%)");
-            baseDropChance = config.ActiveBind<float>("Item: " + ItemName, "Base Chance for Elites to Drop Items with 1 Arrogant Canting", .02f, "What should the chance an elite drop an item be with 1 Arrogant Canting? (.02 = 2%)");
-            addDropChance = config.ActiveBind<float>("Item: " + ItemName, "Additional Chance for Elites to Drop Items per Arrogant Canting", .02f, "What should the chance an elite drop an item be for each additional Arrogant Canting? (.02 = 2%)");
+            baseDropChance = config.ActiveBind<float>("Item: " + ItemName, "Base Chance for Elites to Drop Items with 1 Arrogant Canting", .06f, "What should the chance an elite drop an item be with 1 Arrogant Canting? (.06 = 6%)");
+            addDropChance = config.ActiveBind<float>("Item: " + ItemName, "Additional Chance for Elites to Drop Items per Arrogant Canting", .06f, "What should the chance an elite drop an item be for each additional Arrogant Canting? (.06 = 6%)");
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

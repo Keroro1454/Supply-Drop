@@ -158,9 +158,9 @@ namespace SupplyDrop.Items
                 new Range(50, double.PositiveInfinity, DevotedBloodBuff, 14)
             };
 
-           //BombBookSound = ScriptableObject.CreateInstance<NetworkSoundEventDef>();
-           // BombBookSound.eventName = "SupplyDrop_BombBook_Talk";
-           // R2API.ContentAddition.AddNetworkSoundEventDef(BombBookSound);
+           BombBookSound = ScriptableObject.CreateInstance<NetworkSoundEventDef>();
+           BombBookSound.eventName = "SupplyDrop_BombBook_Talk";
+           R2API.ContentAddition.AddNetworkSoundEventDef(BombBookSound);
         }
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
@@ -585,7 +585,7 @@ namespace SupplyDrop.Items
 
                         if (willBookRead <= (chanceBookReads * 100))
                         {
-                           AkSoundEngine.PostEvent(4030648726u, self.body.gameObject);
+                          AkSoundEngine.PostEvent(4030648726u, self.body.gameObject);
                         }
                     }
                 }               
