@@ -12,21 +12,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
     - name: Install dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         # Artifact name
         name: SupplyDrop.dll
         # A file, directory or wildcard pattern that describes what to upload
-        path: bin/Release/netstandard2.0/SupplyDrop.dll
+        path: bin/Release/netstandard2.1/SupplyDrop.dll
         # The desired behavior if no files are found using the provided path.
         if-no-files-found: error
