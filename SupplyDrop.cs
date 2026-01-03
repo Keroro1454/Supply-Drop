@@ -11,11 +11,18 @@ using System.Linq;
 using SupplyDrop.Items;
 using SupplyDrop.CoreModules;
 using System;
+using System.Runtime.CompilerServices;
+using RoR2;
+using LookingGlass;
+using LookingGlass.ItemStatsNameSpace;
+using R2API.Networking;
 
 namespace K1454.SupplyDrop
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
+    [BepInDependency(LanguageAPI.PluginGUID)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
+    [BepInDependency(NetworkingAPI.PluginGUID)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(PrefabAPI), nameof(RecalculateStatsAPI), nameof(DirectorAPI), nameof(DeployableAPI), nameof(DamageAPI), nameof(SoundAPI), nameof(OrbAPI))]
     public class SupplyDropPlugin : BaseUnityPlugin
@@ -45,6 +52,7 @@ namespace K1454.SupplyDrop
 
         public List<ItemBase> Items = new List<ItemBase>();
         public List<CoreModule> CoreModules = new List<CoreModule>();
+
 
         private void Awake()
         {
@@ -92,13 +100,15 @@ namespace K1454.SupplyDrop
 
             ConfigFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
 
-            //using (var bankStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SupplyDrop.SupplyDropSounds.bnk"))
-            //{
-            //    var bytes = new byte[bankStream.Length];
-            //    bankStream.Read(bytes, 0, bytes.Length);
-            //    SoundAPI.SoundBanks.Add(bytes);
-            //}
+            using (var bankStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SupplyDrop.SupplyDropSounds.bnk"))
+            {
+                var bytes = new byte[bankStream.Length];
+                bankStream.Read(bytes, 0, bytes.Length);
+                SoundAPI.SoundBanks.Add(bytes);
+            }
+//            RoR2Application.OnLoad += LGCompat;
         }
+        public static Action onFinishScanning;
         public bool ValidateItem(ItemBase item, List<ItemBase> itemList)
         {
             var enabled = Config.Bind<bool>("Item: " + item.ItemName, "Enable Item?", true, "Should this item appear in runs?").Value;
@@ -120,5 +130,26 @@ namespace K1454.SupplyDrop
             }
             return enabled;
         }
+//        public static class Compat
+//        {
+//            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+//            public static void LGCompat()
+//            {
+//                if (LookingGlass.ItemStatsNameSpace.ItemDefinitions.allItemDefinitions?.Any() != true)
+//                {
+//                    ModLogger.LogError("Can't do compatibility stuff with LookingGlass");
+//                    return;
+//                }
+//
+
+//                LookingGlass.ItemStatsNameSpace.ItemStatsDef itemStat = new ItemStatsDef();
+//                itemStat.descriptions.Add("Current Roll Results:")
+
+//                if (LookingGlass.ItemStatsNameSpace.ItemDefinitions.allItemDefinitions.TryGetValue((int)SupplyDrop.Items.TwoSidedDie.itemIndex, out var diceDef))
+//                {
+
+//                }
+//            }
+//        }
     }
 }

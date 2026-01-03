@@ -1,6 +1,7 @@
 ﻿using R2API;
 using RoR2;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using static R2API.RecalculateStatsAPI;
 
 using SupplyDrop.Utils;
@@ -74,6 +75,8 @@ namespace SupplyDrop.Items
             CreateLang();
             CreateItem();
             Hooks();
+
+            onFinishScanning += CreateCraftableDef;
         }
 
         private void CreateConfig(ConfigFile config)
@@ -81,7 +84,32 @@ namespace SupplyDrop.Items
             baseStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Shield Gained with First Stack of Echo-Voltaic Plankton", .08f, "How much shield as a % of max HP should you gain with the first echo-voltaic plankton? (.08 = 8%)");
             shieldAmountOnHit = config.ActiveBind<float>("Item: " + ItemName, "Amount of Shield Gained on Hit", 1f, "How much shield should you gain when you hit an enemy?");
         }
-
+        protected override void CreateCraftableDef()
+        {
+            //Shield Gen + Leeching Seed = Plankton
+            var genSeedPlankton = ScriptableObject.CreateInstance<CraftableDef>();
+            (genSeedPlankton as ScriptableObject).name = "cdGenSeedPlankton";
+            genSeedPlankton.pickup = ItemDef;
+            genSeedPlankton.recipes = new Recipe[]
+            {
+                new Recipe()
+                {
+                    ingredients = new RecipeIngredient[]
+                    {
+                        new RecipeIngredient()
+                        {
+                            pickup = Addressables.LoadAssetAsync<ItemDef>("RoR2/Base/PersonalShield/PersonalShield.asset").WaitForCompletion(),
+                            type = IngredientTypeIndex.AssetReference
+                        },
+                        new RecipeIngredient()
+                        {
+                            pickup = Addressables.LoadAssetAsync<ItemDef>("RoR2/Base/Seed/Seed.asset").WaitForCompletion(),
+                            type = IngredientTypeIndex.AssetReference
+                        }
+                    }
+                }
+            };
+        }
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
             ItemBodyModelPrefab = ItemModel;
@@ -97,7 +125,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0, 0, 0),
                     localAngles = new Vector3(0, 0, 0),
@@ -109,7 +137,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.25f, -0.36f),   
                     localAngles = new Vector3(180f, 180f, 180f),
@@ -121,7 +149,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, -0.025f, -0.12f),
                     localAngles = new Vector3(0f, 0f, 90f),
@@ -133,7 +161,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0.03487F, 0.26702F, -0.23743F),
                     localAngles = new Vector3(16.22462F, 354.7491F, 355.1796F),
@@ -145,7 +173,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.8f, -2.5f),
                     localAngles = new Vector3(0f, 0f, 90f),
@@ -157,7 +185,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.15f, -0.4f),
                     localAngles = new Vector3(0f, 0f, 0f),
@@ -169,7 +197,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0F, 0.1F, -0.38F),
                     localAngles = new Vector3(9.86298F, 0.05314F, 357.6569F),
@@ -181,7 +209,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.2f, -0.41f),
                     localAngles = new Vector3(80f, 180f, 0f),
@@ -193,7 +221,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "WeaponPlatform",
                     localPos = new Vector3(0f, -0.5f, 0.4f),
                     localAngles = new Vector3(0f, 0f, 180f),
@@ -205,7 +233,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.25f, -0.37f),
                     localAngles = new Vector3(0f, 0f, 90f),
@@ -217,7 +245,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, 3f, 4f),
                     localAngles = new Vector3(-30f, 0f, 0f),
@@ -229,7 +257,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0f, 0.2f, -0.35f),
                     localAngles = new Vector3(0f, 0f, 0f),
@@ -241,7 +269,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Backpack",
                     localPos = new Vector3(0.43838F, 0.22354F, 0.00284F),
                     localAngles = new Vector3(10.28261F, 185.1785F, 91.81888F),
@@ -253,14 +281,73 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "ShoulderL",
                     localPos = new Vector3(-0.14555F, 0.12824F, 0.149F),
                     localAngles = new Vector3(35.93249F, 73.72224F, 84.21194F),
                     localScale = new Vector3(0.03568F, 0.03669F, 0.03669F)
                 }
             });
-
+            rules.Add("mdlSeeker", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "Pack",
+                    localPos = new Vector3(0.2396F, -0.35614F, -0.15973F),
+                    localAngles = new Vector3(319.4088F, 83.43626F, 173.3693F),
+                    localScale = new Vector3(0.06071F, 0.06071F, 0.06071F)
+                }
+            });
+            rules.Add("mdlFalseSon", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.45235F, 0.09031F, -0.05391F),
+                    localAngles = new Vector3(9.87882F, 7.01942F, 20.37975F),
+                    localScale = new Vector3(0.10199F, 0.10199F, 0.10199F)
+                }
+            });
+            rules.Add("mdlChef", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "Wheel",
+                    localPos = new Vector3(-0.01836F, 0.03F, -0.01047F),
+                    localAngles = new Vector3(71.71733F, 195.2843F, 101.2001F),
+                    localScale = new Vector3(0.41866F, 0.41866F, 0.41866F)
+                }
+            });
+            rules.Add("mdlDroneTech", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "Backpack",
+                    localPos = new Vector3(-0.22317F, -0.04823F, -0.09983F),
+                    localAngles = new Vector3(0F, 0F, 0F),
+                    localScale = new Vector3(0.06902F, 0.06902F, 0.06618F)
+                }
+            });
+            rules.Add("mdlDrifter", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "BagPocketR",
+                    localPos = new Vector3(-0.11915F, 0.23164F, 0.10013F),
+                    localAngles = new Vector3(18.29501F, 90.61576F, 97.33646F),
+                    localScale = new Vector3(0.06505F, 0.06505F, 0.06505F)
+                }
+            });
             //MODDED CHARACTER IDRs START HERE
 
             rules.Add("mdlNemCommando", new RoR2.ItemDisplayRule[]
@@ -268,7 +355,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "JetR",
                     localPos = new Vector3(-0.02321F, 0.00866F, -0.0044F),
                     localAngles = new Vector3(61.14747F, 125.2273F, 129.7773F),
@@ -277,7 +364,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "JetL",
                     localPos = new Vector3(0.0198F, 0.00524F, 0.00559F),
                     localAngles = new Vector3(302.7839F, 59.69757F, 124.8021F),
@@ -289,7 +376,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0.01434F, 0.60066F, 0F),
                     localAngles = new Vector3(0F, 0F, 0F),
@@ -301,7 +388,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0.39827F, 0.31022F, -0.01165F),
                     localAngles = new Vector3(0F, 0F, 0F),
@@ -313,7 +400,7 @@ namespace SupplyDrop.Items
 //                new RoR2.ItemDisplayRule
 //                {
 //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-//                    followerPrefab = ItemBodyModelPrefab,
+//                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
 //                    childName = "Chest",
 //                    localPos = new Vector3(-0.25983F, 0.30917F, -0.02484F),
 //                    localAngles = new Vector3(343.1456F, 273.5997F, 0.5956F),
@@ -325,31 +412,31 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Sword",
                     localPos = new Vector3(0.0086F, -0.06774F, 0.01411F),
                     localAngles = new Vector3(0F, 0F, 0F),
                     localScale = new Vector3(0.04909F, 0.04909F, 0.04909F)
                 }
             });
-//            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
-//            {
-//                new RoR2.ItemDisplayRule
-//                {
-//                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-//                    followerPrefab = ItemBodyModelPrefab,
-//                    childName = "Chest",
-//                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
-//                    localAngles = new Vector3(0f, 0f, 0f),
-//                    localScale = generalScale * 0.9f
-//                }
-//            });
+            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.00223F, 0.00107F, 0.00003F),
+                    localAngles = new Vector3(349.7992F, 178.5731F, 174.0399F),
+                    localScale = new Vector3(-0.00056F, -0.00056F, -0.00056F)
+                }
+            });
             rules.Add("mdlPathfinder", new RoR2.ItemDisplayRule[]
             {
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "SpearHitbox",
                     localPos = new Vector3(-0.00414F, -0.78807F, -0.00407F),
                     localAngles = new Vector3(-0.00001F, 180F, 180F),
@@ -361,7 +448,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Pelvis",
                     localPos = new Vector3(-0.02982F, -0.00594F, 0.27733F),
                     localAngles = new Vector3(76.88757F, 342.5656F, 83.25074F),
@@ -373,7 +460,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Pelvis",
                     localPos = new Vector3(-0.2383F, -0.04141F, 0.00528F),
                     localAngles = new Vector3(0.43422F, 182.53F, 160.776F),
@@ -385,7 +472,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0.00826F, 0.44339F, -0.23484F),
                     localAngles = new Vector3(9.38397F, 359.6089F, 356.5085F),
@@ -397,7 +484,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "RadCannonItems",
                     localPos = new Vector3(-0.00377F, -1.48042F, -0.00011F),
                     localAngles = new Vector3(-0.00001F, 180F, 180F),
@@ -409,7 +496,7 @@ namespace SupplyDrop.Items
             //                new RoR2.ItemDisplayRule
             //                {
             //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
             //                    childName = "Head",
             //                    localPos = new Vector3(0F, 0.01245F, -0.00126F),
             //                    localAngles = new Vector3(0F, 0F, 0F),
@@ -421,7 +508,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(-0.29114F, 0.52624F, -0.30575F),
                     localAngles = new Vector3(9.63699F, 6.94206F, 56.15643F),
@@ -430,7 +517,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0.29543F, 0.52537F, -0.31812F),
                     localAngles = new Vector3(31.4669F, 153.7513F, 52.74549F),
@@ -442,7 +529,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "thigh.L",
                     localPos = new Vector3(-0.19673F, 0.03266F, 0.04399F),
                     localAngles = new Vector3(346.6592F, 166.2192F, 187.89F),

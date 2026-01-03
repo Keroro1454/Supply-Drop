@@ -2,6 +2,9 @@
 using UnityEngine;
 using RoR2;
 using static R2API.RecalculateStatsAPI;
+using System.Text;
+using UnityEngine.Networking;
+using System.Linq;
 
 namespace SupplyDrop.Utils
 {
@@ -80,6 +83,30 @@ namespace SupplyDrop.Utils
                     args.baseShieldAdd += ((sender.maxHealth * baseStackHPPercent) + ((sender.maxHealth * addStackHPPercent) * (inventoryCount - 1)));
                 };
             }
+        }
+
+        public static StringBuilder globalStringBuilder = new StringBuilder();
+
+        public static ItemIndex[] indiciiToCheckUtilitySD;
+        public static ItemIndex[] indiciiToCheckDamageSD;
+        public static ItemIndex[] indiciiToCheckHealingSD;
+
+        public static void ItemListCreators(On.RoR2.Run.orig_Start orig, Run self)        
+        {
+            orig(self);
+            
+            indiciiToCheckUtilitySD = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Utility)).ToArray();
+            Debug.Log("Item List Method has been run and a Utility Item List has been created");
+            Debug.Log(indiciiToCheckUtilitySD.Length);
+
+            indiciiToCheckDamageSD = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
+            Debug.Log("Item List Method has been run and a Damage Item List has been created");
+            Debug.Log(indiciiToCheckDamageSD.Length);
+
+            indiciiToCheckHealingSD = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Healing)).ToArray();
+            Debug.Log("Item List Method has been run and a Healing Item List has been created");
+            Debug.Log(indiciiToCheckHealingSD.Length);
+
         }
     }
 }

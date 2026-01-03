@@ -10,8 +10,11 @@ namespace SupplyDrop.Utils
     {
         public ParticleSystem particles;
         public CharacterModel model;
-
-
+        private void Awake()
+        {
+            if (!particles)
+                particles = GetComponent<ParticleSystem>();
+        }
         public void FixedUpdate()
         {
             var particleSystem = particles;
@@ -22,42 +25,23 @@ namespace SupplyDrop.Utils
                     if (particles)
                     { 
                         int currentBuffLevel = Array.FindIndex(BloodBook.ranges, r => model.body.HasBuff(r.Buff));
-                        if (Enumerable.Range(0, 5).Contains(currentBuffLevel))                        
+                        if (currentBuffLevel >= 0)                        
                         {
-                            if (!particleSystem.isPlaying)
+                            var emission = particleSystem.emission;
+
+                            emission.rateOverTime = currentBuffLevel switch
                             {
-                                if (currentBuffLevel == 0)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 1f;
-                                }
-                                if (currentBuffLevel == 1)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 2f;
-                                }
-                                if (currentBuffLevel == 2)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 5f;
-                                }
-                                if (currentBuffLevel == 3)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 10f;
-                                }
-                                if (currentBuffLevel == 4)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 15f;
-                                }
-                                if (currentBuffLevel == 5)
-                                {
-                                    var newDripSpeed = particleSystem.emission;
-                                    newDripSpeed.rateOverTime = 20f;
-                                }
+                                0 => 1f,
+                                1 => 2f,
+                                2 => 5f,
+                                3 => 10f,
+                                4 => 15f,
+                                5 => 20f,
+                                _ => 0f
+                            };
+
+                            if (!particleSystem.isPlaying)
                                 particleSystem.Play();
-                            }
                         }
                         else
                         {

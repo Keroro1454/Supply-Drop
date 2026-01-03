@@ -1,6 +1,7 @@
 ﻿using R2API;
 using RoR2;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using static R2API.RecalculateStatsAPI;
 
 using SupplyDrop.Utils;
@@ -10,6 +11,7 @@ using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 namespace SupplyDrop.Items
 {
@@ -32,14 +34,14 @@ namespace SupplyDrop.Items
 
         public override string ItemPickupDesc => "Elite enemies have a <style=cIsUtility>chance to drop items</style>, but are <style=cDeath>more powerful</style>.";
 
-        public override string ItemFullDescription => $"Elite enemies have a {FloatToPercentageString(baseDropChance)} (+{FloatToPercentageString(addDropChance)} " +
-            $"per stack) chance to <style=cIsUtility>drop a random item</style> on death, but they also gain {FloatToPercentageString(baseHPIncrease)} (+{FloatToPercentageString(addHPIncrease)} " +
-            $"per stack) <style=cDeath>more HP</style> and {FloatToPercentageString(baseDamageIncrease)} (+{FloatToPercentageString(addDamageIncrease)} " +
-            $"per stack) <style=cDeath>more damage</style>.";
+        public override string ItemFullDescription => $"Elite enemies have a {FloatToPercentageString(baseDropChance)} <style=cStack>(+{FloatToPercentageString(addDropChance)} " +
+            $"per stack)</style> chance to <style=cIsUtility>drop a random item</style> on death, but they also gain {FloatToPercentageString(baseHPIncrease)} <style=cStack>(+{FloatToPercentageString(addHPIncrease)} " +
+            $"per stack)</style> <style=cDeath>more HP</style> and {FloatToPercentageString(baseDamageIncrease)} <style=cStack>(+{FloatToPercentageString(addDamageIncrease)} " +
+            $"per stack)</style> <style=cDeath>more damage</style>.";
 
         public override string ItemLore => "Do you remember, Brother, when I made a steed for myself?\n\n" +
-            "Stone. Silver. Fire. All the ingredients to make a perfect creation, fast and able. But that was not enough this time. I wished to prove how right I had always been." +
-            "How little value soul, that which you held so sacred and precious, truly had.\n\n" +
+            "Stone. Silver. Fire. All the ingredients to make a perfect creation, fast and able. But that was not enough this time. I wished to prove how right I had always been. " +
+            "To prove how little value soul, that which you held so sacred and precious, truly had.\n\n" +
             "So I forged something new, superior to soul. Stronger, more vibrant. Obedient. Infused into my design, I was certain a mere glance at this perfect creature would be enough to convince you at last.\n\n" +
             "But when you looked upon the warhorse, you did not sing its praises. Do you remember what you did? YOU, who protested so greatly at the imprisonment of that abominable gold creature?\n\n" +
             "You did not hesitate to seal my steed away. You could not accept my success. My wisdom. MY RIGHTEOUSNESS.\n\n" +
@@ -47,17 +49,15 @@ namespace SupplyDrop.Items
 
         public override ItemTier Tier => ItemTier.Lunar;
 
-        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist, ItemTag.OnKillEffect};
 
         public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("ArrogantCanting.prefab");
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("ArrogantCantingIcon");
         public static GameObject ItemBodyModelPrefab;
 
-        public static List<PickupIndex> redItems = null;
-        public static List<PickupIndex> greenItems = null;
-        public static List<PickupIndex> whiteItems = null;
+        public static PickupDropTable SacrificePickupDropTable => RoR2.Artifacts.SacrificeArtifactManager.dropTable;
+        public static Xoroshiro128Plus dropRoll;
 
-        
 
         public override void Init(ConfigFile config)
         {
@@ -65,6 +65,7 @@ namespace SupplyDrop.Items
             CreateLang();
             CreateItem();
             Hooks();
+            dropRoll = new Xoroshiro128Plus(0UL);
 
             ItemDef.pickupModelPrefab.transform.localScale = new Vector3(2f, 2f, 2f);
         }
@@ -92,7 +93,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "Chest",
                     localPos = new Vector3(0, 0, 0),
                     localAngles = new Vector3(0, 0, 0),
@@ -104,7 +105,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.00277F, 0.17479F, 0.0266F),
                     localAngles = new Vector3(0.00617F, 359.8606F, 7.22759F),
@@ -116,7 +117,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.01297F, 0.11871F, 0.00568F),
                     localAngles = new Vector3(359.3404F, 356.1982F, 0.70586F),
@@ -128,7 +129,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.00291F, 0.21169F, -0.04033F),
                     localAngles = new Vector3(317.8236F, 358.0385F, 358.1294F),
@@ -140,7 +141,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "MuzzleNailgun",
                     localPos = new Vector3(1.18679F, 0.1173F, -0.03888F),
                     localAngles = new Vector3(350.6134F, 71.73103F, 82.40997F),
@@ -152,7 +153,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.00118F, 0.17366F, 0.03878F),
                     localAngles = new Vector3(0F, 0F, 0F),
@@ -164,7 +165,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.0078F, 0.14205F, 0.01929F),
                     localAngles = new Vector3(324.8272F, 359.9283F, 357.544F),
@@ -176,7 +177,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.00806F, 0.16336F, -0.01393F),
                     localAngles = new Vector3(39.97188F, 179.9329F, 359.8967F),
@@ -188,7 +189,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "WeaponPlatform",
                     localPos = new Vector3(0.00331F, -0.09F, -0.0336F),
                     localAngles = new Vector3(283.2124F, 177.6522F, 1.84774F),
@@ -200,7 +201,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.00705F, 0.16607F, -0.0321F),
                     localAngles = new Vector3(308.2388F, 358.9312F, 356.0719F),
@@ -212,7 +213,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.12926F, 0.80654F, -0.53378F),
                     localAngles = new Vector3(279.2639F, 5.08149F, 356.154F),
@@ -224,7 +225,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.02313F, 0.21775F, -0.07184F),
                     localAngles = new Vector3(307.5771F, 340.4614F, 3.61965F),
@@ -236,7 +237,7 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.00375F, 0.24964F, -0.09597F),
                     localAngles = new Vector3(50.55249F, 180.3299F, 1.73038F),
@@ -248,14 +249,73 @@ namespace SupplyDrop.Items
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.03417F, 0.21444F, 0.00097F),
                     localAngles = new Vector3(30.92299F, 94.97478F, 358.8921F),
                     localScale = new Vector3(0.04332F, 0.04455F, 0.04455F)
                 }
             });
-
+            rules.Add("mdlSeeker", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "FootL",
+                    localPos = new Vector3(0.03417F, 0.21444F, 0.00097F),
+                    localAngles = new Vector3(30.92299F, 94.97478F, 358.8921F),
+                    localScale = new Vector3(0.04332F, 0.04455F, 0.04455F)
+                }
+            });
+            rules.Add("mdlFalseSon", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "FootL",
+                    localPos = new Vector3(0.03656F, -0.06252F, -0.01044F),
+                    localAngles = new Vector3(47.32598F, 89.34612F, 359.2574F),
+                    localScale = new Vector3(0.0554F, 0.0554F, 0.0554F)
+                }
+            });
+            rules.Add("mdlChef", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "Wheel",
+                    localPos = new Vector3(0.51771F, 0.01124F, -0.01005F),
+                    localAngles = new Vector3(0.32579F, 83.71847F, 312.9304F),
+                    localScale = new Vector3(0.10235F, 0.10235F, 0.10235F)
+                }
+            });
+            rules.Add("mdlDroneTech", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "FootL",
+                    localPos = new Vector3(-0.11657F, -0.09575F, 0.00385F),
+                    localAngles = new Vector3(313.9219F, 97.58095F, 174.3286F),
+                    localScale = new Vector3(0.02756F, 0.02756F, 0.02756F)
+                }
+            });
+            rules.Add("mdlDrifter", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "FootR",
+                    localPos = new Vector3(-0.13141F, 0.1724F, -0.01229F),
+                    localAngles = new Vector3(359.4962F, 271.9681F, 18.23417F),
+                    localScale = new Vector3(0.03821F, 0.03622F, 0.03821F)
+                }
+            });
             //MODDED CHARACTER IDRs START HERE
 
             rules.Add("mdlNemCommando", new RoR2.ItemDisplayRule[]
@@ -263,7 +323,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.01742F, 0.87634F, 0.0401F),
                     localAngles = new Vector3(38.36021F, 4.24105F, 9.9883F),
@@ -275,7 +335,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "UpperArmL",
                     localPos = new Vector3(-0.04755F, -0.02314F, -0.06916F),
                     localAngles = new Vector3(358.8415F, 88.95627F, 261.6975F),
@@ -287,7 +347,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "UpperArmL",
                     localPos = new Vector3(-0.04755F, -0.02314F, -0.06916F),
                     localAngles = new Vector3(358.8415F, 88.95627F, 261.6975F),
@@ -299,7 +359,7 @@ namespace SupplyDrop.Items
             //                new RoR2.ItemDisplayRule
             //                {
             //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
             //                    childName = "Chest",
             //                    localPos = new Vector3(-0.25983F, 0.30917F, -0.02484F),
             //                    localAngles = new Vector3(343.1456F, 273.5997F, 0.5956F),
@@ -311,31 +371,31 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(0.03683F, 0.38324F, 0.00515F),
                     localAngles = new Vector3(337.9349F, 11.15429F, 356.3635F),
                     localScale = new Vector3(0.08552F, 0.08552F, 0.08552F)
                 }
             });
-            //            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
-            //            {
-            //                new RoR2.ItemDisplayRule
-            //                {
-            //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-            //                    followerPrefab = ItemBodyModelPrefab,
-            //                    childName = "Chest",
-            //                    localPos = new Vector3(-0.04f, 0.26f, 0.22f),
-            //                    localAngles = new Vector3(0f, 0f, 0f),
-            //                    localScale = generalScale * 0.9f
-            //                }
-            //            });
+            rules.Add("mdlMiner", new RoR2.ItemDisplayRule[]
+            {
+                new RoR2.ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
+                    childName = "FootR",
+                    localPos = new Vector3(0.00003F, 0.00151F, -0.0003F),
+                    localAngles = new Vector3(16.11882F, 355.5665F, 359.4258F),
+                    localScale = new Vector3(0.00034F, 0.00041F, 0.00041F)
+                }
+            });
             rules.Add("mdlPathfinder", new RoR2.ItemDisplayRule[]
             {
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.01601F, 0.19647F, -0.03739F),
                     localAngles = new Vector3(49.17606F, 179.0234F, 355.9081F),
@@ -347,7 +407,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.01211F, 0.17431F, -0.04927F),
                     localAngles = new Vector3(40.66501F, 183.761F, 354.1893F),
@@ -359,7 +419,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "LeftFoot",
                     localPos = new Vector3(-0.00221F, 0.2621F, -0.02835F),
                     localAngles = new Vector3(44.60031F, 187.0047F, 3.19586F),
@@ -371,7 +431,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "ToeL",
                     localPos = new Vector3(-0.00812F, 0.10074F, 0.0469F),
                     localAngles = new Vector3(357.8404F, 359.4761F, 357.9219F),
@@ -383,7 +443,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "ToeL",
                     localPos = new Vector3(-0.00114F, 0.13838F, 0.03387F),
                     localAngles = new Vector3(4.98274F, 180.27F, 3.00657F),
@@ -395,7 +455,7 @@ namespace SupplyDrop.Items
             //                new RoR2.ItemDisplayRule
             //                {
             //                    ruleType = ItemDisplayRuleType.ParentedPrefab,
-            //                    followerPrefab = ItemBodyModelPrefab,
+            //                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
             //                    childName = "Head",
             //                    localPos = new Vector3(0F, 0.01245F, -0.00126F),
             //                    localAngles = new Vector3(0F, 0F, 0F),
@@ -407,7 +467,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "FootL",
                     localPos = new Vector3(-0.0218F, 0.25019F, -0.04457F),
                     localAngles = new Vector3(318.5143F, 356.2689F, 2.86264F),
@@ -419,7 +479,7 @@ namespace SupplyDrop.Items
                 new RoR2.ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
-                    followerPrefab = ItemBodyModelPrefab,
+                    followerPrefab = ItemBodyModelPrefab, followerPrefabAddress = new AssetReferenceGameObject(""),
                     childName = "shin.L",
                     localPos = new Vector3(-0.05437F, 0.07299F, -0.01956F),
                     localAngles = new Vector3(63.23962F, 49.92986F, 160.8041F),
@@ -431,64 +491,45 @@ namespace SupplyDrop.Items
         public override void Hooks()
         {
             GetStatCoefficients += ElitesEatVeggies;
+            GlobalEventManager.onCharacterDeathGlobal += EliteKillCheck;
         }
 
-        //This whole chunk handles the item dropping
-        public void OnKilledOtherServer(DamageReport damageReport)
+        //This chunk checks if the enemy killed was an elite
+        private void EliteKillCheck(DamageReport damageReport)
         {
-            if (redItems is null)
+            //Confirm networking for item drops is active
+            if (!NetworkServer.active)
             {
-                redItems = Run.instance.availableTier3DropList;
+                return;
             }
-            if (greenItems is null)
+
+            if (damageReport.victimBody && damageReport.victimBody.isElite && damageReport.attacker)
             {
-                greenItems = Run.instance.availableTier2DropList;
+                ActivateCanting(damageReport);
             }
-            if (whiteItems is null)
+        }
+        //This chunk handles the roll
+        private bool RollCheck(CharacterMaster master)
+        {
+            if (master)
             {
-                whiteItems = Run.instance.availableTier1DropList;
-            }    
-
-            var victimBody = damageReport.victimBody;
-            var dropLocation = damageReport.victimBody.transform.position;
-            var cbKiller = damageReport.attackerBody.GetComponent<CharacterBody>();
-
-            //Vector3 constant = (Vector3.up * 20f) + (5 * Vector3.right * Mathf.Cos(2f * Mathf.PI / Run.instance.participatingPlayerCount)) + (5 * Vector3.forward * Mathf.Sin(2f * Mathf.PI / Run.instance.participatingPlayerCount));
-
-            if (cbKiller)
-            {
-                var inventoryCount = GetCount(cbKiller);
+                var inventoryCount = GetCount(master);
                 if (inventoryCount > 0)
                 {
-                    if (victimBody.isElite && Util.CheckRoll(Mathf.Min((baseDropChance * 100) + ((addDropChance * 100) * (inventoryCount-1)),100),0))
-                    {
-                        var redItem = Util.CheckRoll(1 + ((baseDropChance * 100) * (inventoryCount - 1)), cbKiller.master.luck);
-                        if (redItem)
-                        {
-
-                            SpawnItem(redItems, Run.instance.treasureRng.RangeInt(0, redItems.Count));
-                            return;
-                        }
-
-                        var greenItem = Util.CheckRoll(19 + ((baseDropChance * 100) * (inventoryCount - 1)), cbKiller.master.luck);
-                        if (greenItem)
-                        {
-                            SpawnItem(greenItems, Run.instance.treasureRng.RangeInt(0, greenItems.Count));
-                            return;
-                        }
-
-                        else
-                        {
-                            SpawnItem(whiteItems, Run.instance.treasureRng.RangeInt(0, whiteItems.Count));
-                            return;
-                        }
-                    }
+                    //Item scales hyperbolically, to slightly nerf stacking (10 stacks gives you 48% drop chance as opposed to 60%)
+                    return Util.CheckRoll((1 - 1/(1 + baseDropChance + (addDropChance * (inventoryCount - 1)))) * 100, 0);
                 }
             }
-
-            void SpawnItem(List<PickupIndex> items, int nextItem)
+            return false;
+        }
+        //This chunk triggers the item drop
+        private void ActivateCanting(DamageReport damageReport)
+        {
+            if (damageReport.attackerMaster && RollCheck(damageReport.attackerMaster))
             {
-                PickupDropletController.CreatePickupDroplet(items[nextItem], victimBody.transform.position, Vector3.zero);
+                var itemReward = SacrificePickupDropTable.GeneratePickupPreReplacement(dropRoll);
+
+                PickupDropletController.CreatePickupDroplet(itemReward, damageReport.victimBody.corePosition, Vector3.up * 20f, false, false);
             }
         }
 

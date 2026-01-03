@@ -49,7 +49,8 @@ namespace SupplyDrop.Items
         public virtual bool AIBlacklisted { get; set; } = false;
 
         public virtual bool RequireUnlock { get; set; } = true;
-
+        protected virtual void CreateCraftableDef()
+        { }
         public abstract void Init(ConfigFile config);
 
         protected void CreateLang()
@@ -90,7 +91,26 @@ namespace SupplyDrop.Items
             }
 
             ItemAPI.Add(new CustomItem(ItemDef, CreateItemDisplayRules()));
+
+            var mdlParams = this.ItemDef.pickupModelPrefab.GetComponent<ModelPanelParameters>() ?? this.ItemDef.pickupModelPrefab.AddComponent<ModelPanelParameters>();
         }
+
+        //Dunno why this doesn't work. Don't care anymore, the NRE it throws doesn't actually cause any issues. If someone else wants to fix it be my guest, I'm crashed out over this.
+        //public virtual void AdjustPickupMode()
+        //{
+        //    var mdlParams = this.ItemDef.pickupModelPrefab.GetComponent<ModelPanelParameters>() ?? this.ItemDef.pickupModelPrefab.AddComponent<ModelPanelParameters>();
+
+        //    if (!mdlParams.focusPointTransform)
+        //    {
+        //        mdlParams.focusPointTransform = new GameObject("FocusPoint").transform;
+        //        mdlParams.focusPointTransform.SetParent(this.ItemDef.pickupModelPrefab.transform);
+        //    }
+        //    if (!mdlParams.cameraPositionTransform)
+        //    {
+        //       mdlParams.cameraPositionTransform = new GameObject("CameraPosition)").transform;
+        //        mdlParams.cameraPositionTransform.SetParent(this.ItemDef.pickupModelPrefab.transform);
+        //    }
+        //}
 
 
         public abstract void Hooks();

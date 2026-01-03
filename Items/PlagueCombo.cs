@@ -2,7 +2,6 @@
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using MonoMod.Cil;
 
 using SupplyDrop.Utils;
 using static SupplyDrop.Utils.ItemHelpers;
@@ -10,71 +9,78 @@ using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
-using System;
-using System.Linq;
 
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using static R2API.RecalculateStatsAPI;
 
 namespace SupplyDrop.Items
 {
-    public class PlagueMask : ItemBase<PlagueMask>
+    public class PlagueCombo : ItemBase<PlagueCombo>
     {
 
         //Config Stuff
 
         public static ConfigOption<float> baseStackHealPercent;
         public static ConfigOption<float> addStackHealPercent;
+        public static ConfigOption<float> baseStackHPPercent;
+        public static ConfigOption<float> addStackHPPercent;
+        public static ConfigOption<float> baseStackBlightPercent;
+        public static ConfigOption<float> addStackBlightPercent;
 
         //Item Data
 
-        public override string ItemName => "Vintage Plague Mask";
+        public override string ItemName => "The Pestilence";
 
-        public override string ItemLangTokenName => "PLAGUE_MASK";
+        public override string ItemLangTokenName => "PLAGUE_COMBO";
 
-        public override string ItemPickupDesc => "Heal more the more damage items you have.";
+        public override string ItemPickupDesc => "The effects of the Plague Doctor...plus something more.";
 
-        public override string ItemFullDescription => $"All <style=cIsHealing>healing</style> is increased by " +
-            $"<style=cIsHealing>{FloatToPercentageString(baseStackHealPercent)}</style> <style=cStack>(+{FloatToPercentageString(addStackHealPercent)} per stack)</style> for every <style=cIsDamage>damage item</style> you possess.";
+        public override string ItemFullDescription => $"All <style=cIsHealing>healing</style> is increased by " + $"<style=cIsHealing>{FloatToPercentageString(baseStackHealPercent)}</style> <style=cStack>(+{FloatToPercentageString(addStackHealPercent)} per stack)</style> " + 
+            $"for every <style=cIsDamage>damage item</style> you possess. " + 
+            $"Increase your <style=cIsHealing>health permanently</style> by <style=cIsHealing>{FloatToPercentageString(baseStackHPPercent)}</style> " + 
+            $"<style=cStack>(+{FloatToPercentageString(addStackHPPercent)} per stack)</style> for every <style=cIsUtility>utility item</style> you possess. " + 
+            $"On hit, <style=cIsDamage>{FloatToPercentageString(baseStackBlightPercent)}</style> <style=cStack>(+{FloatToPercentageString(addStackBlightPercent)} per stack)</style> " +
+            $"to apply a stack of Blight for every <style=cIsHealing>healing item</style> you possess.";
 
-        public override string ItemLore => "A fire crackled from within the ornate fireplace that dominated one side " +
-            "of the pristine office. Across, beautiful bookshelves that seemed to stretch into the heavens were packed with tomes, " +
-            "ancient and modern, as well as various priceless curios.\n\n" +
-            "One of the office's great mahogany doors, covered in elaborate and disturbing carvings, opened silently. Three men walked into room. " +
-            "Two of the men were massive; dressed in fine suits, their faces were obscured with menacing hoods of black fabric and steel. " +
-            "The last man, a tall, gaunt creature being coralled by the other two, wore a simple white lab uniform, a leather hat, and a mask with " +
-            "a beak. The two hooded figures led him into the room and sat him in a simple chair, at the foot of a magnificent desk.\n\n" +
-            "The man peered through the glass lenses of his mask at the Administrator. The leader of The Order stared impassively back from behind " +
-            "a mask made of solid gold, intricately sculpted into the face the Order had proven to be god.\n\n" +
-            "\"Doctor. You have broken the Oath of the Order.\"\n\n" +
-            "\"Fuck you.\"\n\n" +
-            "The Administrator did not flinch at the words. They stared motionlessly at the increasingly agitated man before them. " +
-            "\"You have been found attempting...unsuccessfully...to reveal the Order's involvement in recent UES voyages.\"\n\n" +
-            "\"Fu-\"\n\n" +
-            "The Adminstrator raised their hand. \"The Order does not tolerate such blasphemous acts. We are an Order of science and reason, " +
-            "and you have acted against reason.\"\n\n" +
-            "\"Reason? You idiots are going to unleash them! Onto everyone! How is that reasonable?!\"\n\n" +
-            "\"You have thusly been deemed <b>Unreasonable</b>. Your membership to the Order has been severed.\"\n\n" +
-            "The Administrator reached out, and placed a single, gloved finger upon the quivering man's mask.\n\n" +
-            "\"Goodbye Doctor.\"\n\n" +
-            "The two men stepped forward, and ripped away the man's mask, revealing a face full of emotion. Rage. Grief. Terror. " +
-            "The exposed man yelled at those in the room, cried and struggled, but he was easily hoisted out of the chair and dragged " +
-            "out of the room by the two men.\n\n" +
-            "The golden face stared stoicly as the man it just condemned was removed from the room. As the doors slammed shut, " +
-            "it looked down at the mask that had been left behind.";
+        public override string ItemLore => "Ignorance has spread throughout the flock.\n\n" +
+            "<i>Yes</i>\n\n" +
+            "It consumes humanity like the foul parasite it is, hollowing out its hosts of their blessing.\n\n" +
+            "<i>Yes</i>\n\n" +
+            "STEALING OUR BIRTHRIGHTS!\n\n" +
+            "<i>Yes!</i>\n\n" +
+            "We see it for what it is. We perceive its true, disgusting form. And it is scared.\n\n" +
+            "<i>YES!</i>\n\n" +
+            "Yet even as We fight to save the flock, Ignorance feasts.\n\n" +
+            "<i>Yes</i>\n\n" +
+            "And, most pathetically of all, the flock is not entirely innocent in this vile ritual. The infected are not unwilling hosts.\n\n" +
+            "<i>...Yes?</i>\n\n" +
+            "The infected are not unwilling hosts.\n\n" +
+            "<i>Yes</i>\n\n" +
+            "The TRUTH is that the flock is giving itself over to Ignorance! Offering up their birthrights willingly!\n\n" +
+            "<i>Yes!</i>\n\n" +
+            "They sabotage Our efforts! Destroy Our works! They smile and submit with glee as Ignorance consumes them, and they work to spread Its filth!\n\n" +
+            "<i><b>Yes!!</i></b>\n\n" +
+            "NO LONGER! WE SHALL ROOT IGNORANCE OUT OF THE FLOCK! AND THE TRAITORS TO HUMANITY ALONG WITH IT!\n\n" +
+            "<i><b>Yes!!!</i></b>\n\n" +
+            "THE CANCER WILL BE CULLED!\n\n" +
+            "<i><b>YES!!!</i></b>\n\n" +
+            "THROUGH OUR MERCY THE FLOCK SHALL BE CULLED AND CLEANED!\n\n" +
+            "YES!!!\n\n";
 
-        public override ItemTier Tier => ItemTier.Tier2;
+        public override ItemTier Tier => ItemTier.FoodTier;
 
-        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Healing, ItemTag.AIBlacklist };
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Damage, ItemTag.AIBlacklist, ItemTag.IgnoreForDropList};
 
         public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("PlagueMask.prefab");
         public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("PlagueMaskIcon");
         public static GameObject ItemBodyModelPrefab;
 
         private static List<CharacterBody> Playername = new List<CharacterBody>();
-        private ItemIndex[] indiciiToCheck;
 
         public static Dictionary<NetworkInstanceId, int> DamageItemCounts { get; private set; } = new Dictionary<NetworkInstanceId, int>();
+        public static Dictionary<NetworkInstanceId, int> UtilityItemCounts { get; private set; } = new Dictionary<NetworkInstanceId, int>();
+
 
         public override void Init(ConfigFile config)
         {
@@ -83,10 +89,42 @@ namespace SupplyDrop.Items
             CreateItem();
             Hooks();
         }
+        protected override void CreateCraftableDef()
+        {
+            //Plague Hat + Plague Mask = Pestilence
+            var plagueCombo = ScriptableObject.CreateInstance<CraftableDef>();
+            (plagueCombo as ScriptableObject).name = "cdPlagueCombo";
+            plagueCombo.pickup = ItemDef;
+            plagueCombo.recipes = new Recipe[]
+            {
+                new Recipe()
+                {
+                    ingredients = new RecipeIngredient[]
+                    {
+                        new RecipeIngredient()
+                        {
+                            pickup = PlagueHat.instance.ItemDef,
+                            type = IngredientTypeIndex.AssetReference
+                        },
+                        new RecipeIngredient()
+                        {
+                            pickup = PlagueMask.instance.ItemDef,
+                            type = IngredientTypeIndex.AssetReference
+                        }
+                    }
+                }
+            };
+        }
         private void CreateConfig(ConfigFile config)
         {
-            baseStackHealPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bonus Healing Gained for Each Damage Item With 1 Vintage Plague Mask", .04f, "How much bonus healing per Damage item should you gain with a single Vintage Plague Mask? (.05 = 4%)");
-            addStackHealPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Bonus Healing Gained for Each Damage Item Per Vintage Plague Mask", .02f, "How much additional bonus healing per Damage item should each Vintage Plague Mask after the first give?");
+            baseStackHealPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bonus Healing Gained for Each Damage Item With 1 Pestilence", .04f, "How much bonus healing per Damage item should you gain with a single Pestilence? (.05 = 4%)");
+            addStackHealPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Bonus Healing Gained for Each Damage Item Per Pestilence", .02f, "How much additional bonus healing per Damage item should each Pestilence after the first give?");
+
+            baseStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Base HP Gained for Each Utility Item With 1 Pestilence", .01f, "How much HP, as a % of max HP, per Utility item should you gain with a single Pestilence? (.01 = 1%)");
+            addStackHPPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional HP Gained for Each Utility Item Per Pestilence", .01f, "How much additional HP, as a % of max HP, per Utility item should each Pestilence after the first give?");
+
+            baseStackBlightPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Chance For Blight On-Hit Per Healing Item With 1 Pestilence", .01f, "How much chance to apply Blight on hit per Healing item should you gain with a single Pestilence? (.01 = 1%)");
+            addStackBlightPercent = config.ActiveBind<float>("Item: " + ItemName, "Additional Chance For Blight On-Hit Per Healing Item Per Pestilence", .01f, "How much additional chance to apply Blight on hit per Healing item should each Pestilence after the first give? (.01 = 1%)");
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -500,29 +538,43 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            On.RoR2.Run.Start += DamageItemListCreator;
             On.RoR2.CharacterBody.OnInventoryChanged += GetTotalDamageItems;
+            On.RoR2.CharacterBody.OnInventoryChanged += GetTotalUtilityItems;
             On.RoR2.HealthComponent.Heal += HealthComponent_Heal;
+            GetStatCoefficients += GainBonusHP;
+            On.RoR2.GlobalEventManager.OnHitEnemy += BlightOnHit;
         }
-        private void DamageItemListCreator(On.RoR2.Run.orig_Start orig, Run self)
-        //May need to be moved to a separate class if multiple items need to access this list
-        {
-            orig(self);
-            indiciiToCheck = ItemCatalog.allItems.Where(x => ItemCatalog.GetItemDef(x).ContainsTag(ItemTag.Damage)).ToArray();
-            DamageItemCounts = new Dictionary<NetworkInstanceId, int>();
-            Debug.Log("Item List Method has been run and a Damage Item List has been created");
-            Debug.Log(indiciiToCheck.Length);
-        }
+
         private void GetTotalDamageItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         //This compares your inventory to the damage item list each time your inventory changes, and generates the appropriate value for damageItemCount
         {
             orig(self);
-            var damageItemCount = 0;
-            foreach (ItemIndex x in indiciiToCheck)
+            var inventoryCount = GetCount(self);
+            if (inventoryCount > 0)
             {
-                damageItemCount += self.inventory.GetItemCount(x);
+                var damageItemCount = 0;
+                foreach (ItemIndex x in indiciiToCheckDamageSD)
+                {
+                    damageItemCount += self.inventory.GetItemCount(x);
+                }
+                DamageItemCounts[self.netId] = damageItemCount;
             }
-            DamageItemCounts[self.netId] = damageItemCount;
+        }
+        private void GetTotalUtilityItems(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
+        //This compares your inventory to the utility item list each time your inventory changes, and generates the appropriate value for utilityItemCount
+        {
+            orig(self);
+            var inventoryCount = GetCount(self);
+            if (inventoryCount > 0)
+            {
+                var utilityItemCount = 0;
+                foreach (ItemIndex x in indiciiToCheckUtilitySD)
+                {
+                    utilityItemCount += self.inventory.GetItemCount(x);
+                }
+                UtilityItemCounts[self.netId] = utilityItemCount;
+            }
+
         }
         private float HealthComponent_Heal(On.RoR2.HealthComponent.orig_Heal orig, HealthComponent self, float amount, ProcChainMask procChainMask, bool nonRegen)
         //This should handle the healing shenanigans. Thank God I don't need to use IL anymore
@@ -533,6 +585,44 @@ namespace SupplyDrop.Items
                 amount = amount + (amount * baseStackHealPercent * DamageItemCounts[self.netId]) + (amount * addStackHealPercent * DamageItemCounts[self.netId] * (maskCount - 1));
             }
             return orig(self, amount, procChainMask, nonRegen);
+        }
+        private void GainBonusHP(CharacterBody sender, StatHookEventArgs args)
+        {
+            var inventoryCount = GetCount(sender);
+            if (GetCount(sender) > 0 && UtilityItemCounts.ContainsKey(sender.netId))
+            {
+                args.healthMultAdd += (UtilityItemCounts[sender.netId] * (baseStackHPPercent + ((inventoryCount - 1) * addStackHPPercent)));
+            }
+        }
+
+        private void BlightOnHit(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+        {
+            orig(self, damageInfo, victim);
+
+            if (damageInfo.dotIndex != DotController.DotIndex.None) return;
+            if (damageInfo.procCoefficient <= 0.0f) return;
+
+            var masterAttacker = damageInfo.attacker.GetComponent<CharacterMaster>();
+            if (masterAttacker)
+            {
+                var cbAttacker = damageInfo.attacker.GetComponent<CharacterBody>();
+                if (cbAttacker)
+                {
+                    var victimBody = victim.GetComponent<CharacterBody>();
+                    if (victimBody)
+                    {
+                        var inventoryCount = GetCount(cbAttacker);
+                        if (inventoryCount > 0)
+                        {
+                            if (Util.CheckRoll((baseStackBlightPercent + (addStackBlightPercent * (inventoryCount - 1)) *damageInfo.procCoefficient), masterAttacker))
+                            {
+                                DotController.InflictDot(victim, cbAttacker.gameObject, victimBody.mainHurtBox, DotController.DotIndex.Blight, 5f);
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

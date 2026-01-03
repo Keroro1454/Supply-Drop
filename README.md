@@ -4,46 +4,55 @@ Items are designed with not just variety in mind, but with the goal of staying t
 More items are coming soon--over a dozen are planned as of now!
 
 # What's New with Update 1.5: By the Light of the Moon!
-Historically, the moon has been a pain in the butt of humanity. I know all you lunar nerds are upset to hear it, but it's true. Consider what the moon has ever done for us:
+Historically, the moon has been a pain in the butt of humanity. I know you crystal-loving lunar nerds are upset to hear it, but it's true. Consider what the moon has done for us:
 
 Created werewolves? Terrible dinner party guests.
 
-Housed Nazis? Those guys suck. And were also probably terrible dinner party guests.
+Housed Nazis? Those guys suck. And also make for terrible dinner party guests.
 
-Driven us crazy? They put me in a room for that!
+Made tides? That's our water dammit! Who does the moon think it is, touching our stuff without permission?!
 
-Enabled Halloween cosmetics? If I hear that fly set one more time...
-
-But today, for the first time, the moon has done something halfway decent: It's given us some brand new items to play with! Admittedly, because the moon can't help but be annoying, these items may be of...dubious benefit, but still,
-maybe that damn rock has turned over a new leaf. We doubt it though. No leaves on the moon.
+But today, for the first time, the moon has done something halfway decent: It's given us some brand new items to play with! Admittedly, probably because the moon can't help itself, these items may be of...dubious benefit, but still,
+maybe that damn rock has turned over a new leaf. We doubt it though. No trees on the moon.
 
 ----
 # Included Items:
 Icon | Item | Description | Rarity
 ---|---:|---:|---
 <img src="https://i.imgur.com/nv4V8R8.png" width="100"/> | **Hardened Bone Fragments** | Killing an enemy temporarily grants 5 (+1 per stack) armor. Some armor is lost upon taking damage; higher damage loses more armor. | Common 
-<img src="https://i.imgur.com/VTys6yV.png" width="100"/> | **Numbing Berries** | Gain 10 (+5 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds. | Common 
+<img src="https://i.imgur.com/VTys6yV.png" width="100"/> | **Numbing Berries** | Gain 10 (+10 per stack) armor upon taking damage for 2 (+0.5 per stack) seconds. | Common 
 <img src="https://i.imgur.com/0DuVrzU.png" width="100"/> | **Unassuming Tie** |  Gain shield equal to 4% (+4% per stack) of your max HP. Breaking your shield gives you a Second Wind for 5 seconds, plus an additional amount based on max shield. Second Wind increases movement speed by 15% (+15% per stack). | Common 
 <img src="https://i.imgur.com/WIuK51q.png" width="100"/> | **Salvaged Wires** | Gain shield equal to 4% (+4% per stack) of your max HP. While shields are active, gain 10% (+10% per stack) increased attack speed. | Common 
 <img src="https://i.imgur.com/Rw2A1He.png" width="100"/> | **Shell Plating** | Killing an enemy increases your armor permanently by .5, up to a maximum of 25 (+10 per stack) armor. |  Uncommon 
 <img src="https://i.imgur.com/4BJoA04.png" width="100"/> | **Echo-Voltaic Plankton** | Gain shield equal to 8% of your max HP. Dealing damage recharges 1 (+1 per stack) shield. |  Uncommon 
-<img src="https://i.imgur.com/kuqjqSn.png" width="100"/> |  **Vintage Plague Mask** |  All healing is increased by 2% (+2% per stack) for every damage item you possess. | Uncommon 
+<img src="https://i.imgur.com/kuqjqSn.png" width="100"/> |  **Vintage Plague Mask** |  All healing is increased by 4% (+2% per stack) for every damage item you possess. | Uncommon 
 <img src="https://i.imgur.com/5slZP70.png" width="100"/> | **Vintage Plague Hat** | Increase maximum HP by 1% (+1% per stack) for every utility item you possess. | Uncommon 
 <img src="https://i.imgur.com/0L658Aq.png" width="100"/> | **Quantum Shield Stabilizer** | Gain shield equal to 16% of your max HP. If an attack exceeds your active shields, the excess damage is negated. This ability has a cooldown of 5s (-1s per stack). | Legendary 
 <img src="https://i.imgur.com/2Fgehyx.png" width="100"/> | **Tome of Bloodletting** | Convert 10% (+10% per stack) of the damage you take into a damage boost of up to 20 (+10 per stack) for 4s. The boost duration is increased based on damage taken; every 10% max health that was depleted, up to 50%, increases the duration by +2s. |  Legendary 
 <img src="https://i.imgur.com/9ee2ayr.png" width="100"/> | **Afterlife Insurance** | Gain 25% (+10% per stack) less money from killing monsters. 100% (+25% per stack) of money lost is invested into upgrading your insurance to cover more threats, up to 10 times. Upon dying to an source you are insured for, you will be revived, and your insurance level will be reset to zero. | Lunar 
 <img src="https://i.imgur.com/2lSag6M.png" width="100"/> |  **Silver Pocketwatch** | All buff durations are increased by 50% (+25% per stack). All debuff durations are also increased by 50% (+25% per stack). | Lunar
 <img src="https://i.imgur.com/I8mSekS.png" width="100"/> |  **Arrogant Canting** | Elite enemies have a 6% (+6% per stack) chance to drop a random item on death, but they also gain 25% (+25% per stack) more HP and 15% (+15% per stack) more damage. | Lunar
-<img src="https://i.imgur.com/FGIJv4a.png" width="100"/> |  **Two-Sided Die** | Whenever you use a shrine, 2 (+2 per stack) stats are picked at random. One is buffed by 50%, the other is nerfed by 25%. | Lunar
+<img src="https://i.imgur.com/FGIJv4a.png" width="100"/> |  **Two-Sided Die** | Whenever you use a shrine, 2 (+2 per stack) stats are picked at random. Half of the selected stats are buffed by 50%, the others are nerfed by 25%. | Lunar
 
 ----
 ## Changelog:
 - 1.5.0: By the Light of the Moon!
 	- Additions:
 		- Added four new items: Arrogant Canting, Afterlife Insurance, Silver Pocketwatch, and Two-Sided Die
+		- Added item displays for all new vanilla characters (SotS + AC), as well numerous modded ones
+		- Added a few crafting recipes
 	- Bug Fixes:
-		- Fixed the Tome of Bloodletting bleeding visual not appearing -------> TO BE DONE
-
+		- Fixed the Tome of Bloodletting bleeding visual not appearing
+		- Fixed Shell Plating stacks not carrying over in-between stages
+		- Fixed a massive Two-Sided Die being randomly part of the Hardened Bone Fragments model
+		- Fixed a number of item displays on several modded characters
+		- Fixed IDRs being dependent on core mods fixing the missing wonky code. They now fix the issue themselves. (Thanks .score!)
+		- Fixed item models not appearing in logbook entries
+		- Standardized config language
+		- Fixed Quantum Shield Stabilizer being massive when it was a pick-up
+	- Balance Changes:
+		- BUFF/REVERT: Increased Vintage Plague Mask base healing boost per item, back from 2% to 4%
+		- BUFF: Increased how much armor additional stacks of Numbing Berries provides, from +5 to +10 per stack
 
 <details>
 <summary>
@@ -229,3 +238,5 @@ Icon | Item | Description | Rarity
 **Aaron:** They helped a ton with puzzling through the Plague Hat's IL hook!
 
 **Phreel:** Helped provide some fixes with porting to SOTV as well as motivation to actually get around to fixing this mod!
+
+**.score:** Helped with logbook stuff, Two-Sided Die UI implementation, and probably even more that I don't remember!

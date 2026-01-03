@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 573800512
+CRC: 2263555177
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 665e8adfa64077917765ff1a30441654
+    Hash: be1eceeff090a1a8a0a1aeb727e6755e
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 069797ccdc458d01886e092d5a79e275
+    Hash: e98ba4bbfbfa1438b7b15421acbd3e6b
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,18 +25,124 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
-- Class: 49
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d78dad841a1ee8643b9296215033a1de, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5e8b33c4e3f8e0847abd264e385a4403, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2a1bfd578d6b4eb4990846686cfeb640, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 92c2a258398e99749b7883dc76473208, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 73c9c069bbb81df408029133a81979e5, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b0f2268e56569ba468f428ef69e131ec, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 153
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
 Assets:
-- Assets/Main/Textures/Icons/BoneIcon.png
+- Assets/Main/Textures/Icons/SecondWindBuffIcon.png
+- Assets/Main/Textures/Icons/HolyInsuranceIcon.png
+- Assets/Main/Textures/UI/InsuranceBarTest.prefab
+- Assets/Main/Models/Prefabs/QSGen.prefab
 - Assets/Main/Models/Prefabs/Bone.prefab
+- Assets/Main/Models/Prefabs/TestModel.prefab
+- Assets/Main/Textures/Icons/HolyInsuranceT3Icon.png
+- Assets/Main/Textures/Icons/ShellIcon.png
+- Assets/Main/Textures/Icons/PlagueHatIcon.png
+- Assets/Main/Textures/Icons/BloodBookBuffIcon5.png
+- Assets/Main/Textures/Icons/ArrogantCantingIcon.png
+- Assets/Main/Models/Prefabs/Shell.prefab
+- Assets/Main/Textures/Icons/HolyInsuranceT8Icon.png
+- Assets/Main/Textures/Icons/BoneIcon.png
+- Assets/Main/Textures/Icons/SilverWatchIcon.png
+- Assets/Main/Textures/UI/InsuranceBarOld.prefab
+- Assets/Main/Textures/Icons/QSGenIcon.png
+- Assets/Main/Models/materials/seaShellTxt_0.mat
 - Assets/Main/Models/materials/bone_material.mat
-- Assets/Main/Models/Prefabs/bone.blend
+- Assets/Main/Models/Prefabs/Tie.prefab
+- Assets/Main/Models/Prefabs/PlagueMask.prefab
+- Assets/Main/Textures/Icons/HolyInsuranceT1Icon.png
+- Assets/Main/Textures/Icons/PlagueMaskIcon.png
+- Assets/Main/Textures/UI/Health-Bar.png
+- Assets/Main/Textures/Icons/TestIcon.png
+- Assets/Main/Textures/Icons/ShieldGateCooldownIcon.png
+- Assets/Main/Textures/Icons/PlanktonIcon 1.png
+- Assets/Main/Textures/Icons/PlanktonIcon.png
+- Assets/Main/Models/Prefabs/Scroll2.prefab
+- Assets/Main/Models/Prefabs/HolyInsurance.prefab
+- Assets/Main/Textures/Icons/TieIcon.png
+- Assets/Main/Textures/Icons/HolyInsuranceT4Icon.png
+- Assets/Main/Models/materials/Goo.mat
+- Assets/Main/Models/textures/seaShellTxt_0.png
+- Assets/Main/Textures/Icons/BerryIcon.png
+- Assets/Main/Textures/Icons/TwoSidedDieIcon.png
+- Assets/Main/Textures/Icons/BerryBuffIcon.png
+- Assets/Main/Models/meshes/buffer-0-mesh-0_0_0.asset
+- Assets/Main/Textures/Icons/BloodBookBuffIcon2.png
+- Assets/Main/Models/Prefabs/BloodBookTracker.prefab
+- Assets/Main/Textures/Icons/BloodBookBuffIcon4.png
+- Assets/Main/Models/Prefabs/TieBig.prefab
+- Assets/Main/Textures/Icons/HolyInsuranceT7Icon.png
+- Assets/Main/Textures/Icons/BloodBookBuffIcon1.png
+- Assets/Main/Models/Scripts/GooShader.shader
 - Assets/Main/Textures/Icons/BoneBuffIcon.png
-- Assets/AssetBundle/AssetBundle.manifest
+- Assets/Main/Textures/Icons/BloodBookIcon.png
+- Assets/Main/Models/meshes/meshes/buffer-0-mesh-0_0_0.asset
+- Assets/Main/Models/Prefabs/Berry.prefab
+- Assets/Main/Textures/Icons/SalvagedWiresIcon.png
+- Assets/Main/Models/Prefabs/TiePickUp.prefab
+- Assets/Main/Textures/Icons/BloodBookBuffIcon3.png
 - Assets/Main/Models/materials/Boney.mat
-- Assets/AssetBundle/supplydrop.manifest
-- Assets/AssetBundle/exampleitemmod.manifest
+- Assets/Main/Models/Prefabs/PlagueHat.prefab
+- Assets/Main/Textures/Icons/HolyInsuranceT5Icon.png
+- Assets/Main/Textures/Icons/HolyInsuranceT6Icon.png
+- Assets/Main/Textures/Icons/WindedDebuffIcon.png
+- Assets/Main/Textures/Icons/ShellBuffIcon.png
+- Assets/Main/Textures/UI/InsuranceBar.prefab
+- Assets/Main/Textures/Icons/HolyInsuranceT9Icon.png
+- Assets/Main/Models/Prefabs/SilverWatch.prefab
+- Assets/Main/Models/Prefabs/BloodBook Backup.prefab
+- Assets/Main/Textures/Icons/BloodBookBuffIcon6.png
+- Assets/Main/Textures/Icons/HolyInsuranceT10Icon.png
+- Assets/Main/Models/materials/texDominoDirt.mat
+- Assets/Main/Models/Prefabs/BloodBook.prefab
+- Assets/Main/Models/textures/Boney.jpg
+- Assets/Main/Textures/Icons/HolyInsuranceT2Icon.png
+- Assets/Main/Models/materials/lambert9SG_0.mat
+- Assets/Main/Models/Prefabs/WireBundle.prefab
+- Assets/Main/Models/Prefabs/ArrogantCanting.prefab
+- Assets/Main/Models/Prefabs/TwoSidedDie.prefab
+- Assets/Main/Models/Prefabs/Belt.prefab
+- Assets/Main/Models/textures/texDominoDirt.png
+- Assets/Main/Models/Prefabs/Plankton.prefab
 Dependencies: []

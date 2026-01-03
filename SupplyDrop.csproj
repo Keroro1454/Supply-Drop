@@ -18,13 +18,11 @@
 
   <ItemGroup>
     <Compile Remove="Bobbing.cs" />
-    <Compile Remove="Items\ArrogantCanting.cs" />
-    <Compile Remove="Items\HolyInsurance.cs" />
-    <Compile Remove="Items\SilverWatch.cs" />
-    <Compile Remove="Items\TwoSidedDie.cs" />
+    <Compile Remove="Items\PlagueCombo.cs" />
+    <Compile Remove="Items\TwoSidedDie - BuffAlt.cs" />
+    <Compile Remove="Items\TwoSidedDie - DisplayAlt.cs" />
+    <Compile Remove="Items\TwoSidedDie OLD.cs" />
     <Compile Remove="PlagueMask.cs" />
-    <Compile Remove="Utilities\InsuranceBarController.cs" />
-    <Compile Remove="Utilities\InsuranceSavingsTracker.cs" />
     <Compile Remove="Utilities\ShellStackTracker.cs" />
   </ItemGroup>
 
@@ -43,18 +41,42 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="BepInEx.Core" Version="5.4.19" />
-	  <PackageReference Include="RiskOfRain2.GameLibs" Version="1.3.2-r.1" />
-	  <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" />
-	  <PackageReference Include="MMHOOK.RoR2" Version="2024.9.5">
+	  <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+	  <PackageReference Include="RiskOfRain2.GameLibs" Version="1.4.0-r.0" />
+	  <PackageReference Include="UnityEngine.Modules" Version="2021.3.33">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="MMHOOK.RoR2" Version="2025.11.19">
 		  <NoWarn>NU1701</NoWarn>
 	  </PackageReference>
-	  <PackageReference Include="R2API" Version="4.3.5" />
+	  <PackageReference Include="R2API" Version="5.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="AK.Wwise.Unity.API">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\AK.Wwise.Unity.API.dll</HintPath>
+    </Reference>
+    <Reference Include="ItemStats">
+      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\PostStorm\BepInEx\plugins\Moffein-ItemStats\ItemStats.dll</HintPath>
+    </Reference>
+    <Reference Include="LookingGlass">
+      <HintPath>..\..\..\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\PostStorm\BepInEx\plugins\DropPod-LookingGlass\LookingGlass\LookingGlass.dll</HintPath>
+    </Reference>
+    <Reference Include="RoR2">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\RoR2.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 

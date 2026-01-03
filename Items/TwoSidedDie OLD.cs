@@ -11,17 +11,9 @@ using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
 using System.Collections.Generic;
-using System.Linq;
-using RoR2.UI;
-using BepInEx;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
-using UnityEngine.Networking;
-using RoR2.Networking;
 
 namespace SupplyDrop.Items
 {
-    [BepInDependency(NetworkingAPI.PluginGUID)]
     public class TwoSidedDie : ItemBase<TwoSidedDie>
     {
         //Config Stuff
@@ -57,14 +49,36 @@ namespace SupplyDrop.Items
 
         List<int> weights = new List<int>();
 
-        private static string tooltipString = "<color=#E6BC4D></color><color=#D4CB6E></color><color=#ABEFA2></color>";
+        public int timeToRoll = 0;
+        public int goldModifier = 0;
+        public int goodGoldRoll = 0;
+        public int badGoldRoll = 0;
+        public int luckModifier = 0;
+        public int goodLuckRoll = 0;
+        public int badLuckRoll = 0;
+        public int goodHPRoll = 0;
+        public int badHPRoll = 0;
+        public int goodDamageRoll = 0;
+        public int badDamageRoll = 0;
+        public int goodSpeedRoll = 0;
+        public int badSpeedRoll = 0;
+        public int goodXPRoll = 0;
+        public int badXPRoll = 0;
+        public int goodCritRoll = 0;
+        public int badCritRoll = 0;
+        public int goodCDRoll = 0;
+        public int badCDRoll = 0;
+        public int goodArmorRoll = 0;
+        public int badArmorRoll = 0;
+        public int goodSizeRoll = 0;
+        public int badSizeRoll = 0;
+        public int goodJumpRoll = 0;
+        public int badJumpRoll = 0;
+        public int goodEveryRoll = 0;
+        public int badEveryRoll = 0;
 
         public int normalSizeCounter = 0;
         Vector3 bodySizeReset;
-
-        public int TSDSizeUpTracker = 0;
-        public int TSDSizeDownTracker = 0;
-
 
         public override void Init(ConfigFile config)
         {
@@ -72,20 +86,45 @@ namespace SupplyDrop.Items
             CreateLang();
             CreateItem();
             Hooks();
+            SetupAttributes();
 
             ItemDef.pickupModelPrefab.transform.localScale = new Vector3(1.75f, 1.75f, 1.75f);
-
-            SDTSD.Init();
         }
 
         private void CreateConfig(ConfigFile config)
         {
-            goodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Good Stat is Buffed By with 1 1 Two-Sided Die", .10f, "How much should the one stat be buffed by with a single two-sided die? (.1 = 10%)");
-            badStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bad Stat is Nerfed By with 1 Two-Sided Die", .05f, "How much should the one stat be nerfed by with a single two-sided die? (.05 = 5%)");
+            goodStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Good Stat is Buffed By with 1 1 Two-Sided Die", .50f, "How much should the one stat be buffed by with a single two-sided die? (.5 = 50%)");
+            badStatPercent = config.ActiveBind<float>("Item: " + ItemName, "Base Bad Stat is Nerfed By with 1 Two-Sided Die", .25f, "How much should the one stat be nerfed by with a single two-sided die? (.25 = 25%)");
             baseNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Base Number of Stats Rolled with 1 Two-Sided Die", 2, "How many stats should be rolled with a single two-sided die?");
             addNumStatsRolled = config.ActiveBind<int>("Item: " + ItemName, "Additional Number of Stats Rolled per Two-Sided Die", 2, "How many more stats should be rolled for each two-sided die after the first?");
         }
-
+        public void SetupAttributes()
+        {
+            //#0: HP
+            weights.Add(10);
+            //#1: Damage
+            weights.Add(10);
+            //#2: Speed
+            weights.Add(10);
+            //#3: Gold
+            weights.Add(10);
+            //#4: XP
+            weights.Add(10);
+            //#5: Crit
+            weights.Add(10);
+            //#6: Cooldowns
+            weights.Add(10);
+            //#7: Armor
+            weights.Add(10);
+            //#8: Jump
+            weights.Add(10);
+            //#9: Luck
+            weights.Add(6);
+            //#10: Size
+            weights.Add(3);
+            //#11: EVERYTHING!
+            weights.Add(1);
+        }
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
             ItemBodyModelPrefab = ItemModel;
@@ -496,182 +535,19 @@ namespace SupplyDrop.Items
         }
         public override void Hooks()
         {
-            On.RoR2.UI.ItemIcon.SetItemIndex_ItemIndex_int_float += ItemIconSetUp;
-
             On.RoR2.PurchaseInteraction.OnInteractionBegin += ShrineInteraction;
             GetStatCoefficients += ApplyBuffDebuff;
 
             On.RoR2.DeathRewards.OnKilledServer += MoneyBonus;
             On.RoR2.Util.CheckRoll_float_float_CharacterMaster += LuckBonus;
-
-            NetworkingAPI.RegisterMessageType<SyncSDTSDMessage>();
         }
-
-        private void CharacterBody_OnInventoryChanged(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
+        private void ShrineInteraction(On.RoR2.PurchaseInteraction.orig_OnInteractionBegin orig, PurchaseInteraction self, Interactor activator)
         {
-            orig(self);
-            if (!SDTSD.GetForInventory(self.inventory))
-            {
-                self.inventory.gameObject.AddComponent<SDTSD>();
-            }
-        }
-
-        private void ItemIconSetUp (On.RoR2.UI.ItemIcon.orig_SetItemIndex_ItemIndex_int_float orig, RoR2.UI.ItemIcon self, ItemIndex newItemIndex, int newItemCount, float newDurationPercent)
-        {
-            orig(self, newItemIndex, newItemCount, newDurationPercent);
-
-            if (newItemIndex==ItemDef.itemIndex)
-            {
-                Transform parent = self.transform.parent;
-                if (parent)
-                {
-                    RoR2.UI.ItemInventoryDisplay itemInventoryDisplay = parent.GetComponent<RoR2.UI.ItemInventoryDisplay>();
-                    if (itemInventoryDisplay && itemInventoryDisplay.inventory)
-                    {
-                        SDTSD dice = itemInventoryDisplay.inventory.GetComponent<SDTSD>();
-                        if (dice)
-                        {
-                            globalStringBuilder.Clear();
-                            globalStringBuilder.Append(Language.GetString(self.tooltipProvider.bodyToken) + "\r\n");
-                            globalStringBuilder.Append("\r\n");
-                            globalStringBuilder.Append(Language.GetString("Current Roll Results:"));
-
-                            //Positive Stat Displays
-                            foreach (var statChange in dice.statStacksGood)
-                            {
-                                if (statChange.Value > 0)
-                                {
-                                    int displayValueUp = statChange.Value * 10;
-
-                                    globalStringBuilder.Append("\r\n");
-                                    globalStringBuilder.Append(Language.GetStringFormatted($"<style=cIsUtility>{statChange.Key.ToString().Replace("Up", " Increase")}: +{displayValueUp}%</style>"));
-                                }
-                            }
-                            //Negative Stat Displays
-                            foreach (var statChange in dice.statStacksBad)
-                            {
-                                if (statChange.Value > 0)
-                                {
-                                    int displayValueDown = statChange.Value * 5;
-
-                                    globalStringBuilder.Append("\r\n");
-                                    globalStringBuilder.Append(Language.GetStringFormatted($"<style=cDeath>{statChange.Key.ToString().Replace("Down", " Decrease")}: -{displayValueDown}%</style>"));
-                                }
-                            }
-                            globalStringBuilder.Append(tooltipString);
-                            self.tooltipProvider.overrideBodyText = globalStringBuilder.ToString();
-                            globalStringBuilder.Clear();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(self.tooltipProvider.overrideBodyText) && self.tooltipProvider.overrideBodyText.Contains(tooltipString))
-                    self.tooltipProvider.overrideBodyText = "";
-            }
-        }
-
-        public class SDTSD : MonoBehaviour
-        { 
-            public enum StatTypeGood 
-            {
-                HPUp,
-                DamageUp,
-                SpeedUp,
-                XPUp,
-                CritUp,
-                CDUp,
-                ArmorUp,
-                SizeUp,
-                JumpUp,
-                GoldUp,
-                LuckUp,
-                EveryUp
-            }
-            public enum StatTypeBad
-            {
-                HPDown,
-                DamageDown,
-                SpeedDown,
-                XPDown,
-                CritDown,
-                CDDown,
-                ArmorDown,
-                SizeDown,
-                JumpDown,
-                GoldDown,
-                LuckDown,
-                EveryDown
-            }
-
-            public static List<StatTypeGood> statTypesGood;
-            public List<StatTypeGood> statListGood;
-            public Dictionary<StatTypeGood, int> statStacksGood;
-
-            public static List<StatTypeBad> statTypesBad;
-            public List<StatTypeBad> statListBad;
-            public Dictionary<StatTypeBad, int> statStacksBad;
-
-            public Inventory[] inventory;
-
-            public static Dictionary<Inventory, SDTSD> inventoryToBehaviourDict = new Dictionary<Inventory, SDTSD>();
-            public static SDTSD GetForInventory(Inventory inventory)
-            {
-                if (!inventoryToBehaviourDict.ContainsKey(inventory))
-                {
-                    return inventory.gameObject.AddComponent<SDTSD>();
-                } 
-                return inventoryToBehaviourDict[inventory];
-            }
-            internal static void Init()
-            {
-                statTypesGood = ((StatTypeGood[])System.Enum.GetValues(typeof(StatTypeGood))).ToList();
-                statTypesBad = ((StatTypeBad[])System.Enum.GetValues(typeof(StatTypeBad))).ToList();
-            }
-            public void Awake()
-            {
-                inventory = GetComponents<Inventory>();
-                foreach (var i in inventory) inventoryToBehaviourDict[i] = this;
-
-                statStacksGood = new Dictionary<StatTypeGood, int>();
-                for (var i = 0; i < statTypesGood.Count; i++)
-                {
-                    statStacksGood.Add(statTypesGood[i], 0);
-                }
-                statListGood = new List<StatTypeGood>();
-
-                statStacksBad = new Dictionary<StatTypeBad, int>();
-                for (var i = 0; i < statTypesBad.Count; i++)
-                {
-                    statStacksBad.Add(statTypesBad[i], 0);
-                }
-                statListBad = new List<StatTypeBad>();
-            }
-
-            public void SyncToClients()
-            {
-                if (!NetworkServer.active) return;
-
-                foreach (var inv in inventory)
-                {
-                    if (!inv) continue;
-
-                    var netIdUInt = inv.gameObject.GetComponent<NetworkIdentity>().netId.Value; // convert NetworkInstanceId → uint
-                    var msg = new SyncSDTSDMessage(netIdUInt, statStacksGood, statStacksBad);
-                    msg.Send(NetworkDestination.Clients);
-                }
-            }
-        }
-        public void ShrineInteraction(On.RoR2.PurchaseInteraction.orig_OnInteractionBegin orig, PurchaseInteraction self, Interactor activator)
-        {                
             CharacterBody body = activator.GetComponent<CharacterBody>();
             int inventoryCount = GetCount(body);
             
             if(inventoryCount > 0)
             {
-                SDTSD statLookup = body.inventory.GetComponent<SDTSD>();
-
                 if (self.CanBeAffordedByInteractor(activator) && self.isShrine)
                 {
                     //This just stores the model's "correct" size so it can be reset later. Will only be accessed once.
@@ -681,67 +557,37 @@ namespace SupplyDrop.Items
                         normalSizeCounter++;
                     }
 
-                    var timeToRoll = inventoryCount;
+                    timeToRoll++;
 
-                    for(; timeToRoll > 0; timeToRoll --)
-                    {
-                        var chosenGoodRoll = RoR2Application.rng.NextElementUniform(SDTSD.statTypesGood);
-
-                        Console.print(chosenGoodRoll);
-
-                        if (!statLookup.statListGood.Contains(chosenGoodRoll))
-                        {
-                            statLookup.statListGood.Add(chosenGoodRoll);                            
-                        }
-                        statLookup.statStacksGood[chosenGoodRoll]++;
-
-                        if (chosenGoodRoll == SDTSD.StatTypeGood.SizeUp || chosenGoodRoll == SDTSD.StatTypeGood.EveryUp)
-                        {
-                            TSDSizeUpTracker = 1;
-                        }
-
-                        var chosenBadRoll = RoR2Application.rng.NextElementUniform(SDTSD.statTypesBad);
-
-                        Console.print(chosenBadRoll);
-
-                        if (!statLookup.statListBad.Contains(chosenBadRoll))
-                        {
-                            statLookup.statListBad.Add(chosenBadRoll);                            
-                        }
-                        statLookup.statStacksBad[chosenBadRoll]++;
-
-                        if (chosenBadRoll == SDTSD.StatTypeBad.SizeDown || chosenBadRoll == SDTSD.StatTypeBad.EveryDown)
-                        {
-                            TSDSizeDownTracker = 1;
-                        }
-                    }
-
-                    //Temporarily resets size to prevent exponential growth
+                    //Resets all modifiers and rolls
+                    goodHPRoll = 0;
+                    badHPRoll = 0;
+                    goodDamageRoll = 0;
+                    badDamageRoll = 0;
+                    goodSpeedRoll = 0;
+                    badSpeedRoll = 0;
+                    goodXPRoll = 0;
+                    badXPRoll = 0;
+                    goodCritRoll = 0;
+                    badCritRoll = 0;
+                    goodCDRoll = 0;
+                    badCDRoll = 0;
+                    goodArmorRoll = 0;
+                    badArmorRoll = 0;
+                    goodSizeRoll = 0;
+                    badSizeRoll = 0;
+                    goodJumpRoll = 0;
+                    badJumpRoll = 0;
+                    goodEveryRoll = 0;
+                    badEveryRoll = 0;
+                    goldModifier = 0;
+                    luckModifier = 0;
                     body.modelLocator.modelTransform.localScale = bodySizeReset;
+
                     //This forces the ApplyBuffDebuff method to trigger after shrine usage. Unsure if there's a more efficient way to do that.
                     body.RecalculateStats();
-
-                    //Forces the UI to update right after using the shrine
-                    var inventoryDisplays = body.GetComponentsInChildren<RoR2.UI.ItemInventoryDisplay>();
-                    foreach (var display in inventoryDisplays)
-                    {
-                        var itemIcons = display.GetComponentsInChildren<RoR2.UI.ItemIcon>();
-                        foreach (var icon in itemIcons)
-                        {
-                            if (icon.itemIndex == ItemDef.itemIndex)
-                            {
-                                icon.SetItemIndex(icon.itemIndex, display.inventory.GetItemCount(icon.itemIndex), 1f);
-                                return;
-                            }
-                        }
-                    }
                 }
-            }
-            if (NetworkServer.active)
-            {
-                SDTSD statLookup = SDTSD.GetForInventory(body.inventory);
-                statLookup.SyncToClients();
-            }
+            }    
             orig(self, activator);
         }
         private void ApplyBuffDebuff(CharacterBody body, StatHookEventArgs args)
@@ -749,65 +595,337 @@ namespace SupplyDrop.Items
             int inventoryCount = GetCount(body);
             if (inventoryCount > 0)
             {
-                Inventory inventory = body.inventory;
-                if (inventory)
+                var chatSpamFilter = 0;
+
+                for (; timeToRoll > 0; timeToRoll--)
                 {
-                    SDTSD component = SDTSD.GetForInventory(inventory);
-                    if (component)
+                    var goodRoll = WeightedRandom();
+                    var badRoll = WeightedRandom();
+
+                    //HP Roll (10%)
+                    if (goodRoll == 0 || badRoll == 0)
                     {
-                        //Note that jump power is actually half of what it says it is because it is way too aggressive otherwise
-                        args.healthMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.HPUp];
-                        args.healthMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.HPDown];
-                        args.damageMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.DamageUp];
-                        args.damageMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.HPDown];
-                        args.moveSpeedMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.SpeedUp];
-                        args.moveSpeedMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.HPDown];
-                        args.levelMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.XPUp];
-                        args.levelMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.HPDown];
-                        args.critAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.CritUp];
-                        args.critAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.HPDown];
-                        args.cooldownMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.CDUp];
-                        args.cooldownMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.HPDown];
-                        args.armorAdd += Mathf.Max(body.baseArmor * (goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.ArmorUp]), 5);
-                        args.armorAdd -= Mathf.Max(body.baseArmor * (badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.HPDown]), 5);
-                        args.jumpPowerMultAdd += (goodStatPercent / 2) * component.statStacksGood[SDTSD.StatTypeGood.JumpUp];
-                        args.jumpPowerMultAdd -= (badStatPercent / 2) * component.statStacksBad[SDTSD.StatTypeBad.HPDown];                       
-                        
-                        //Every stat up                        
-                        args.healthMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.EveryUp];
-                        args.damageMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.EveryUp];
-                        args.moveSpeedMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.EveryUp];
-                        args.levelMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.EveryUp];
-                        args.critAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.EveryUp];
-                        args.cooldownMultAdd += goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.EveryUp];
-                        args.armorAdd += Mathf.Max(body.baseArmor * (goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.EveryUp]), 5);
-                        args.jumpPowerMultAdd += (goodStatPercent / 2) * component.statStacksGood[SDTSD.StatTypeGood.EveryUp];
-
-                        //Every stat down
-                        args.healthMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.EveryDown];
-                        args.damageMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.EveryDown];
-                        args.moveSpeedMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.EveryDown];
-                        args.levelMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.EveryDown];
-                        args.critAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.EveryDown];
-                        args.cooldownMultAdd -= badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.EveryDown];
-                        args.armorAdd -= Mathf.Max(body.baseArmor * (badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.EveryDown]), 5);
-                        args.jumpPowerMultAdd -= (badStatPercent / 2) * component.statStacksBad[SDTSD.StatTypeBad.EveryDown];
-
-                        //Because the transform doesn't work like args (in that it will repeat execute every time it is passed), it needs to be essentially locked away. 
-                        //It can only be accessed if you have the "key", which you gain one of upon using a shrine and hitting the size (or everything) effect(s). You burn it after using it once.
-                        //Also I lie, size is actually affected by 5%/2.5% because you get way too big too quickly otherwise lol
-                        if (TSDSizeUpTracker > 0)
+                        if (goodRoll == 0)
                         {
-                            body.modelLocator.modelTransform.localScale *= (1 + ((goodStatPercent/2) * component.statStacksGood[SDTSD.StatTypeGood.SizeUp]) + ((goodStatPercent / 2) * component.statStacksGood[SDTSD.StatTypeGood.EveryUp]));
-                            TSDSizeUpTracker--;
+                            goodHPRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel healthier!");
+                                chatSpamFilter++;
+                            }
                         }
-                        if (TSDSizeDownTracker > 0)
+                        else
                         {
-                            body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - ((badStatPercent/2) * component.statStacksBad[SDTSD.StatTypeBad.SizeDown]) - ((badStatPercent / 2) * component.statStacksBad[SDTSD.StatTypeBad.EveryDown]), 0.10f);
-                            TSDSizeDownTracker--;
+                            badHPRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel scrawnier.");
+                                chatSpamFilter++;
+                            }
                         }
                     }
-                }               
+                    //Damage Roll (10%)
+                    if (goodRoll == 1 || badRoll == 1)
+                    {
+                        if (goodRoll == 1)
+                        {
+                            goodDamageRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel stronger!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badDamageRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel weaker.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Speed Roll (10%)
+                    if (goodRoll == 2 || badRoll == 2)
+                    {
+                        if (goodRoll == 2)
+                        {
+                            goodSpeedRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel quicker!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badSpeedRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel slower.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Gold Roll (10%)
+                    if (goodRoll == 3 || badRoll == 3)
+                    {
+                        if (goodRoll == 3)
+                        {
+                            goodGoldRoll++;
+                            goldModifier++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel richer!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badGoldRoll++;
+                            goldModifier--;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel poorer.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //XP Roll (10%)
+                    if (goodRoll == 4 || badRoll == 4)
+                    {
+                        if (goodRoll == 4)
+                        {
+                            goodXPRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel wiser!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badXPRoll++;
+
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel dumber.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Crit Roll (10%)
+                    if (goodRoll == 5 || badRoll == 5)
+                    {
+                        if (goodRoll == 5)
+                        {
+                            goodCritRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel preciser!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badCritRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel sloppier.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Cooldown Roll (10%)
+                    if (goodRoll == 6 || badRoll == 6)
+                    {
+                        if (goodRoll == 6)
+                        {
+                            goodCDRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel livelier!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badCDRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel drowsier.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Armor Roll (10%)
+                    if (goodRoll == 7 || badRoll == 7)
+                    {
+                        if (goodRoll == 7)
+                        {
+                            goodArmorRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel tougher!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badArmorRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel squishier.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Jump Height Roll (10%)
+                    if (goodRoll == 8 || badRoll == 8)
+                    {
+                        if (goodRoll == 8)
+                        {
+                            goodJumpRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel lighter!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badJumpRoll++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel heavier.");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Luck Roll (6%)
+                    if (goodRoll == 9 || badRoll == 9)
+                    {
+                        if (goodRoll == 9)
+                        {
+                            goodLuckRoll++;
+                            luckModifier++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel LUCKIER!!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badLuckRoll++;
+                            luckModifier--;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel unluckier...");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //Size Roll (3%)
+                    if (goodRoll == 10 || badRoll == 10)
+                    {
+                        if (goodRoll == 10)
+                        {
+                            goodSizeRoll++;
+                            body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodSizeRoll));
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel BIGGER!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badSizeRoll++;
+                            body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - (badStatPercent * badSizeRoll), 0.10f);
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel tiny...");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+                    //EVERYTHING Roll (1%)
+                    if (goodRoll == 11 || badRoll == 11)
+                    {
+                        if (goodRoll == 11)
+                        {
+                            goodEveryRoll++;
+
+                            goodGoldRoll++;
+                            goldModifier++;
+                            body.modelLocator.modelTransform.localScale *= (1 + (goodStatPercent * goodEveryRoll));
+                            goodLuckRoll++;
+                            luckModifier++;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("YOU FEEL LIKE A MILLION BUCKS!");
+                                chatSpamFilter++;
+                            }
+                        }
+                        else
+                        {
+                            badEveryRoll++;
+
+                            badGoldRoll++;
+                            goldModifier--;
+                            body.modelLocator.modelTransform.localScale *= Mathf.Max(1 - (badStatPercent * badEveryRoll), 0.25f);
+                            badLuckRoll++;
+                            luckModifier--;
+                            if (chatSpamFilter < 10)
+                            {
+                                Chat.AddMessage("You feel utterly worthless...");
+                                chatSpamFilter++;
+                            }
+                        }
+                    }
+
+                    //This won't let more than 10 chat messages be sent as a result of rolling. Maybe set this to be a configurable value? Don't know if that's worth doing...
+                    if (chatSpamFilter > 10)
+                    {
+                        Chat.AddMessage("In summary: You feel like a confused mess right now.");
+                    }
+                }
+                args.healthMultAdd += goodStatPercent * goodHPRoll;
+                args.healthMultAdd -= (badStatPercent * badHPRoll);
+                args.damageMultAdd += (goodStatPercent * goodDamageRoll);
+                args.damageMultAdd -= (badStatPercent * badDamageRoll);
+                args.moveSpeedMultAdd += (goodStatPercent * goodSpeedRoll);
+                args.moveSpeedMultAdd -= (badStatPercent * badSpeedRoll);
+                args.levelMultAdd += (goodStatPercent * goodXPRoll);
+                args.levelMultAdd -= (badStatPercent * badXPRoll);
+                args.critAdd += (goodStatPercent * goodCritRoll);
+                args.critAdd -= (badStatPercent * badCritRoll);
+                args.cooldownMultAdd += (goodStatPercent * goodCDRoll);
+                args.cooldownMultAdd -= (badStatPercent * badCDRoll);
+                args.armorAdd += Mathf.Max(body.baseArmor * (goodStatPercent * goodArmorRoll), 5);
+                args.armorAdd -= Mathf.Max(body.baseArmor * (badStatPercent * badArmorRoll), 5);
+                args.jumpPowerMultAdd += (goodStatPercent * goodJumpRoll);
+                args.jumpPowerMultAdd -= (badStatPercent * badJumpRoll);
+
+                args.healthMultAdd += (goodStatPercent * goodEveryRoll);
+                args.damageMultAdd += (goodStatPercent * goodEveryRoll);
+                args.moveSpeedMultAdd += (goodStatPercent * goodEveryRoll);
+                args.levelMultAdd += (goodStatPercent * goodEveryRoll);
+                args.critAdd += (goodStatPercent * goodEveryRoll);
+                args.cooldownMultAdd += (goodStatPercent * goodEveryRoll);
+                args.armorAdd += Mathf.Max(body.baseArmor * (goodStatPercent * goodEveryRoll), 5);
+                args.jumpPowerMultAdd += (goodStatPercent * goodEveryRoll);
+
+                args.healthMultAdd -= (badStatPercent * badEveryRoll);
+                args.damageMultAdd -= (badStatPercent * badEveryRoll);
+                args.moveSpeedMultAdd -= (badStatPercent * badEveryRoll);
+                args.levelMultAdd -= (badStatPercent * badEveryRoll);
+                args.critAdd -= (badStatPercent * badEveryRoll);
+                args.cooldownMultAdd -= (badStatPercent * badEveryRoll);
+                args.armorAdd -= Mathf.Max(body.baseArmor * (badStatPercent * badEveryRoll), 5);
+                args.jumpPowerMultAdd -= (badStatPercent * badEveryRoll);
             }
         }
         private void MoneyBonus(On.RoR2.DeathRewards.orig_OnKilledServer orig, DeathRewards self, DamageReport rep)
@@ -820,17 +938,21 @@ namespace SupplyDrop.Items
                 var inventoryCount = GetCount(cbKiller);
                 if (inventoryCount > 0)
                 {
-                    SDTSD component = SDTSD.GetForInventory(cbKiller.inventory);
-                    if (component)
+                    if (goldModifier != 0)
                     {
-                        if (component.statStacksGood[SDTSD.StatTypeGood.LuckUp] != 0 || component.statStacksBad[SDTSD.StatTypeBad.LuckDown] != 0)
-                        {
-                            uint origGold = self.goldReward;
+                        uint origGold = self.goldReward;
 
-                            uint newGold = (uint)Mathf.FloorToInt(origGold * ((goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.GoldUp]) - (badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.GoldDown])));
-                            self.goldReward = newGold;
+                        if (goldModifier > 0)
+                        {
+                            uint increasedGold = (uint)Mathf.FloorToInt(origGold * (goodStatPercent * goodGoldRoll));
+                            self.goldReward = increasedGold;
                         }
-                    }                    
+                        else
+                        {
+                            uint reducedGold = (uint)Mathf.FloorToInt(origGold * (badStatPercent * badGoldRoll));
+                            self.goldReward = reducedGold;
+                        }
+                    }
                 }
             }
         }
@@ -843,14 +965,16 @@ namespace SupplyDrop.Items
                     var inventoryCount = GetCount(effectOriginMaster);
                     if (inventoryCount > 0)
                     {
-                        var component = SDTSD.GetForInventory(effectOriginMaster.inventory);
-                        if (component)
+                        if (luckModifier != 0)
                         {
-                            if (component.statStacksGood[SDTSD.StatTypeGood.LuckUp] != 0 || component.statStacksBad[SDTSD.StatTypeBad.LuckDown] != 0)
+                            var currentPercent = percentChance;
+                            if (luckModifier > 0)
                             {
-                                var currentPercent = percentChance;
-
-                                percentChance = currentPercent + (currentPercent * (goodStatPercent * component.statStacksGood[SDTSD.StatTypeGood.LuckUp])) - (currentPercent * (badStatPercent * component.statStacksBad[SDTSD.StatTypeBad.LuckDown]));
+                                percentChance = currentPercent + (currentPercent * (goodStatPercent * goodLuckRoll));
+                            }
+                            else
+                            {
+                                percentChance = currentPercent - (currentPercent * (badStatPercent * badLuckRoll));
                             }
                         }
                     }
@@ -858,101 +982,30 @@ namespace SupplyDrop.Items
             }
             return orig(percentChance, luck, effectOriginMaster);
         }
-        public class SyncSDTSDMessage : INetMessage
+        int WeightedRandom()
         {
-            private NetworkInstanceId networkId;
-            private int[] statGoodCounts;
-            private int[] statBadCounts;
-
-            public SyncSDTSDMessage() { }
-
-            public SyncSDTSDMessage(uint netIdUInt, Dictionary<SDTSD.StatTypeGood, int> good, Dictionary<SDTSD.StatTypeBad, int> bad)
+            float total = 0f;
+            foreach (float weight in weights)
             {
-                networkId = new NetworkInstanceId(netIdUInt);
-                statGoodCounts = good.Values.ToArray();
-                statBadCounts = bad.Values.ToArray();
+                total += weight;
             }
 
-            public void Serialize(NetworkWriter writer)
+            float max = weights[0],
+            random = Random.Range(0f, total);
+
+            for (int index = 0; index < weights.Count; index++)
             {
-                writer.Write(networkId.Value); // write as uint
-
-                writer.Write(statGoodCounts.Length);
-                foreach (var val in statGoodCounts) writer.Write(val);
-
-                writer.Write(statBadCounts.Length);
-                foreach (var val in statBadCounts) writer.Write(val);
-            }
-
-            public void Deserialize(NetworkReader reader)
-            {                
-                uint netIdUInt = reader.ReadUInt32();
-                networkId = new NetworkInstanceId(netIdUInt);
-
-                int goodLength = reader.ReadInt32();
-                statGoodCounts = new int[goodLength];
-                for (int i = 0; i < goodLength; i++)
-                    statGoodCounts[i] = reader.ReadInt32();
-
-                int badLength = reader.ReadInt32();
-                statBadCounts = new int[badLength];
-                for (int i = 0; i < badLength; i++)
-                    statBadCounts[i] = reader.ReadInt32();
-            }
-
-            public void OnReceived()
-            {
-                GameObject netObj = Util.FindNetworkObject(networkId);
-                if (!netObj) return;
-
-                Inventory inv = netObj.GetComponent<Inventory>();
-                if (!inv) return;
-
-                SDTSD dice = SDTSD.GetForInventory(inv);
-
-                int i = 0;
-                foreach (var key in dice.statStacksGood.Keys.ToList())
-                    dice.statStacksGood[key] = statGoodCounts[i++];
-                i = 0;
-                foreach (var key in dice.statStacksBad.Keys.ToList())
-                    dice.statStacksBad[key] = statBadCounts[i++];
-
-                // Refresh UI
-                foreach (var display in inv.GetComponentsInChildren<RoR2.UI.ItemInventoryDisplay>())
+                if (random < max)
                 {
-                    foreach (var icon in display.GetComponentsInChildren<RoR2.UI.ItemIcon>())
-                    {
-                        if (icon.itemIndex == instance.ItemDef.itemIndex)
-                            icon.SetItemIndex(icon.itemIndex, display.inventory.GetItemCount(icon.itemIndex), 1f);
-                    }
+                    return index;
                 }
+                else if (index == weights.Count - 1)
+                {
+                    return weights.Count - 1;
+                }
+                max += weights[index + 1];
             }
+            return -1;
         }
-        //This used to be part of the old version of TSD that weighted different effects (10% for most, 6% for size, 3% for luck, 1% for everything). I may bring back the weighting system, but not right now.
-        ///*        int WeightedRandom()
-        //        {
-        //            float total = 0f;
-        //            foreach (float weight in weights)
-        //            {
-        //                total += weight;
-        //            }
-
-        //            float max = weights[0],
-        //            random = Random.Range(0f, total);
-
-        //            for (int index = 0; index < weights.Count; index++)
-        //            {
-        //                if (random < max)
-        //                {
-        //                    return index;
-        //                }
-        //                else if (index == weights.Count - 1)
-        //                {
-        //                    return weights.Count - 1;
-        //                }
-        //                max += weights[index + 1];
-        //            }
-        //            return -1;
-        //        }*/
     }
 }
