@@ -11,10 +11,6 @@ using System.Linq;
 using SupplyDrop.Items;
 using SupplyDrop.CoreModules;
 using System;
-using System.Runtime.CompilerServices;
-using RoR2;
-using LookingGlass;
-using LookingGlass.ItemStatsNameSpace;
 using R2API.Networking;
 
 namespace K1454.SupplyDrop

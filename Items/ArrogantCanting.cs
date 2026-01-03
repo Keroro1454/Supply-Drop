@@ -10,7 +10,6 @@ using static SupplyDrop.Utils.MathHelpers;
 using static K1454.SupplyDrop.SupplyDropPlugin;
 
 using BepInEx.Configuration;
-using System.Collections.Generic;
 using UnityEngine.Networking;
 
 namespace SupplyDrop.Items

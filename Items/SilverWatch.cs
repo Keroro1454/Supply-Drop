@@ -2,7 +2,6 @@
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using static R2API.RecalculateStatsAPI;
 
 using SupplyDrop.Utils;
 using static SupplyDrop.Utils.ItemHelpers;

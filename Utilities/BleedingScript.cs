@@ -1,7 +1,6 @@
 ﻿using RoR2;
 using UnityEngine;
 using System;
-using System.Linq;
 using SupplyDrop.Items;
 
 namespace SupplyDrop.Utils

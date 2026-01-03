@@ -3,7 +3,6 @@ using UnityEngine;
 using RoR2;
 using static R2API.RecalculateStatsAPI;
 using System.Text;
-using UnityEngine.Networking;
 using System.Linq;
 
 namespace SupplyDrop.Utils
